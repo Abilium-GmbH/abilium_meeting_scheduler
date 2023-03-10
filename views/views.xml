@@ -1,0 +1,53 @@
+<odoo>
+  <data>
+
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="meeting__scheduler.list">
+      <field name="name">Meeting_Scheduler list</field>
+      <field name="model">meeting__scheduler.meeting__scheduler</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="meeting__scheduler.action_window">
+      <field name="name">Meeting Scheduler window</field>
+      <field name="res_model">meeting__scheduler.meeting__scheduler</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+    <record model="ir.actions.server" id="meeting__scheduler.action_server">
+      <field name="name">Meeting_Scheduler server</field>
+      <field name="model_id" ref="model_meeting__scheduler_meeting__scheduler"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+
+
+    <!-- Top menu item -->
+    <menuitem name="Meeting Scheduler" id="meeting__scheduler.menu_root"/>
+
+    <!-- menu categories -->
+    <menuitem name="Menu 1" id="meeting__scheduler.menu_1" parent="meeting__scheduler.menu_root"/>
+    <menuitem name="Menu 2" id="meeting__scheduler.menu_2" parent="meeting__scheduler.menu_root"/>
+
+    <!-- actions -->
+    <menuitem name="List" id="meeting__scheduler.menu_1_list" parent="meeting__scheduler.menu_1"
+              action="meeting__scheduler.action_window"/>
+    <menuitem name="Server to list" id="meeting__scheduler" parent="meeting__scheduler.menu_2"
+              action="meeting__scheduler.action_server"/>
+
+  </data>
+</odoo>
