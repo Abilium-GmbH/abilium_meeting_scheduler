@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/meeting__scheduler.iml" filepath="$PROJECT_DIR$/.idea/meeting__scheduler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/meeting_scheduler.iml" filepath="$PROJECT_DIR$/.idea/meeting_scheduler.iml" />
+      <module fileurl="file://$USER_HOME$/Documents/Odoo 14 Source Code/odoo-14.0/.idea/odoo-14.0.iml" filepath="$USER_HOME$/Documents/Odoo 14 Source Code/odoo-14.0/.idea/odoo-14.0.iml" />
     </modules>
   </component>
 </project>

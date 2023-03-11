@@ -7,9 +7,9 @@ class meeting_scheduler(models.Model):
     _name = 'meeting_scheduler'
     _description = 'meeting_scheduler'
 
-    name = fields.Char()
-    value = fields.Integer()
-    value2 = fields.Float(compute="_value_pc", store=True)
+    name = fields.Char(string="Name")
+    value = fields.Integer(string="value")
+    value2 = fields.Float(string="value2", compute="_value_pc", store=True)
     description = fields.Text()
 
     @api.depends('value')
