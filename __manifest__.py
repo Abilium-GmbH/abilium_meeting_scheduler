@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Meeting Scheduler",
+    'name': "Abilium Meeting Scheduler",
 
     'summary': """
-        Schedule meetings""",
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com""",
 
     'description': """
-        With this plugin you can invite users to see your availability (sourced from the Odoo calendar)and create meeting requests in that time.
-         The request can be confirmed or rejected by the user. If it is confirmed a meeting entry will be created and the invitation is sent.
+        Long description of module's purpose
     """,
 
-    'author': "PSE-Team",
-    'website': "",
+    'author': "My Company",
+    'website': "http://www.yourcompany.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml

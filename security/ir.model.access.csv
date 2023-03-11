@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_meeting__scheduler_meeting__scheduler,meeting__scheduler.meeting__scheduler,model_meeting__scheduler_meeting__scheduler,base.group_user,1,1,1,1
+access_meeting_scheduler_meeting_scheduler,meeting_scheduler,model_meeting_scheduler_meeting_scheduler,base.group_user,1,1,1,1

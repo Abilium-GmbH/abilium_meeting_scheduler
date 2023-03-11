@@ -2,9 +2,9 @@
   <data>
 
     <!-- explicit list view definition -->
-    <record model="ir.ui.view" id="meeting__scheduler.list">
-      <field name="name">Meeting_Scheduler list</field>
-      <field name="model">meeting__scheduler.meeting__scheduler</field>
+    <record model="ir.ui.view" id="meeting_scheduler.list">
+      <field name="name">meeting_scheduler list</field>
+      <field name="model">meeting_scheduler</field>
       <field name="arch" type="xml">
         <tree>
           <field name="name"/>
@@ -15,16 +15,16 @@
     </record>
 
     <!-- actions opening views on models -->
-    <record model="ir.actions.act_window" id="meeting__scheduler.action_window">
-      <field name="name">Meeting Scheduler window</field>
-      <field name="res_model">meeting__scheduler.meeting__scheduler</field>
+    <record model="ir.actions.act_window" id="meeting_scheduler.action_window">
+      <field name="name">meeting_scheduler window</field>
+      <field name="res_model">meeting_scheduler</field>
       <field name="view_mode">tree,form</field>
     </record>
 
     <!-- server action to the one above -->
-    <record model="ir.actions.server" id="meeting__scheduler.action_server">
-      <field name="name">Meeting_Scheduler server</field>
-      <field name="model_id" ref="model_meeting__scheduler_meeting__scheduler"/>
+    <record model="ir.actions.server" id="meeting_scheduler.action_server">
+      <field name="name">meeting_scheduler server</field>
+      <field name="model_id" ref="model_meeting_scheduler"/>
       <field name="state">code</field>
       <field name="code">
         action = {
@@ -35,19 +35,18 @@
       </field>
     </record>
 
-
     <!-- Top menu item -->
-    <menuitem name="Meeting Scheduler" id="meeting__scheduler.menu_root"/>
+    <menuitem name="Abilium Meeting Scheduler" id="meeting_scheduler.menu_root"/>
 
     <!-- menu categories -->
-    <menuitem name="Menu 1" id="meeting__scheduler.menu_1" parent="meeting__scheduler.menu_root"/>
-    <menuitem name="Menu 2" id="meeting__scheduler.menu_2" parent="meeting__scheduler.menu_root"/>
+    <menuitem name="Menu 1" id="meeting_scheduler.menu_1" parent="meeting_scheduler.menu_root"/>
+    <menuitem name="Menu 2" id="meeting_scheduler.menu_2" parent="meeting_scheduler.menu_root"/>
 
     <!-- actions -->
-    <menuitem name="List" id="meeting__scheduler.menu_1_list" parent="meeting__scheduler.menu_1"
-              action="meeting__scheduler.action_window"/>
-    <menuitem name="Server to list" id="meeting__scheduler" parent="meeting__scheduler.menu_2"
-              action="meeting__scheduler.action_server"/>
+    <menuitem name="List" id="meeting_scheduler.menu_1_list" parent="meeting_scheduler.menu_1"
+              action="meeting_scheduler.action_window"/>
+    <menuitem name="Server to list" id="meeting_scheduler" parent="meeting_scheduler.menu_2"
+              action="meeting_scheduler.action_server"/>
 
   </data>
 </odoo>

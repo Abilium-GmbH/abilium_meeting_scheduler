@@ -3,9 +3,9 @@
 from odoo import models, fields, api
 
 
-class meeting__scheduler(models.Model):
-    _name = 'meeting__scheduler.meeting__scheduler'
-    _description = 'meeting__scheduler.meeting__scheduler'
+class meeting_scheduler(models.Model):
+    _name = 'meeting_scheduler'
+    _description = 'meeting_scheduler'
 
     name = fields.Char()
     value = fields.Integer()
