@@ -7,12 +7,8 @@ class meeting_scheduler(models.Model):
     _name = 'meeting_scheduler'
     _description = 'meeting_scheduler'
 
-    name = fields.Char(string="Name")
-    value = fields.Integer(string="value")
-    value2 = fields.Float(string="value2", compute="_value_pc", store=True)
-    description = fields.Text()
-
-    @api.depends('value')
-    def _value_pc(self):
-        for record in self:
-            record.value2 = float(record.value) / 100
+    name = fields.Char(string="Your Name")
+    start_date = fields.Datetime(string="Start Date")
+    end_date = fields.Datetime(string="End Date")
+    location = fields.Char(string="Location")
+    subject = fields.Text(string="Subject")
