@@ -24,3 +24,4 @@ class meeting_scheduler(models.Model):
                 record.meeting_duration = record.meeting_end_date - record.meeting_start_date
         except:
             record.meeting_duration = "Error"
+
