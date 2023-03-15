@@ -2,25 +2,24 @@
 
 from odoo import models, fields, api
 
-
 class meeting_scheduler(models.Model):
     _name = 'meeting_scheduler'
     _description = 'meeting_scheduler'
 
-    name = fields.Char(string="Your Name")
-    start_date = fields.Datetime(string="Start Date")
-    end_date = fields.Datetime(string="End Date")
-    location = fields.Char(string="Location")
-    subject = fields.Text(string="Subject")
-    duration = fields.Char(string="Duration", compute="_calc_duration", store=True)
-    frequency = fields.Selection([('0', 'Not repeating'), ('1', 'Weekly'), ('2', 'Biweekly')], store=True,
+    meetingTitle = fields.Char(string="Meeting Title")
+    meetingStartDate = fields.Datetime(string="Start Date")
+    meetingEndDate = fields.Datetime(string="End Date")
+    meetingLocation = fields.Char(string="Location")
+    meetingSubject = fields.Text(string="Subject")
+    meetingDuration = fields.Char(string="Duration", compute="_calc_duration", store=True)
+    meetingFrequency = fields.Selection([('0', 'Not repeating'), ('1', 'Weekly'), ('2', 'Biweekly')], store=True,
                                  string="Repeating", default='0')
 
-    @api.depends('start_date', 'end_date')
+    @api.depends('meetingStartDate', 'meetingEndDate')
     def _calc_duration(self):
 
         try:
             for record in self:
-                record.duration = record.end_date - record.start_date
+                record.meetingDuration = record.meetingEndDate - record.meetingStartDate
         except:
-            record.duration = "Error"
+            record.meetingDuration = "Error"

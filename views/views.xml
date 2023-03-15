@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <odoo>
 
     <!-- menu actions -->
@@ -17,6 +18,5 @@
     <!-- menu categories -->
     <menuitem name="Calender" id="meeting-scheduler-calender" parent="meeting-scheduler-root" action="view_action"/>
     <menuitem name="User Menu" id="meeting-scheduler-user-menu" parent="meeting-scheduler-root" action="view_action"/>
-
 
 </odoo>
