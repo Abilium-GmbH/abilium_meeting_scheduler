@@ -35,4 +35,3 @@
     <menuitem name="User Menu" id="meeting-scheduler-user-menu" parent="meeting-scheduler-root" action="view_action"/>
 
 </odoo>
-
