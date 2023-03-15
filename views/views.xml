@@ -10,6 +10,21 @@
         <field name="view_mode">tree,kanban,form</field>
     </record>
 
+    <!-- explicit list view definition -->
+    <data>
+        <record model="ir.ui.view" id="meeting_scheduler_list">
+            <field name="name">meeting_scheduler list</field>
+            <field name="model">meeting_scheduler</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="meetingTitle"/>
+                </tree>
+            </field>
+
+        </record>
+    </data>
+
+
     <!-- Top menu item -->
     <menuitem name="Abilium Meeting Scheduler"
               id="meeting-scheduler-root"
