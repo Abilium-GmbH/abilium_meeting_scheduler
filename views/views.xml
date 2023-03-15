@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- menu actions -->
+    <record id="view_action" model="ir.actions.act_window">
+        <field name="name">Abilium Meeting Scheduler</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">meeting_scheduler</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem name="Abilium Meeting Scheduler"
+              id="meeting-scheduler-root"
+              sequence="0"/>
+
+    <!-- menu categories -->
+    <menuitem name="Calender" id="meeting-scheduler-calender" parent="meeting-scheduler-root" action="view_action"/>
+    <menuitem name="User Menu" id="meeting-scheduler-user-menu" parent="meeting-scheduler-root" action="view_action"/>
+
+</odoo>
