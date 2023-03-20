@@ -17,7 +17,7 @@ class meeting_scheduler(models.Model):
     meeting_duration = fields.Char(string="Duration", compute="_calc_duration", store=True)
     meeting_frequency = fields.Selection([('0', 'Not repeating'), ('1', 'Weekly'), ('2', 'Biweekly')], store=True,
                                          string="Repeating", default='0')
-    meeting_repetitions = fields.Integer(string="Number of repetitions")
+    meeting_repetitions = fields.Integer(string="Number of repetitions", default='0')
 
     @api.depends('meeting_start_date', 'meeting_end_date')
     def _calc_duration(self):
