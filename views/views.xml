@@ -26,6 +26,7 @@
                     <field name="meeting_frequency"/>
                     <field name="meeting_privacy"/>
                     <field name="meeting_show_as"/>
+
                 </tree>
             </field>
 
