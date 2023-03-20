@@ -61,10 +61,10 @@ class meeting_scheduler(models.Model):
 
                 #datetime is stored as string, so we need to convert string to datetime object then add the days and then convert it back to a string
                 data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(data_list[0]['meeting_start_date'],
-                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7))
+                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7 * x))
 
                 data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(data_list[0]['meeting_end_date'],
-                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7))
+                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7 * x))
 
                 created_records.append(super(meeting_scheduler, self).create(data_list))
                 self.create_entry_to_calendar(data_list[0])
@@ -75,10 +75,10 @@ class meeting_scheduler(models.Model):
             for x in range(meeting_repetitions):
                 data_list[0]['meeting_title'] = default_title + " #" + str(x + 1)
                 data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(data_list[0]['meeting_start_date'],
-                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14))
+                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14 * x))
 
                 data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(data_list[0]['meeting_end_date'],
-                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14))
+                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14 * x))
 
                 created_records.append(super(meeting_scheduler, self).create(data_list))
                 self.create_entry_to_calendar(data_list[0])
