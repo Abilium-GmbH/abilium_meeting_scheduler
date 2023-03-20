@@ -38,13 +38,6 @@ class meeting_scheduler(models.Model):
     @api.model_create_multi
     def create(self, data_list):
 
-
-
-
-
-
-
-
         #created_records stores all the created records
         created_records = []
 
@@ -52,6 +45,7 @@ class meeting_scheduler(models.Model):
         meeting_repetitions = data_list[0]['meeting_repetitions']
         meeting_frequency = data_list[0]['meeting_frequency']
         default_title = data_list[0]['meeting_title']
+        default_start_date = data_list[0]['meeting_start_date']
 
         #frequency 1 is weekly so add 7 days
         if meeting_frequency == '1':
@@ -60,10 +54,10 @@ class meeting_scheduler(models.Model):
                 data_list[0]['meeting_title'] = default_title + " #" + str(x + 1)
 
                 #datetime is stored as string, so we need to convert string to datetime object then add the days and then convert it back to a string
-                data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(data_list[0]['meeting_start_date'],
+                data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(default_start_date,
                                                     "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7 * x))
 
-                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(data_list[0]['meeting_end_date'],
+                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_start_date,
                                                     "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7 * x))
 
                 created_records.append(super(meeting_scheduler, self).create(data_list))
@@ -74,10 +68,10 @@ class meeting_scheduler(models.Model):
 
             for x in range(meeting_repetitions):
                 data_list[0]['meeting_title'] = default_title + " #" + str(x + 1)
-                data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(data_list[0]['meeting_start_date'],
+                data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(default_start_date,
                                                     "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14 * x))
 
-                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(data_list[0]['meeting_end_date'],
+                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_start_date,
                                                     "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14 * x))
 
                 created_records.append(super(meeting_scheduler, self).create(data_list))
