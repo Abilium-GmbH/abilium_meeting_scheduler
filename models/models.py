@@ -26,6 +26,7 @@ class meeting_scheduler(models.Model):
     meeting_show_as = fields.Selection([('free', 'Free'),
                                         ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
 
+
     @api.depends('meeting_start_date', 'meeting_end_date')
     def _calc_duration(self):
 
@@ -34,6 +35,7 @@ class meeting_scheduler(models.Model):
                 record.meeting_duration = record.meeting_end_date - record.meeting_start_date
         except:
             record.meeting_duration = "Error"
+
 
     @api.model_create_multi
     def create(self, data_list):
@@ -84,6 +86,7 @@ class meeting_scheduler(models.Model):
 
         #show the first meeting
         return created_records[0]
+        
 
     def write(self, vals):
         """
@@ -139,7 +142,6 @@ class meeting_scheduler(models.Model):
                                        'start': new_meeting_start_date,
                                        'stop': new_meeting_end_date})
         return super(meeting_scheduler, self).write(vals)
-
 
 
     @api.model

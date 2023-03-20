@@ -24,6 +24,9 @@
                     <field name="meeting_subject"/>
                     <field name="meeting_duration"/>
                     <field name="meeting_frequency"/>
+                    <field name="meeting_privacy"/>
+                    <field name="meeting_show_as"/>
+
                 </tree>
             </field>
 
