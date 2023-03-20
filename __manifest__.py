@@ -15,7 +15,7 @@
     'category': 'Uncategorized',
     'version': '0.1',
 
-    'depends': ['base'],
+    'depends': ['base', 'calendar', 'mail'],
 
     'data': [
         # 'security/ir.model.access.csv',
