@@ -34,6 +34,41 @@
     </data>
 
 
+        <!-- second menu action-->
+    <record id="group_action" model="ir.actions.act_window">
+        <field name="name">Group Stage</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">group_scheduler</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+
+    <!-- explicit list view definition second item -->
+    <data>
+        <record model="ir.ui.view" id="group_scheduler_list">
+            <field name="name">group_scheduler list</field>
+            <field name="model">group_scheduler</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="meeting_title"/>
+                    <field name="meeting_start_date"/>
+                    <field name="meeting_end_date"/>
+                    <field name="meeting_location"/>
+                    <field name="meeting_subject"/>
+                    <field name="meeting_duration"/>
+                    <field name="meeting_frequency"/>
+                    <field name="meeting_privacy"/>
+                    <field name="meeting_show_as"/>
+
+                </tree>
+            </field>
+
+        </record>
+    </data>
+
+
+
+
     <!-- Top menu item -->
     <menuitem name="Abilium Meeting Scheduler"
               id="meeting-scheduler-root"
@@ -41,7 +76,7 @@
 
     <!-- menu categories -->
     <menuitem name="Calender" id="meeting-scheduler-calender" parent="meeting-scheduler-root" action="view_action"/>
-    <menuitem name="User Menu" id="meeting-scheduler-user-menu" parent="meeting-scheduler-root" action="view_action"/>
+    <menuitem name="User Menu" id="meeting-scheduler-user-menu" parent="meeting-scheduler-root" action="group_action"/>
 
 </odoo>
 
