@@ -49,10 +49,22 @@
             <field name="name">group_scheduler list</field>
             <field name="model">group_scheduler</field>
             <field name="arch" type="xml">
+
                 <tree>
+                    <header>
+<!--                    for tree header buttons no id, states, confirm
+                        class="btn-primary" makes it blue -->
+                        <button name="button_function_test" string="Get free slots from calendar of selected Groups"
+                             class="btn-primary" type="object"/>
+
+                        <button name="%(view_action)d" type="action"
+                                string="Go back to Calendar view" class="btn-primary"/>
+
+                    </header>
                     <field name="meeting_group"/>
                     <field name="meeting_attendees"/>
                 </tree>
+
             </field>
 
         </record>
