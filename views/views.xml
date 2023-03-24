@@ -70,6 +70,30 @@
         </record>
     </data>
 
+            <!-- third menu action-->
+    <record id="stuff_action" model="ir.actions.act_window">
+        <field name="name">Group Stage</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">print_table</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+        <!-- explicit list view definition third item -->
+    <data>
+        <record model="ir.ui.view" id="print_table_list">
+            <field name="name">print_table list</field>
+            <field name="model">print_table</field>
+            <field name="arch" type="xml">
+
+                <tree>
+                    <field name="show_stuff"/>
+                </tree>
+
+            </field>
+
+        </record>
+    </data>
+
 
 
 
@@ -81,6 +105,8 @@
     <!-- menu categories -->
     <menuitem name="Calender" id="meeting-scheduler-calender" parent="meeting-scheduler-root" action="view_action"/>
     <menuitem name="User Menu" id="meeting-scheduler-user-menu" parent="meeting-scheduler-root" action="group_action"/>
+    <menuitem name="Printed Stuff" id="meeting-scheduler-stuff-printer" parent="meeting-scheduler-root"
+    action="stuff_action"/>
 
 </odoo>
 
