@@ -100,13 +100,25 @@
     <!-- Top menu item -->
     <menuitem name="Abilium Meeting Scheduler"
               id="meeting-scheduler-root"
-              sequence="0"/>
+              sequence="0"
+              groups="base.group_user"/>
 
     <!-- menu categories -->
-    <menuitem name="Calender" id="meeting-scheduler-calender" parent="meeting-scheduler-root" action="view_action"/>
-    <menuitem name="User Menu" id="meeting-scheduler-user-menu" parent="meeting-scheduler-root" action="group_action"/>
-    <menuitem name="Printed Stuff" id="meeting-scheduler-stuff-printer" parent="meeting-scheduler-root"
-    action="stuff_action"/>
+    <menuitem name="Calender"
+              id="meeting-scheduler-calender"
+              parent="meeting-scheduler-root"
+              action="view_action"
+              groups="base.group_user"/>
+    <menuitem name="User Menu"
+              id="meeting-scheduler-user-menu"
+              parent="meeting-scheduler-root"
+              action="group_action"
+              groups="base.group_user"/>
+    <menuitem name="Printed Stuff"
+              id="meeting-scheduler-stuff-printer"
+              parent="meeting-scheduler-root"
+              action="stuff_action"
+              groups="base.group_user"/>
 
 </odoo>
 

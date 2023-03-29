@@ -2,6 +2,8 @@
 import datetime
 
 from odoo import models, fields, api
+from typing import List
+from datetime import datetime
 
 
 class group_scheduler(models.Model):
@@ -47,9 +49,50 @@ class group_scheduler(models.Model):
                         meeting_selected_list.append(ting)
                         # self.env['print_table'].create({'show_stuff': str(ting.name) + ', ' + str(ting.start) + ', ' + str(ting.attendee_ids.partner_id)})
         meeting_selected_list = list(dict.fromkeys(meeting_selected_list))
+        meeting_start_end_list = []
         for x in meeting_selected_list:
-            self.env['print_table'].create(
-                {'show_stuff': str(x.name) + ', '
-                               + str(x.start) + ', '
-                               + str(x.stop) + ', '
-                               + str(x.attendee_ids.partner_id)})
+            meeting_start_end_list.append([x.start, x.stop])
+            # self.env['print_table'].create(
+            #     {'show_stuff': str(x.name) + ', '
+            #                    + str(x.start) + ', '
+            #                    + str(x.stop) + ', '
+            #                    + str(x.attendee_ids.partner_id)})
+
+        result = self.find_overlapping_timeslots(meeting_start_end_list)
+        # timeslots = [[datetime(2023, 3, 29, 10, 0), datetime(2023, 3, 29, 12, 0)],
+        #              [datetime(2023, 3, 29, 11, 0), datetime(2023, 3, 29, 13, 0)],
+        #              [datetime(2023, 3, 29, 14, 0), datetime(2023, 3, 29, 15, 0)],
+        #              ]
+        # result = self.find_overlapping_timeslots(timeslots)
+        self.env['print_table'].create(
+            {'show_stuff': result})
+
+    def find_overlapping_timeslots(self, timeslots: List[List[datetime]]) -> List[List[datetime]]:
+        """
+        Given a list of timeslots represented as a list of start and end times,
+        returns a list of overlapping timeslots.
+        """
+        overlaps = []
+        for i in range(len(timeslots)):
+            for j in range(i + 1, len(timeslots)):
+                # check if the two timeslots overlap
+                if timeslots[i][0] < timeslots[j][1] and timeslots[i][1] > timeslots[j][0]:
+                    # add the overlapping timeslot to the list of overlaps
+                    overlap_start = max(timeslots[i][0], timeslots[j][0])
+                    overlap_start_converted = self.convert_timezone(overlap_start)
+
+                    overlap_end = min(timeslots[i][1], timeslots[j][1])
+                    overlap_end_converted = self.convert_timezone(overlap_end)
+
+                    overlaps.append([overlap_start_converted, overlap_end_converted])
+
+        for overlap in overlaps:
+            otuput_overlaps = overlap[0] , overlap[1]
+        return otuput_overlaps
+
+    def convert_timezone(self, input_datetime: datetime) -> datetime:
+        import pytz
+        user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+        output_datetime = pytz.utc.localize(input_datetime).astimezone(user_timezone)
+        return output_datetime
+
