@@ -26,6 +26,12 @@ class meeting_scheduler(models.Model):
     meeting_show_as = fields.Selection([('free', 'Free'),
                                         ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
 
+    corresponding_calendar_event = fields.Many2one('calendar.event',
+                                                   string="Corresponding Calendar Event",
+                                                   ondelete="cascade", )  # readonly="True")
+
+    # compute = lambda self: self._allocate_corresponding_field(
+    #   self.meeting_title),
 
     @api.depends('meeting_start_date', 'meeting_end_date')
     def _calc_duration(self):
@@ -36,57 +42,90 @@ class meeting_scheduler(models.Model):
         except:
             record.meeting_duration = "Error"
 
-
     @api.model_create_multi
     def create(self, data_list):
 
-        #created_records stores all the created records
+        # created_records stores all the created records
         created_records = []
 
-        #stores values given in the form for easier calculations and adjustments
+        # stores values given in the form for easier calculations and adjustments
         meeting_repetitions = data_list[0]['meeting_repetitions']
         meeting_frequency = data_list[0]['meeting_frequency']
         default_title = data_list[0]['meeting_title']
         default_start_date = data_list[0]['meeting_start_date']
 
-        #frequency 1 is weekly so add 7 days
+        # frequency 1 is weekly so add 7 days
         if meeting_frequency == '1':
 
             for x in range(meeting_repetitions):
                 data_list[0]['meeting_title'] = default_title + " #" + str(x + 1)
 
-                #datetime is stored as string, so we need to convert string to datetime object then add the days and then convert it back to a string
+                # datetime is stored as string, so we need to convert string to datetime object then add the days and then convert it back to a string
                 data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(default_start_date,
-                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7 * x))
+                                                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
+                    days=7 * x))
 
                 data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_start_date,
-                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7 * x))
+                                                                                  "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
+                    days=7 * x))
 
-                created_records.append(super(meeting_scheduler, self).create(data_list))
                 self.create_entry_to_calendar(data_list[0])
+                x = self.env['calendar.event'].search(
+                    [('name', '=', data_list[0]['meeting_title']),
+                     ('privacy', '=',
+                      data_list[0]['meeting_privacy']),
+                     ('show_as', '=',
+                      data_list[0]['meeting_show_as']),
+                     ('start', '=',
+                      data_list[0]['meeting_start_date']),
+                     ('stop', '=', data_list[0]['meeting_end_date'])])
+                data_list[0]['corresponding_calendar_event'] = x.id
+                created_records.append(super(meeting_scheduler, self).create(data_list))
 
-        #frequency 2 is biweekly so add 14 days
+        # frequency 2 is biweekly so add 14 days
         elif meeting_frequency == '2':
 
             for x in range(meeting_repetitions):
                 data_list[0]['meeting_title'] = default_title + " #" + str(x + 1)
                 data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(default_start_date,
-                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14 * x))
+                                                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
+                    days=14 * x))
 
                 data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_start_date,
-                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14 * x))
+                                                                                  "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
+                    days=14 * x))
 
-                created_records.append(super(meeting_scheduler, self).create(data_list))
                 self.create_entry_to_calendar(data_list[0])
+                x = self.env['calendar.event'].search(
+                    [('name', '=', data_list[0]['meeting_title']),
+                     ('privacy', '=',
+                      data_list[0]['meeting_privacy']),
+                     ('show_as', '=',
+                      data_list[0]['meeting_show_as']),
+                     ('start', '=',
+                      data_list[0]['meeting_start_date']),
+                     ('stop', '=', data_list[0]['meeting_end_date'])])
+                data_list[0]['corresponding_calendar_event'] = x.id
+                created_records.append(super(meeting_scheduler, self).create(data_list))
 
-        #else create normal record
+        # else create normal record
         else:
-            created_records.append(super(meeting_scheduler, self).create(data_list))
-            self.create_entry_to_calendar(data_list[0])
 
-        #show the first meeting
+            self.create_entry_to_calendar(data_list[0])
+            x = self.env['calendar.event'].search(
+                [('name', '=', data_list[0]['meeting_title']),
+                 ('privacy', '=',
+                  data_list[0]['meeting_privacy']),
+                 ('show_as', '=',
+                  data_list[0]['meeting_show_as']),
+                 ('start', '=',
+                  data_list[0]['meeting_start_date']),
+                 ('stop', '=', data_list[0]['meeting_end_date'])])
+            data_list[0]['corresponding_calendar_event'] = x.id
+            created_records.append(super(meeting_scheduler, self).create(data_list))
+
+        # show the first meeting
         return created_records[0]
-        
 
     def write(self, vals):
         """
@@ -107,8 +146,8 @@ class meeting_scheduler(models.Model):
                                                               ('show_as', '=', record.meeting_show_as),
                                                               ('start', '=', record.meeting_start_date),
                                                               ('stop', '=', record.meeting_end_date)])
-            if(record_found.exists()):
-                if(vals.get('meeting_title')):
+            if (record_found.exists()):
+                if (vals.get('meeting_title')):
                     new_meeting_title = vals.get('meeting_title')
                 else:
                     new_meeting_title = record.meeting_title
@@ -143,7 +182,6 @@ class meeting_scheduler(models.Model):
                                        'stop': new_meeting_end_date})
         return super(meeting_scheduler, self).write(vals)
 
-
     @api.model
     def create_entry_to_calendar(self, vals):
         """
@@ -157,4 +195,15 @@ class meeting_scheduler(models.Model):
                                            'show_as': vals.get('meeting_show_as'),
                                            'start': vals.get('meeting_start_date'),
                                            'stop': vals.get('meeting_end_date')})
-        # self.env.cr.commit() #shows no effect when used or not used
+
+        # self.env.cr.commit() #shows no effect when used or not used$
+
+    # self.corresponding_calendar_event = self.env['calendar.event'].search([('name', '=', vals.get('meeting_title')),
+    #                                                                           ('privacy', '=',
+    #                                                                           vals.get('meeting_privacy')),
+    #                                                                         ('show_as', '=',
+    #                                                                           vals.get('meeting_show_as')),
+    #                                                                         ('start', '=',
+    #                                                                         vals.get('meeting_start_date')),
+    #                                                                       ('stop', '=', vals.get(
+    #                                                                          'meeting_end_date'))])
