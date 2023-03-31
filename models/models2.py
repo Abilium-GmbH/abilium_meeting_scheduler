@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+import pytz
+
 from odoo import models, fields, api
 from typing import List
 from datetime import datetime
+
 
 
 class group_scheduler(models.Model):
@@ -13,7 +16,7 @@ class group_scheduler(models.Model):
     meeting_group = fields.Char(string="Meeting Group", required=True)
     meeting_attendees = fields.Many2many('res.users', string="Attendees") #todo partners
 
-    # those variables need to apear in a search form
+    # TODO those variables need to apear in a search form
     # meeting_search_start_date = fields.Datetime(string="Search Start Date", required=True)
     # meeting_search_end_date = fields.Datetime(string="Search End Date", required=True)
 
@@ -51,21 +54,74 @@ class group_scheduler(models.Model):
         meeting_selected_list = list(dict.fromkeys(meeting_selected_list))
         meeting_start_end_list = []
         for x in meeting_selected_list:
-            meeting_start_end_list.append([x.start, x.stop])
+            meeting_start_end_list.append([x.id, x.start, x.stop, x.duration])
             # self.env['print_table'].create(
             #     {'show_stuff': str(x.name) + ', '
             #                    + str(x.start) + ', '
             #                    + str(x.stop) + ', '
             #                    + str(x.attendee_ids.partner_id)})
 
-        result = self.find_overlapping_timeslots(meeting_start_end_list)
+        # result = self.find_overlapping_timeslots(meeting_start_end_list)
         # timeslots = [[datetime(2023, 3, 29, 10, 0), datetime(2023, 3, 29, 12, 0)],
         #              [datetime(2023, 3, 29, 11, 0), datetime(2023, 3, 29, 13, 0)],
         #              [datetime(2023, 3, 29, 14, 0), datetime(2023, 3, 29, 15, 0)],
         #              ]
         # result = self.find_overlapping_timeslots(timeslots)
-        self.env['print_table'].create(
-            {'show_stuff': result})
+        meetings_sorted_abu = self.alg02(meeting_start_end_list)
+        self.env['print_table'].create({'show_stuff': meetings_sorted_abu})
+
+    def alg02(self, meetings):
+        import pytz
+        working_hours_start = datetime(year=2023, month=3, day=28, hour=4, minute=0,
+                                       second=0)  # TODO get from odoo and give to function
+        working_hours_start = self.convert_timezone(working_hours_start)
+        working_hours_end = datetime(year=2023, month=3, day=28, hour=17, minute=0,
+                                     second=0)  # TODO get from odoo and give to function
+        working_hours_end = self.convert_timezone(working_hours_end)
+        meetings_sorted_duration = sorted(meetings, key=lambda i: i[1])
+
+        free_meetings_list = [[working_hours_start, working_hours_end]]
+
+        for meeting in meetings_sorted_duration:
+            free_meetings_list_temp = free_meetings_list
+            for index_free, free_meeting in enumerate(free_meetings_list):
+                meeting_starttime = self.convert_timezone(meeting[1])
+                meeting_endtime = self.convert_timezone(meeting[2])
+                free_starttime = free_meeting[0]
+                free_endtime = free_meeting[1]
+
+                if (free_starttime <= meeting_starttime) \
+                        and (meeting_starttime <= free_endtime) \
+                        and (free_starttime <= meeting_endtime) \
+                        and (free_endtime <= meeting_endtime):
+                    # case 1, meeting starts before freetime ends
+                    free_meetings_list_temp[index_free][1] = meeting_starttime
+
+                elif (meeting_starttime <= free_starttime) \
+                        and (meeting_starttime <= free_endtime) \
+                        and (free_starttime <= meeting_endtime) \
+                        and (meeting_endtime <= free_endtime):
+                    # case 2, meeting ends after freetime starts
+                    free_meetings_list_temp[index_free][0] = meeting_endtime
+
+                elif (free_starttime < meeting_starttime)  \
+                        and (meeting_starttime < free_endtime) \
+                        and (free_starttime < meeting_endtime) \
+                        and (meeting_endtime < free_endtime):
+                    # case 3, meeting lies between free time
+                    free_meetings_list_temp[index_free][1] = meeting_starttime
+                    free_meetings_list_temp.append([meeting_endtime, free_endtime])
+
+                elif (meeting_starttime <= free_starttime) \
+                        and (meeting_starttime <= free_endtime) \
+                        and (free_starttime <= meeting_endtime) \
+                        and (free_endtime <= meeting_endtime):
+                    # case 4, freetime lies between meeting, delete
+                    free_meetings_list_temp.remove(index_free)
+
+            free_meetings_list = free_meetings_list_temp
+
+        return free_meetings_list
 
     def find_overlapping_timeslots(self, timeslots: List[List[datetime]]) -> List[List[datetime]]:
         """

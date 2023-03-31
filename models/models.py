@@ -28,7 +28,7 @@ class meeting_scheduler(models.Model):
 
     corresponding_calendar_event = fields.Many2one('calendar.event',
                                                    string="Corresponding Calendar Event",
-                                                   ondelete="cascade", )  # readonly="True")
+                                                   ondelete="cascade", readonly="True")
 
     # compute = lambda self: self._allocate_corresponding_field(
     #   self.meeting_title),
