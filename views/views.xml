@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
+<!--    <template id="jkdfjk" name="calendar assets" inherit_id="web.assets_backend">-->
+<!--        <t t-call="web.layout">-->
+<!--            -->
+<!--            -->
+<!--        </t>-->
+<!--    </template>-->
+
 
     <!-- menu actions -->
     <record id="view_action" model="ir.actions.act_window">
@@ -10,8 +17,43 @@
         <field name="view_mode">tree,kanban,form</field>
     </record>
 
-    <!-- explicit list view definition -->
     <data>
+        <!-- explicit form view definition -->
+        <record id="meeting_scheduler_form" model="ir.ui.view">
+            <field name="name">meeting_scheduler.form</field>
+            <field name="model">meeting_scheduler</field>
+            <field name="arch" type="xml">
+
+                <form>
+                    <header>
+                        <button name="%(view_action)d" type="action"
+                                string="Go back"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="meeting_title"/>
+                                <field name="meeting_location" />
+                                <field name="meeting_show_as"/>
+                                <field name="meeting_privacy"/>
+                              </group>
+                           <group>
+                               <field name="meeting_start_date" />
+                                <field name="meeting_end_date" />
+                                <field name="meeting_duration" />
+                                <field name="meeting_repetitions"/>
+                                <field name="meeting_frequency"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="meeting_subject"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- explicit list view definition -->
         <record model="ir.ui.view" id="meeting_scheduler_list">
             <field name="name">meeting_scheduler list</field>
             <field name="model">meeting_scheduler</field>
@@ -43,8 +85,29 @@
     </record>
 
 
-    <!-- explicit list view definition second item -->
+    <!-- explicit form view definition second item -->
     <data>
+        <record id="group_scheduler_form" model="ir.ui.view">
+            <field name="name">group_scheduler.form</field>
+            <field name="model">group_scheduler</field>
+            <field name="arch" type="xml">
+
+                <form>
+                    <header>
+                        <button name="%(group_action)d" type="action"
+                                string="Go back"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="meeting_group"/>
+                            <field name="meeting_attendees" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- explicit list view definition second item -->
         <record model="ir.ui.view" id="group_scheduler_list">
             <field name="name">group_scheduler list</field>
             <field name="model">group_scheduler</field>
@@ -68,6 +131,7 @@
             </field>
 
         </record>
+
     </data>
 
             <!-- third menu action-->
@@ -104,12 +168,12 @@
               groups="base.group_user"/>
 
     <!-- menu categories -->
-    <menuitem name="Calender"
+    <menuitem name="Appointment List"
               id="meeting-scheduler-calender"
               parent="meeting-scheduler-root"
               action="view_action"
               groups="base.group_user"/>
-    <menuitem name="User Menu"
+    <menuitem name="Group Calendar"
               id="meeting-scheduler-user-menu"
               parent="meeting-scheduler-root"
               action="group_action"
@@ -121,4 +185,3 @@
               groups="base.group_user"/>
 
 </odoo>
-
