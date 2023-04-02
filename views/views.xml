@@ -7,21 +7,75 @@
             <!--&lt;!&ndash;            <t t-call="web.external_layout">&ndash;&gt; gives a template structre which we maybe can use-->
             <html>
                 <head>
+                    <style>
+
+                        .timeslots{
+
+                        }
+                    </style>
                 </head>
                 <body>
-                    <t t-foreach="[1,2,3]" t-as="i">
-<!--                        use t-esc instead of t-out-->
-                        <h1 t-esc="i"/>
+                    <div class="welcomeText">
 
+                        <h1><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo" />
+                            <br></br>
+                            Welcome to the Abilium meeting scheduler</h1>
+                        You can select free timeslots, reserve them for a meeting request and submit your contact information.
+                    </div>
+<!--                    <t t-foreach="[1,2,3]" t-as="i">-->
+<!--&lt;!&ndash;                        use t-esc instead of t-out&ndash;&gt;-->
+<!--                        <h1 t-esc="i"/>-->
+<!--                    </t>-->
+<!--                    <p>hello</p>-->
+                    <div class="timeslots">
+                        <h2>Your contact information</h2>
+                        <form>
+                            <table>
+                                <tr>
+                                    <th><label for="firstname">First name:</label></th>
+                                    <th><label for="lastname">Last name:</label></th>
+                                    <th><label for="companyname">Company name:</label></th>
+                                    <th><label for="email">E-Mail address:</label></th>
+                                </tr>
+                                <tr>
+                                    <th><input type="text" id="firstname" name="firstname"/></th>
+                                    <th><input type="text" id="lastname" name="lastname"/></th>
+                                    <th><input type="text" id="companyname" name="companyname"/></th>
+                                    <th><input type="text" id="email" name="email"/></th>
+                                </tr>
 
-                    </t>
-                    <p>hello</p>
-                    <h1 t-esc="value[0].meeting_title"/>
-                    <t t-foreach="value" t-as="i">
-                        <br>
-                            <t t-esc="i[0].meeting_title"/>
-                        </br>
-                    </t>
+                            </table>
+                        </form>
+
+                    </div>
+                    <div class="timeslots">
+                        <style>
+                            table, th, td{border: 1px solid black;}
+                            tr:nth-child(even){background-color:#D6EEEE;}
+                        </style>
+
+                        <h2>Timeslot selector</h2>
+                        <table>
+                            <tr>
+                                <th>#</th>
+                                <th>Meeting title (TBremoved)</th>
+                                <th>Start date</th>
+                                <th>End date</th>
+                                <th>Available resources (TBD)</th>
+                                <th></th>
+                            </tr>
+                            <t t-foreach="value" t-as="i">
+                                <tr>
+                                    <th t-esc="i.id"/>
+                                    <th t-esc="i.meeting_title"/>
+                                    <th t-esc="i.meeting_start_date"/>
+                                    <th t-esc="i.meeting_end_date"/>
+                                    <th>(TBD)</th>
+                                    <th><button type="button">reserve this timeslot</button></th>
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
                 </body>
 
             </html>
