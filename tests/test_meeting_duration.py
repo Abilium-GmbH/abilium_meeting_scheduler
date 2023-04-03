@@ -11,9 +11,9 @@ class DurationTest(common.TransactionCase):
                                                           'meeting_repetitions': 1,
                                                           'meeting_frequency': '0',
                                                           'meeting_start_date':
-                                                              datetime.datetime.strptime("2023-03-29 15:00:00", "%Y-%m-%d %H:%M:%S"),
+                                                              datetime.datetime(2023, 3, 29, 15, 0, 0),
                                                           'meeting_end_date':
-                                                              datetime.datetime.strptime("2023-03-29 17:00:00", "%Y-%m-%d %H:%M:%S"),
+                                                              datetime.datetime(2023, 3, 29, 17, 0, 0),
                                                           'meeting_location': 'airport',
                                                           'meeting_subject': 'testing',
                                                           'meeting_privacy': 'public',
@@ -23,11 +23,9 @@ class DurationTest(common.TransactionCase):
                                                           'meeting_repetitions': 1,
                                                           'meeting_frequency': '0',
                                                           'meeting_start_date':
-                                                              datetime.datetime.strptime("2023-03-28 15:00:00",
-                                                                                         "%Y-%m-%d %H:%M:%S"),
+                                                              datetime.datetime(2023, 3, 28, 15, 0, 0),
                                                           'meeting_end_date':
-                                                              datetime.datetime.strptime("2023-03-29 15:00:00",
-                                                                                         "%Y-%m-%d %H:%M:%S"),
+                                                              datetime.datetime(2023, 3, 29, 15, 0, 0),
                                                           'meeting_location': 'airport',
                                                           'meeting_subject': 'testing',
                                                           'meeting_privacy': 'public',
@@ -38,28 +36,29 @@ class DurationTest(common.TransactionCase):
                                                           'meeting_repetitions': 1,
                                                           'meeting_frequency': '0',
                                                           'meeting_start_date':
-                                                              datetime.datetime.strptime("2023-03-29 15:00:00",
-                                                                                         "%Y-%m-%d %H:%M:%S"),
+                                                              datetime.datetime(2023, 3, 29, 15, 0, 0),
                                                           'meeting_end_date':
-                                                              datetime.datetime.strptime("2023-03-29 15:00:00",
-                                                                                         "%Y-%m-%d %H:%M:%S"),
+                                                              datetime.datetime(2023, 3, 29, 15, 0, 0),
                                                           'meeting_location': 'airport',
                                                           'meeting_subject': 'testing',
                                                           'meeting_privacy': 'public',
                                                           'meeting_show_as': 'busy'})
-        #get actual values of objcets
-        m1_actual_start_date = meeting_1.get_start_date()
-        m1_actual_end_date = meeting_1.get_end_date()
-        m1_actual_duration = meeting_1.get_duration()
+        #get actual values of objects
+        m1_actual_start_date = meeting_1.meeting_start_date
+        m1_actual_end_date = meeting_1.meeting_end_date
+        m1_actual_duration = meeting_1.meeting_duration
 
-        m2_actual_start_date = meeting_2.get_start_date()
-        m2_actual_end_date = meeting_2.get_end_date()
-        m2_actual_duration = meeting_2.get_duration()
+        m2_actual_start_date = meeting_2.meeting_start_date
+        m2_actual_end_date = meeting_2.meeting_end_date
+        m2_actual_duration = meeting_2.meeting_duration
 
-        m3_actual_start_date = meeting_3.get_start_date()
-        m3_actual_end_date = meeting_3.get_end_date()
-        m3_actual_duration = meeting_3.get_duration()
+        m3_actual_start_date = meeting_3.meeting_start_date
+        m3_actual_end_date = meeting_3.meeting_end_date
+        m3_actual_duration = meeting_3.meeting_duration
 
+
+        #check that there are meetings
+        self.assertTrue(self.env['meeting_scheduler'].search([]))
 
         #check if duration was calculated correctly
 
