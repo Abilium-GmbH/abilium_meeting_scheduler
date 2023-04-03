@@ -18,16 +18,16 @@ class DummyTest(common.TransactionCase):
                                                           'meeting_privacy': 'public',
                                                           'meeting_show_as': 'busy'})
         #get actual values of meeting_1
-        actual_title = meeting_1.get_title()
-        actual_repetitions = meeting_1.get_repetitions()
-        actual_frequency = meeting_1.get_frequency()
-        actual_start_date = meeting_1.get_start_date()
-        actual_end_date = meeting_1.get_end_date()
-        actual_duration = meeting_1.get_duration()
-        actual_location = meeting_1.get_location()
-        actual_subject = meeting_1.get_subject()
-        actual_privacy = meeting_1.get_privacy()
-        actual_show_as = meeting_1.get_show_as()
+        actual_title = meeting_1.meeting_title
+        actual_repetitions = meeting_1.meeting_repetitions
+        actual_frequency = meeting_1.meeting_frequency
+        actual_start_date = meeting_1.meeting_start_date
+        actual_end_date = meeting_1.meeting_end_date
+        actual_duration = meeting_1.meeting_duration
+        actual_location = meeting_1.meeting_location
+        actual_subject = meeting_1.meeting_subject
+        actual_privacy = meeting_1.meeting_privacy
+        actual_show_as = meeting_1.meeting_show_as
 
         #check if meeting_1 was created correctly
         self.assertEqual("test meeting", actual_title)
