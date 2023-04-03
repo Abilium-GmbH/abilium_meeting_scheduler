@@ -10,8 +10,9 @@ class MeetingScheduler(http.Controller):
 
     @route('/meeting_scheduler/guest_view/', auth='public', website=True)
     def index(self, **kw):
-        records = request.env['meeting_scheduler'].sudo().search([])
-        request.env['print_table'].create({'show_stuff': records})
+        records = request.env['timeslots'].sudo().search([])
+        # records = request.env['meeting_scheduler'].sudo().search([])
+        # request.env['print_table'].create({'show_stuff': records})
         response = request.render("meeting_scheduler.guest_view_loop", {'value': records})
         return response
 

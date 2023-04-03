@@ -24,7 +24,7 @@ class meeting_scheduler(models.Model):
                                         ('confidential', 'Only internal users')],
                                        'Privacy', default='public', required=True)
     meeting_show_as = fields.Selection([('free', 'Free'),
-                                        ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
+                                        ('busy', 'Busy')], 'Show Time as', default='free', required=True)
 
     corresponding_calendar_event = fields.Many2one('calendar.event',
                                                    string="Corresponding Calendar Event",

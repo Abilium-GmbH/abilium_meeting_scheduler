@@ -69,6 +69,9 @@ class group_scheduler(models.Model):
         # result = self.find_overlapping_timeslots(timeslots)
         meetings_sorted_abu = self.alg02(meeting_start_end_list)
         self.env['print_table'].create({'show_stuff': meetings_sorted_abu})
+        for i in meetings_sorted_abu:
+            self.env['timeslots'].create({'timeslots_start_date': i[0],
+                                          'timeslots_end_date': i[1]})
 
     def alg02(self, meetings):
         import pytz

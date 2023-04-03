@@ -27,7 +27,7 @@
 <!--                        <h1 t-esc="i"/>-->
 <!--                    </t>-->
 <!--                    <p>hello</p>-->
-                    <div class="timeslots">
+                    <div class="contactinfos">
                         <h2>Your contact information</h2>
                         <form>
                             <table>
@@ -58,7 +58,7 @@
                         <table>
                             <tr>
                                 <th>#</th>
-                                <th>Meeting title (TBremoved)</th>
+<!--                                <th>Meeting title (TBremoved)</th>-->
                                 <th>Start date</th>
                                 <th>End date</th>
                                 <th>Available resources (TBD)</th>
@@ -67,11 +67,14 @@
                             <t t-foreach="value" t-as="i">
                                 <tr>
                                     <th t-esc="i.id"/>
-                                    <th t-esc="i.meeting_title"/>
-                                    <th t-esc="i.meeting_start_date"/>
-                                    <th t-esc="i.meeting_end_date"/>
+                                    <th t-esc="i.timeslots_start_date"/>
+                                    <th t-esc="i.timeslots_end_date"/>
+<!--                                    <th t-esc="i.meeting_title"/>-->
+<!--                                    <th t-esc="i.meeting_start_date"/>-->
+<!--                                    <th t-esc="i.meeting_end_date"/>-->
                                     <th>(TBD)</th>
-                                    <th><button type="button">reserve this timeslot</button></th>
+<!--                                    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
+                                    <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>
                                 </tr>
                             </t>
                         </table>
@@ -233,6 +236,39 @@
         </record>
     </data>
 
+            <!-- fourth menu action-->
+    <record id="timeslots_action" model="ir.actions.act_window">
+        <field name="name">Timeslots</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">timeslots</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+        <!-- explicit list view definition second item -->
+    <data>
+        <record model="ir.ui.view" id="timeslot_list">
+            <field name="name">Timeslot list</field>
+            <field name="model">timeslots</field>
+            <field name="arch" type="xml">
+
+                <tree>
+                    <field name="timeslots_start_date"/>
+                    <field name="timeslots_end_date"/>
+                </tree>
+
+            </field>
+
+        </record>
+    </data>
+
+    <data>
+        <record id="link_to_guest_view" model="ir.actions.act_url">
+            <field name="name">Guest View</field>
+            <field name="type">ir.actions.act_url</field>
+            <field name="target">self</field>
+            <field name="url">http://localhost:8069/meeting_scheduler/guest_view/</field>
+        </record>
+    </data>
+
 
 
 
@@ -243,15 +279,25 @@
               groups="base.group_user"/>
 
     <!-- menu categories -->
-    <menuitem name="Appointment List"
+    <menuitem name="1. Define Meeting Times"
               id="meeting-scheduler-calender"
               parent="meeting-scheduler-root"
               action="view_action"
               groups="base.group_user"/>
-    <menuitem name="Group Calendar"
+    <menuitem name="2. Select Groups"
               id="meeting-scheduler-user-menu"
               parent="meeting-scheduler-root"
               action="group_action"
+              groups="base.group_user"/>
+    <menuitem name="3. Bookable Timeslots"
+              id="meeting-scheduler-timeslots"
+              parent="meeting-scheduler-root"
+              action="timeslots_action"
+              groups="base.group_user"/>
+    <menuitem name="4. Guest View"
+              id="meeting-scheduler-guest_view"
+              parent="meeting-scheduler-root"
+              action="link_to_guest_view"
               groups="base.group_user"/>
     <menuitem name="Printed Stuff"
               id="meeting-scheduler-stuff-printer"

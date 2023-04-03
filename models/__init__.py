@@ -3,3 +3,4 @@
 from . import models
 from . import models2
 from . import models3
+from . import timeslots
