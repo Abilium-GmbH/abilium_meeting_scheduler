@@ -48,6 +48,7 @@ class meeting_scheduler(models.Model):
         meeting_frequency = data_list[0]['meeting_frequency']
         default_title = data_list[0]['meeting_title']
         default_start_date = data_list[0]['meeting_start_date']
+        default_end_date = data_list[0]['meeting_end_date']
 
         #frequency 1 is weekly so add 7 days
         if meeting_frequency == '1':
@@ -59,7 +60,7 @@ class meeting_scheduler(models.Model):
                 data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(default_start_date,
                                                     "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7 * x))
 
-                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_start_date,
+                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_end_date,
                                                     "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7 * x))
 
                 created_records.append(super(meeting_scheduler, self).create(data_list))
@@ -73,7 +74,7 @@ class meeting_scheduler(models.Model):
                 data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(default_start_date,
                                                     "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14 * x))
 
-                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_start_date,
+                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_end_date,
                                                     "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14 * x))
 
                 created_records.append(super(meeting_scheduler, self).create(data_list))
