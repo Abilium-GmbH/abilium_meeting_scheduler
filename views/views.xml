@@ -38,10 +38,15 @@
                                     <th><label for="email">E-Mail address:</label></th>
                                 </tr>
                                 <tr>
+                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
                                     <th><input type="text" id="firstname" name="firstname"/></th>
                                     <th><input type="text" id="lastname" name="lastname"/></th>
                                     <th><input type="text" id="companyname" name="companyname"/></th>
                                     <th><input type="text" id="email" name="email"/></th>
+                                    <input type="submit" t-att-value="Submit"/>
+                                        <button type="submit" class="btn btn-primary mt8" onclick="window.location.href='www.sbb.ch';">Post</button>
+                                    </form>
+
                                 </tr>
 
                             </table>
