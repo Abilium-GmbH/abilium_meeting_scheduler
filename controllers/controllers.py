@@ -14,9 +14,22 @@ class MeetingScheduler(http.Controller):
         # records = request.env['meeting_scheduler'].sudo().search([])
         # request.env['print_table'].create({'show_stuff': records})
         response = request.render("meeting_scheduler.guest_view_loop", {'value': records})
+        inputs = []
         if((kw.get('firstname') is not None) and (kw.get('firstname') != '')):
-            firstname = kw.get('firstname')  # Get the value of the 'my_input' parameter
-            request.env['print_table'].create({'show_stuff': firstname})
+            # request.env['print_table'].create({'show_stuff': firstname})
+            inputs.append(kw.get('firstname'))
+        if((kw.get('lastname') is not None) and (kw.get('lastname') != '')):
+            inputs.append(kw.get('lastname'))
+        if((kw.get('companyname') is not None) and (kw.get('companyname') != '')):
+            inputs.append(kw.get('companyname'))
+        if((kw.get('email') is not None) and (kw.get('email') != '')):
+            inputs.append(kw.get('email'))
+        if(len(inputs) == 4):
+            request.env['timeslots_reserved'].create({'firstname': inputs[0],
+                                                      'lastname': inputs[1],
+                                                      'companyname': inputs[2],
+                                                      'email': inputs[3]})
+
         return response
 
     @http.route('/meeting_scheduler/meeting_scheduler/objects/', auth='public')

@@ -68,10 +68,24 @@ class group_scheduler(models.Model):
         #              ]
         # result = self.find_overlapping_timeslots(timeslots)
         meetings_sorted_abu = self.alg02(meeting_start_end_list)
-        self.env['print_table'].create({'show_stuff': meetings_sorted_abu})
-        for i in meetings_sorted_abu:
+        timeslots_bookable_h = self.calc_bookable_hours(meetings_sorted_abu)
+        self.env['print_table'].create({'show_stuff': timeslots_bookable_h})
+        for i in timeslots_bookable_h:
             self.env['timeslots'].create({'timeslots_start_date': i[0],
-                                          'timeslots_end_date': i[1]})
+                                          'timeslots_end_date': i[1],
+                                          'timeslots_bookable_hours': i[2]})
+    def calc_bookable_hours(self, timeslots):
+        import math
+        output_timeslots = []
+        for timeslot in timeslots:
+            duration = timeslot[1] - timeslot[0]
+            duration = math.floor(duration.total_seconds() / 3600)
+            bookable_hours = []
+            for i in range(timeslot[0].hour, timeslot[0].hour+duration+1):
+                bookable_hours.append(i)
+
+            output_timeslots.append([timeslot[0], timeslot[1], bookable_hours])
+        return output_timeslots
 
     def alg02(self, meetings):
         import pytz
@@ -152,6 +166,10 @@ class group_scheduler(models.Model):
     def convert_timezone(self, input_datetime: datetime) -> datetime:
         import pytz
         user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+        # output_datetime = pytz.utc.localize(input_datetime).astimezone(user_timezone)
         output_datetime = pytz.utc.localize(input_datetime).astimezone(user_timezone)
+        output_datetime = output_datetime.replace(tzinfo=None) #removes the +2:00 from utc
+        self.env['print_table'].create({'show_stuff': pytz.utc.localize(output_datetime)})
+
         return output_datetime
 

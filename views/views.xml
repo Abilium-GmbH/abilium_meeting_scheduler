@@ -39,12 +39,37 @@
                                 </tr>
                                 <tr>
                                     <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
-                                    <th><input type="text" id="firstname" name="firstname"/></th>
-                                    <th><input type="text" id="lastname" name="lastname"/></th>
-                                    <th><input type="text" id="companyname" name="companyname"/></th>
-                                    <th><input type="text" id="email" name="email"/></th>
-                                    <input type="submit" t-att-value="Submit"/>
-                                        <button type="submit" class="btn btn-primary mt8" onclick="window.location.href='www.sbb.ch';">Post</button>
+                                        <th>
+                                            <input type="text" id="firstname" name="firstname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="lastname" name="lastname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="companyname" name="companyname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="email" name="email"/>
+                                        </th>
+                                        <label for="cars">Choose a car:</label>
+                                        <select id="cars" name="cars">
+                                            <t t-foreach="[10,12]" t-as="hour">
+                                                <option t-attf-value="hour">
+                                                    <t t-esc="hour"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                        <select id="selected_min" name="selected_min">
+                                            <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
+                                                <option t-attf-value="t_min">
+                                                    <t t-esc="t_min"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                        <input type="submit" t-att-value="Submit"/>
+                                        <button type="submit" class="btn btn-primary mt8"
+                                                onclick="window.location.href='www.sbb.ch';">Post
+                                        </button>
                                     </form>
 
                                 </tr>
@@ -77,7 +102,16 @@
 <!--                                    <th t-esc="i.meeting_title"/>-->
 <!--                                    <th t-esc="i.meeting_start_date"/>-->
 <!--                                    <th t-esc="i.meeting_end_date"/>-->
-                                    <th>(TBD)</th>
+                                    <th>
+<!--                                        (TBD)<th t-esc="i.timeslots_bookable_hours"/>-->
+                                    <select id="homo" name="sapiens">
+                                            <t t-foreach="i.timeslots_bookable_hours" t-as="hour">
+                                                <option t-att-value="hour">
+                                                    <t t-esc="hour"/>
+                                                </option>
+                                            </t>
+                                    </select>
+                                    </th>
 <!--                                    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
                                     <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>
                                 </tr>
@@ -116,7 +150,7 @@
                         <group>
                             <group>
                                 <field name="meeting_title"/>
-                                <field name="meeting_location" />
+                                <field name="meeting_location"/>
                                 <field name="meeting_show_as"/>
                                 <field name="meeting_privacy"/>
                               </group>
@@ -265,6 +299,34 @@
         </record>
     </data>
 
+            <!-- fifth menu action-->
+    <record id="timeslots_reserved_action" model="ir.actions.act_window">
+        <field name="name">Reserved Timeslots</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">timeslots_reserved</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+        <!-- explicit list view definition second item -->
+    <data>
+        <record model="ir.ui.view" id="timeslot_reserved_list">
+            <field name="name">Timeslot list</field>
+            <field name="model">timeslots_reserved</field>
+            <field name="arch" type="xml">
+
+                <tree>
+                    <field name="meeting_title"/>
+                    <field name="lastname"/>
+                    <field name="companyname"/>
+                    <field name="email"/>
+                    <field name="timeslots_start_date"/>
+                    <field name="timeslots_end_date"/>
+                </tree>
+
+            </field>
+
+        </record>
+    </data>
+
     <data>
         <record id="link_to_guest_view" model="ir.actions.act_url">
             <field name="name">Guest View</field>
@@ -309,5 +371,11 @@
               parent="meeting-scheduler-root"
               action="stuff_action"
               groups="base.group_user"/>
+    <menuitem name="Reserved Timeslots"
+              id="meeting-scheduler-timeslots-reserved"
+              parent="meeting-scheduler-root"
+              action="timeslots_reserved_action"
+              groups="base.group_user"/>
+
 
 </odoo>
