@@ -80,10 +80,10 @@ class group_scheduler(models.Model):
         for timeslot in timeslots:
             duration = timeslot[1] - timeslot[0]
             duration = math.floor(duration.total_seconds() / 3600)
-            bookable_hours = []
+            bookable_hours = ""
             for i in range(timeslot[0].hour, timeslot[0].hour+duration+1):
-                bookable_hours.append(i)
-
+                bookable_hours += " " + str(i) # the list has to be treated as a string,
+                # # so that the t-foreach from the qweb template can interpret it as a list
             output_timeslots.append([timeslot[0], timeslot[1], bookable_hours])
         return output_timeslots
 

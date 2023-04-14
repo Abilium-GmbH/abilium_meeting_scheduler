@@ -51,29 +51,13 @@
                                         <th>
                                             <input type="text" id="email" name="email"/>
                                         </th>
-                                        <label for="cars">Choose a car:</label>
-                                        <select id="cars" name="cars">
-                                            <t t-foreach="[10,12]" t-as="hour">
-                                                <option t-attf-value="hour">
-                                                    <t t-esc="hour"/>
-                                                </option>
-                                            </t>
-                                        </select>
-                                        <select id="selected_min" name="selected_min">
-                                            <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
-                                                <option t-attf-value="t_min">
-                                                    <t t-esc="t_min"/>
-                                                </option>
-                                            </t>
-                                        </select>
+
                                         <input type="submit" t-att-value="Submit"/>
-                                        <button type="submit" class="btn btn-primary mt8"
-                                                onclick="window.location.href='www.sbb.ch';">Post
-                                        </button>
+<!--                                        <button type="submit" class="btn btn-primary mt8"-->
+<!--                                                onclick="window.location.href='www.sbb.ch';">Post-->
+<!--                                        </button>-->
                                     </form>
-
                                 </tr>
-
                             </table>
                         </form>
 
@@ -85,38 +69,70 @@
                         </style>
 
                         <h2>Timeslot selector</h2>
+
                         <table>
                             <tr>
                                 <th>#</th>
-<!--                                <th>Meeting title (TBremoved)</th>-->
+                                <!--                                <th>Meeting title (TBremoved)</th>-->
                                 <th>Start date</th>
                                 <th>End date</th>
-                                <th>Available resources (TBD)</th>
+                                <th>Your start time</th>
+                                <th>Your end time</th>
                                 <th></th>
                             </tr>
                             <t t-foreach="value" t-as="i">
                                 <tr>
-                                    <th t-esc="i.id"/>
-                                    <th t-esc="i.timeslots_start_date"/>
-                                    <th t-esc="i.timeslots_end_date"/>
-<!--                                    <th t-esc="i.meeting_title"/>-->
-<!--                                    <th t-esc="i.meeting_start_date"/>-->
-<!--                                    <th t-esc="i.meeting_end_date"/>-->
-                                    <th>
-<!--                                        (TBD)<th t-esc="i.timeslots_bookable_hours"/>-->
-                                    <select id="homo" name="sapiens">
-                                            <t t-foreach="i.timeslots_bookable_hours" t-as="hour">
-                                                <option t-att-value="hour">
-                                                    <t t-esc="hour"/>
-                                                </option>
-                                            </t>
-                                    </select>
-                                    </th>
-<!--                                    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
-                                    <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>
+                                    <form>
+                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
+                                        <th t-esc="i.id"/>
+                                        <th t-esc="i.timeslots_start_date"/>
+                                        <th t-esc="i.timeslots_end_date"/>
+                                        <th>
+                                            <select id="sel_start_h" name="sel_start_h">
+                                                <!--split separates the string on the whitespaces and list treats it as a list-->
+                                                <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
+                                                    <option t-att-value="item">
+                                                        <t t-esc="item"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <select id="sel_start_min" name="sel_start_min">
+                                                <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
+                                                    <option t-att-value="t_min">
+                                                        <t t-esc="t_min"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </th>
+                                        <th>
+                                            <select id="sel_end_h" name="sel_end_h">
+                                                <!--split separates the string on the whitespaces and list treats it as a list-->
+                                                <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
+                                                    <option t-att-value="item">
+                                                        <t t-esc="item"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <select id="sel_end_min" name="sel_end_min">
+                                                <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
+                                                    <option t-att-value="t_min">
+                                                        <t t-esc="t_min"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+
+                                        </th>
+                                        <!--    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
+                                        <!--    <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>-->
+                                        <th>
+                                            <input type="submit" t-att-value="Submit"/>
+                                        </th>
+                                    </form>
+                                    </form>
                                 </tr>
                             </t>
                         </table>
+
                     </div>
                 </body>
 
@@ -315,6 +331,7 @@
 
                 <tree>
                     <field name="meeting_title"/>
+                    <field name="firstname"/>
                     <field name="lastname"/>
                     <field name="companyname"/>
                     <field name="email"/>

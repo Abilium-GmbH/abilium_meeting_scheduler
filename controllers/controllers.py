@@ -24,12 +24,22 @@ class MeetingScheduler(http.Controller):
             inputs.append(kw.get('companyname'))
         if((kw.get('email') is not None) and (kw.get('email') != '')):
             inputs.append(kw.get('email'))
+        if((kw.get('sel_start_h') is not None) and (kw.get('sel_start_h') != '')
+            and (kw.get('sel_start_min') is not None) and (kw.get('sel_start_min') != '')
+            and (kw.get('sel_end_h') is not None) and (kw.get('sel_end_h') != '')
+            and (kw.get('sel_end_min') is not None) and (kw.get('sel_end_min') != '')):
+            temp = kw.get('sel_start_h') + kw.get('sel_start_min');
+            inputs.append(temp)
+            temp = kw.get('sel_end_h') + kw.get('sel_end_min');
+            inputs.append(temp)
         if(len(inputs) == 4):
             request.env['timeslots_reserved'].create({'firstname': inputs[0],
                                                       'lastname': inputs[1],
                                                       'companyname': inputs[2],
                                                       'email': inputs[3]})
-
+        if(len(inputs) == 2):
+            request.env['timeslots_reserved'].create({'timeslots_start_date': inputs[0],
+                                                      'timeslots_end_date': inputs[1]})
         return response
 
     @http.route('/meeting_scheduler/meeting_scheduler/objects/', auth='public')
