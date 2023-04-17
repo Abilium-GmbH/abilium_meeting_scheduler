@@ -78,6 +78,17 @@
                                 <th>End date</th>
                                 <th>Your start time</th>
                                 <th>Your end time</th>
+                                <th><label for="firstname">First name:</label></th>
+                                <th>
+                                    <label for="lastname">Last name:</label>
+                                </th>
+                                <th>
+                                    <label for="companyname">Company name:</label>
+                                </th>
+                                <th>
+                                    <label for="email">E-Mail address:</label>
+                                </th>
+
                                 <th></th>
                             </tr>
                             <t t-foreach="value" t-as="i">
@@ -124,6 +135,20 @@
                                         </th>
                                         <!--    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
                                         <!--    <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>-->
+                                        <th>
+                                            <input type="text" id="firstname" name="firstname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="lastname" name="lastname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="companyname" name="companyname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="email" name="email"/>
+                                        </th>
+
+
                                         <th>
                                             <input type="submit" t-att-value="Submit"/>
                                         </th>

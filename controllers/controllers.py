@@ -14,32 +14,32 @@ class MeetingScheduler(http.Controller):
         # records = request.env['meeting_scheduler'].sudo().search([])
         # request.env['print_table'].create({'show_stuff': records})
         response = request.render("meeting_scheduler.guest_view_loop", {'value': records})
-        inputs = []
+        inputs_contact = []
+        inputs_meeting = []
         if((kw.get('firstname') is not None) and (kw.get('firstname') != '')):
             # request.env['print_table'].create({'show_stuff': firstname})
-            inputs.append(kw.get('firstname'))
+            inputs_contact.append(kw.get('firstname'))
         if((kw.get('lastname') is not None) and (kw.get('lastname') != '')):
-            inputs.append(kw.get('lastname'))
+            inputs_contact.append(kw.get('lastname'))
         if((kw.get('companyname') is not None) and (kw.get('companyname') != '')):
-            inputs.append(kw.get('companyname'))
+            inputs_contact.append(kw.get('companyname'))
         if((kw.get('email') is not None) and (kw.get('email') != '')):
-            inputs.append(kw.get('email'))
+            inputs_contact.append(kw.get('email'))
         if((kw.get('sel_start_h') is not None) and (kw.get('sel_start_h') != '')
             and (kw.get('sel_start_min') is not None) and (kw.get('sel_start_min') != '')
             and (kw.get('sel_end_h') is not None) and (kw.get('sel_end_h') != '')
             and (kw.get('sel_end_min') is not None) and (kw.get('sel_end_min') != '')):
             temp = kw.get('sel_start_h') + kw.get('sel_start_min');
-            inputs.append(temp)
+            inputs_meeting.append(temp)
             temp = kw.get('sel_end_h') + kw.get('sel_end_min');
-            inputs.append(temp)
-        if(len(inputs) == 4):
-            request.env['timeslots_reserved'].create({'firstname': inputs[0],
-                                                      'lastname': inputs[1],
-                                                      'companyname': inputs[2],
-                                                      'email': inputs[3]})
-        if(len(inputs) == 2):
-            request.env['timeslots_reserved'].create({'timeslots_start_date': inputs[0],
-                                                      'timeslots_end_date': inputs[1]})
+            inputs_meeting.append(temp)
+        if(len(inputs_contact) == 4) and (len(inputs_meeting) == 2):
+            request.env['timeslots_reserved'].create({'firstname': inputs_contact[0],
+                                                      'lastname': inputs_contact[1],
+                                                      'companyname': inputs_contact[2],
+                                                      'email': inputs_contact[3],
+                                                      'timeslots_start_date': inputs_meeting[0],
+                                                      'timeslots_end_date': inputs_meeting[1]})
         return response
 
     @http.route('/meeting_scheduler/meeting_scheduler/objects/', auth='public')
