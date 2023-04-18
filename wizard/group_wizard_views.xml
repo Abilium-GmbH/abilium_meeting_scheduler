@@ -25,9 +25,11 @@
 
                             </group>
                             <notebook>
-                                <!--                                <page string="Description">-->
-                                <!--                                    <field name="description"/>-->
-                                <!--                                </page>-->
+                                <page string="Description">
+                                    <!--                                    <field name="description"/>-->
+
+
+                                </page>
                             </notebook>
                         </group>
                     </sheet>

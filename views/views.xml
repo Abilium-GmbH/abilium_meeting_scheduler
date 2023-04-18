@@ -27,41 +27,41 @@
 <!--                        <h1 t-esc="i"/>-->
 <!--                    </t>-->
 <!--                    <p>hello</p>-->
-                    <div class="contactinfos">
-                        <h2>Your contact information</h2>
-                        <form>
-                            <table>
-                                <tr>
-                                    <th><label for="firstname">First name:</label></th>
-                                    <th><label for="lastname">Last name:</label></th>
-                                    <th><label for="companyname">Company name:</label></th>
-                                    <th><label for="email">E-Mail address:</label></th>
-                                </tr>
-                                <tr>
-                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
-                                        <th>
-                                            <input type="text" id="firstname" name="firstname"/>
-                                        </th>
-                                        <th>
-                                            <input type="text" id="lastname" name="lastname"/>
-                                        </th>
-                                        <th>
-                                            <input type="text" id="companyname" name="companyname"/>
-                                        </th>
-                                        <th>
-                                            <input type="text" id="email" name="email"/>
-                                        </th>
+<!--                    <div class="contactinfos">-->
+<!--                        <h2>Your contact information</h2>-->
+<!--                        <form>-->
+<!--                            <table>-->
+<!--                                <tr>-->
+<!--                                    <th><label for="firstname">First name:</label></th>-->
+<!--                                    <th><label for="lastname">Last name:</label></th>-->
+<!--                                    <th><label for="companyname">Company name:</label></th>-->
+<!--                                    <th><label for="email">E-Mail address:</label></th>-->
+<!--                                </tr>-->
+<!--                                <tr>-->
+<!--                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">-->
+<!--                                        <th>-->
+<!--                                            <input type="text" id="firstname" name="firstname"/>-->
+<!--                                        </th>-->
+<!--                                        <th>-->
+<!--                                            <input type="text" id="lastname" name="lastname"/>-->
+<!--                                        </th>-->
+<!--                                        <th>-->
+<!--                                            <input type="text" id="companyname" name="companyname"/>-->
+<!--                                        </th>-->
+<!--                                        <th>-->
+<!--                                            <input type="text" id="email" name="email"/>-->
+<!--                                        </th>-->
 
-                                        <input type="submit" t-att-value="Submit"/>
-<!--                                        <button type="submit" class="btn btn-primary mt8"-->
-<!--                                                onclick="window.location.href='www.sbb.ch';">Post-->
-<!--                                        </button>-->
-                                    </form>
-                                </tr>
-                            </table>
-                        </form>
+<!--                                        <input type="submit" t-att-value="Submit"/>-->
+<!--&lt;!&ndash;                                        <button type="submit" class="btn btn-primary mt8"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                onclick="window.location.href='www.sbb.ch';">Post&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </button>&ndash;&gt;-->
+<!--                                    </form>-->
+<!--                                </tr>-->
+<!--                            </table>-->
+<!--                        </form>-->
 
-                    </div>
+<!--                    </div>-->
                     <div class="timeslots">
                         <style>
                             table, th, td{border: 1px solid black;}
@@ -414,16 +414,17 @@
               parent="meeting-scheduler-root"
               action="link_to_guest_view"
               groups="base.group_user"/>
+    <menuitem name="5. Reserved Timeslots"
+              id="meeting-scheduler-timeslots-reserved"
+              parent="meeting-scheduler-root"
+              action="timeslots_reserved_action"
+              groups="base.group_user"/>
     <menuitem name="Printed Stuff"
               id="meeting-scheduler-stuff-printer"
               parent="meeting-scheduler-root"
               action="stuff_action"
               groups="base.group_user"/>
-    <menuitem name="Reserved Timeslots"
-              id="meeting-scheduler-timeslots-reserved"
-              parent="meeting-scheduler-root"
-              action="timeslots_reserved_action"
-              groups="base.group_user"/>
+
 
 
 </odoo>
