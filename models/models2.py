@@ -87,6 +87,29 @@ class group_scheduler(models.Model):
             output_timeslots.append([timeslot[0], timeslot[1], bookable_hours])
         return output_timeslots
 
+
+
+    # def open_time_form(self, cr, uid, ids, context=None):
+    def open_time_form(self):
+
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'group_wizard',  # name of respective model,
+            # 'views': [('group_scheduler_timeform', 'form')],  # view id and type
+            'view_id': self.env.ref('meeting_scheduler.group_scheduler_timeform').id,  # view id
+            'target': 'new',
+            # 'context': context,
+        }
+
+
+
+    def alg01(self, meetings):
+        return True
+
+
+
     def alg02(self, meetings):
         import pytz
         working_hours_start = datetime(year=2023, month=3, day=28, hour=4, minute=0,

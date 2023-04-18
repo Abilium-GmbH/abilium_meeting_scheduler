@@ -265,6 +265,8 @@
             </field>
         </record>
 
+
+
         <!-- explicit list view definition second item -->
         <record model="ir.ui.view" id="group_scheduler_list">
             <field name="name">group_scheduler list</field>
@@ -280,6 +282,10 @@
 
                         <button name="%(view_action)d" type="action"
                                 string="Go back to Calendar view" class="btn-primary"/>
+
+                        <button name="open_time_form" string="Continue with selection"
+                             class="btn-primary" type="object"/>
+<!--                        <button name="action_from_view" string="Open View" type="object"/>-->
 
                     </header>
                     <field name="meeting_group"/>
