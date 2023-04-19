@@ -186,6 +186,8 @@ class group_scheduler(models.Model):
         Given a list of timeslots represented as a list of start and end times,
         returns a list of overlapping timeslots.
         """
+
+        #otuput_overlaps = None
         overlaps = []
         for i in range(len(timeslots)):
             for j in range(i + 1, len(timeslots)):
@@ -212,8 +214,19 @@ class group_scheduler(models.Model):
         # self.env['print_table'].create({'show_stuff': pytz.utc.localize(output_datetime)})
 
         # suggested solution
-        # user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
-        # output_datetime = input_datetime.astimezone(user_timezone)
+        """
+        First we get the users timezone for some comparisons:
+            1. If the tz of the input_datetime is None then dont convert anything
+            2. Otherwise convert from old tz to new tz
+        
+        user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+
+        if input_datetime.tzname() is None:
+            output_datetime = input_datetime
+
+        else:
+            output_datetime = input_datetime.astimezone(user_timezone)
+            """
 
         return output_datetime
 
