@@ -153,5 +153,10 @@ class group_scheduler(models.Model):
         import pytz
         user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
         output_datetime = pytz.utc.localize(input_datetime).astimezone(user_timezone)
+
+        #suggestsed solution
+        #user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+        #output_datetime = input_datetime.astimezone(user_timezone)
+
         return output_datetime
 
