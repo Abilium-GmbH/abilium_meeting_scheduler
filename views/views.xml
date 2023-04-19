@@ -27,32 +27,41 @@
 <!--                        <h1 t-esc="i"/>-->
 <!--                    </t>-->
 <!--                    <p>hello</p>-->
-                    <div class="contactinfos">
-                        <h2>Your contact information</h2>
-                        <form>
-                            <table>
-                                <tr>
-                                    <th><label for="firstname">First name:</label></th>
-                                    <th><label for="lastname">Last name:</label></th>
-                                    <th><label for="companyname">Company name:</label></th>
-                                    <th><label for="email">E-Mail address:</label></th>
-                                </tr>
-                                <tr>
-                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
-                                    <th><input type="text" id="firstname" name="firstname"/></th>
-                                    <th><input type="text" id="lastname" name="lastname"/></th>
-                                    <th><input type="text" id="companyname" name="companyname"/></th>
-                                    <th><input type="text" id="email" name="email"/></th>
-                                    <input type="submit" t-att-value="Submit"/>
-                                        <button type="submit" class="btn btn-primary mt8" onclick="window.location.href='www.sbb.ch';">Post</button>
-                                    </form>
+<!--                    <div class="contactinfos">-->
+<!--                        <h2>Your contact information</h2>-->
+<!--                        <form>-->
+<!--                            <table>-->
+<!--                                <tr>-->
+<!--                                    <th><label for="firstname">First name:</label></th>-->
+<!--                                    <th><label for="lastname">Last name:</label></th>-->
+<!--                                    <th><label for="companyname">Company name:</label></th>-->
+<!--                                    <th><label for="email">E-Mail address:</label></th>-->
+<!--                                </tr>-->
+<!--                                <tr>-->
+<!--                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">-->
+<!--                                        <th>-->
+<!--                                            <input type="text" id="firstname" name="firstname"/>-->
+<!--                                        </th>-->
+<!--                                        <th>-->
+<!--                                            <input type="text" id="lastname" name="lastname"/>-->
+<!--                                        </th>-->
+<!--                                        <th>-->
+<!--                                            <input type="text" id="companyname" name="companyname"/>-->
+<!--                                        </th>-->
+<!--                                        <th>-->
+<!--                                            <input type="text" id="email" name="email"/>-->
+<!--                                        </th>-->
 
-                                </tr>
+<!--                                        <input type="submit" t-att-value="Submit"/>-->
+<!--&lt;!&ndash;                                        <button type="submit" class="btn btn-primary mt8"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                onclick="window.location.href='www.sbb.ch';">Post&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </button>&ndash;&gt;-->
+<!--                                    </form>-->
+<!--                                </tr>-->
+<!--                            </table>-->
+<!--                        </form>-->
 
-                            </table>
-                        </form>
-
-                    </div>
+<!--                    </div>-->
                     <div class="timeslots">
                         <style>
                             table, th, td{border: 1px solid black;}
@@ -60,29 +69,95 @@
                         </style>
 
                         <h2>Timeslot selector</h2>
+
                         <table>
                             <tr>
                                 <th>#</th>
-<!--                                <th>Meeting title (TBremoved)</th>-->
+                                <!--                                <th>Meeting title (TBremoved)</th>-->
                                 <th>Start date</th>
                                 <th>End date</th>
-                                <th>Available resources (TBD)</th>
+                                <th>Your start time</th>
+                                <th>Your end time</th>
+                                <th><label for="firstname">First name:</label></th>
+                                <th>
+                                    <label for="lastname">Last name:</label>
+                                </th>
+                                <th>
+                                    <label for="companyname">Company name:</label>
+                                </th>
+                                <th>
+                                    <label for="email">E-Mail address:</label>
+                                </th>
+
                                 <th></th>
                             </tr>
                             <t t-foreach="value" t-as="i">
                                 <tr>
-                                    <th t-esc="i.id"/>
-                                    <th t-esc="i.timeslots_start_date"/>
-                                    <th t-esc="i.timeslots_end_date"/>
-<!--                                    <th t-esc="i.meeting_title"/>-->
-<!--                                    <th t-esc="i.meeting_start_date"/>-->
-<!--                                    <th t-esc="i.meeting_end_date"/>-->
-                                    <th>(TBD)</th>
-<!--                                    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
-                                    <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>
+                                    <form>
+                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
+                                        <th t-esc="i.id"/>
+                                        <th t-esc="i.timeslots_start_date"/>
+                                        <th t-esc="i.timeslots_end_date"/>
+                                        <th>
+                                            <select id="sel_start_h" name="sel_start_h">
+                                                <!--split separates the string on the whitespaces and list treats it as a list-->
+                                                <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
+                                                    <option t-att-value="item">
+                                                        <t t-esc="item"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <select id="sel_start_min" name="sel_start_min">
+                                                <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
+                                                    <option t-att-value="t_min">
+                                                        <t t-esc="t_min"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </th>
+                                        <th>
+                                            <select id="sel_end_h" name="sel_end_h">
+                                                <!--split separates the string on the whitespaces and list treats it as a list-->
+                                                <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
+                                                    <option t-att-value="item">
+                                                        <t t-esc="item"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <select id="sel_end_min" name="sel_end_min">
+                                                <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
+                                                    <option t-att-value="t_min">
+                                                        <t t-esc="t_min"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+
+                                        </th>
+                                        <!--    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
+                                        <!--    <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>-->
+                                        <th>
+                                            <input type="text" id="firstname" name="firstname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="lastname" name="lastname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="companyname" name="companyname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="email" name="email"/>
+                                        </th>
+
+
+                                        <th>
+                                            <input type="submit" t-att-value="Submit"/>
+                                        </th>
+                                    </form>
+                                    </form>
                                 </tr>
                             </t>
                         </table>
+
                     </div>
                 </body>
 
@@ -116,7 +191,7 @@
                         <group>
                             <group>
                                 <field name="meeting_title"/>
-                                <field name="meeting_location" />
+                                <field name="meeting_location"/>
                                 <field name="meeting_show_as"/>
                                 <field name="meeting_privacy"/>
                               </group>
@@ -190,6 +265,8 @@
             </field>
         </record>
 
+
+
         <!-- explicit list view definition second item -->
         <record model="ir.ui.view" id="group_scheduler_list">
             <field name="name">group_scheduler list</field>
@@ -205,6 +282,10 @@
 
                         <button name="%(view_action)d" type="action"
                                 string="Go back to Calendar view" class="btn-primary"/>
+
+                        <button name="open_time_form" string="Continue with selection"
+                             class="btn-primary" type="object"/>
+<!--                        <button name="action_from_view" string="Open View" type="object"/>-->
 
                     </header>
                     <field name="meeting_group"/>
@@ -265,6 +346,35 @@
         </record>
     </data>
 
+            <!-- fifth menu action-->
+    <record id="timeslots_reserved_action" model="ir.actions.act_window">
+        <field name="name">Reserved Timeslots</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">timeslots_reserved</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+        <!-- explicit list view definition second item -->
+    <data>
+        <record model="ir.ui.view" id="timeslot_reserved_list">
+            <field name="name">Timeslot list</field>
+            <field name="model">timeslots_reserved</field>
+            <field name="arch" type="xml">
+
+                <tree>
+                    <field name="meeting_title"/>
+                    <field name="firstname"/>
+                    <field name="lastname"/>
+                    <field name="companyname"/>
+                    <field name="email"/>
+                    <field name="timeslots_start_date"/>
+                    <field name="timeslots_end_date"/>
+                </tree>
+
+            </field>
+
+        </record>
+    </data>
+
     <data>
         <record id="link_to_guest_view" model="ir.actions.act_url">
             <field name="name">Guest View</field>
@@ -304,10 +414,17 @@
               parent="meeting-scheduler-root"
               action="link_to_guest_view"
               groups="base.group_user"/>
+    <menuitem name="5. Reserved Timeslots"
+              id="meeting-scheduler-timeslots-reserved"
+              parent="meeting-scheduler-root"
+              action="timeslots_reserved_action"
+              groups="base.group_user"/>
     <menuitem name="Printed Stuff"
               id="meeting-scheduler-stuff-printer"
               parent="meeting-scheduler-root"
               action="stuff_action"
               groups="base.group_user"/>
+
+
 
 </odoo>

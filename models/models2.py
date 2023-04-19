@@ -5,7 +5,7 @@ import pytz
 
 from odoo import models, fields, api
 from typing import List
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 
@@ -20,7 +20,11 @@ class group_scheduler(models.Model):
     # meeting_search_start_date = fields.Datetime(string="Search Start Date", required=True)
     # meeting_search_end_date = fields.Datetime(string="Search End Date", required=True)
 
-    def button_function_test(self):
+    def button_function_test(self,
+                             search_start_date,
+                             search_end_date,
+                             working_hour_start,
+                             working_hour_end):
         group_selected_ids = self.env.context.get('active_ids', [])
         group_selected_records = self.env['group_scheduler'].browse(group_selected_ids)
     # get ids from group members
@@ -43,44 +47,95 @@ class group_scheduler(models.Model):
 
     # get related calendar_event_id from  calendar_event_res_partner_rel
     # get related meetings from calendar_event
-        meeting_found = self.env['calendar.event'].search([])
-        meeting_selected_list = []
-        for ting in meeting_found:
-            for uid in partner_id_list: #group_res_users_all_ids:
-                for pflopf in ting.attendee_ids.partner_id:
-                    if(uid == pflopf.id):
-                        meeting_selected_list.append(ting)
-                        # self.env['print_table'].create({'show_stuff': str(ting.name) + ', ' + str(ting.start) + ', ' + str(ting.attendee_ids.partner_id)})
-        meeting_selected_list = list(dict.fromkeys(meeting_selected_list))
-        meeting_start_end_list = []
-        for x in meeting_selected_list:
-            meeting_start_end_list.append([x.id, x.start, x.stop, x.duration])
-            # self.env['print_table'].create(
-            #     {'show_stuff': str(x.name) + ', '
-            #                    + str(x.start) + ', '
-            #                    + str(x.stop) + ', '
-            #                    + str(x.attendee_ids.partner_id)})
+        day_difference = int((search_end_date - search_start_date).days)
+        daily_meetings_sorted = []
+        for i in range(0, day_difference+1):
+            self.env['print_table'].create({'show_stuff': search_start_date + timedelta(days=i)})
+            meeting_found = self.env['calendar.event'].search(['&',
+                                                               ('start', '>=', search_start_date + timedelta(days=i)),
+                                                               ('stop', '<=', search_start_date + timedelta(days=i))])
+            meeting_selected_list = []
+            for ting in meeting_found:
+                for uid in partner_id_list: #group_res_users_all_ids:
+                    for pflopf in ting.attendee_ids.partner_id:
+                        if(uid == pflopf.id):
+                            meeting_selected_list.append(ting)
+                            # self.env['print_table'].create({'show_stuff': str(ting.name) + ', ' + str(ting.start) + ', ' + str(ting.attendee_ids.partner_id)})
+            meeting_selected_list = list(dict.fromkeys(meeting_selected_list))
+            meeting_start_end_list = []
+            for x in meeting_selected_list:
+                meeting_start_end_list.append([x.id, x.start, x.stop, x.duration])
 
-        # result = self.find_overlapping_timeslots(meeting_start_end_list)
-        # timeslots = [[datetime(2023, 3, 29, 10, 0), datetime(2023, 3, 29, 12, 0)],
-        #              [datetime(2023, 3, 29, 11, 0), datetime(2023, 3, 29, 13, 0)],
-        #              [datetime(2023, 3, 29, 14, 0), datetime(2023, 3, 29, 15, 0)],
-        #              ]
-        # result = self.find_overlapping_timeslots(timeslots)
-        meetings_sorted_abu = self.alg02(meeting_start_end_list)
-        self.env['print_table'].create({'show_stuff': meetings_sorted_abu})
-        for i in meetings_sorted_abu:
+            daily_meetings_temp = self.alg02(meeting_start_end_list,
+                                                  (search_start_date + timedelta(days=i)),
+                                                  (search_start_date + timedelta(days=i)),
+                                                 working_hour_start,
+                                                 working_hour_end)
+            for x in daily_meetings_temp:
+                daily_meetings_sorted.append(x)
+            self.env['print_table'].create({'show_stuff': daily_meetings_sorted})
+
+        timeslots_bookable_h = self.calc_bookable_hours(daily_meetings_sorted)
+        self.env['print_table'].create({'show_stuff': timeslots_bookable_h})
+        for i in timeslots_bookable_h:
             self.env['timeslots'].create({'timeslots_start_date': i[0],
-                                          'timeslots_end_date': i[1]})
+                                          'timeslots_end_date': i[1],
+                                          'timeslots_bookable_hours': i[2]})
+    def calc_bookable_hours(self, timeslots):
+        import math
+        output_timeslots = []
+        for timeslot in timeslots:
+            duration = timeslot[1] - timeslot[0]
+            duration = math.floor(duration.total_seconds() / 3600)
+            bookable_hours = ""
+            for i in range(timeslot[0].hour, timeslot[0].hour+duration+1):
+                bookable_hours += " " + str(i) # the list has to be treated as a string,
+                # # so that the t-foreach from the qweb template can interpret it as a list
+            output_timeslots.append([timeslot[0], timeslot[1], bookable_hours])
+        return output_timeslots
 
-    def alg02(self, meetings):
+
+
+    # def open_time_form(self, cr, uid, ids, context=None):
+    def open_time_form(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'group_wizard',  # name of respective model,
+            # 'views': [('group_scheduler_timeform', 'form')],  # view id and type
+            'view_id': self.env.ref('meeting_scheduler.group_scheduler_timeform').id,  # view id
+            'target': 'new',
+            # 'context': context,
+        }
+
+
+
+    def alg01(self, meetings):
+        #TODO
+        return True
+
+
+
+    def alg02(self, meetings, search_start_date, search_end_date, working_hour_start, working_hour_end):
         import pytz
-        working_hours_start = datetime(year=2023, month=3, day=28, hour=4, minute=0,
-                                       second=0)  # TODO get from odoo and give to function
-        working_hours_start = self.convert_timezone(working_hours_start)
-        working_hours_end = datetime(year=2023, month=3, day=28, hour=17, minute=0,
+        import math
+        whs_min_float, whs_hour_float = math.modf(working_hour_start)
+        working_hours_start = datetime(year=search_start_date.year,
+                                       month=search_start_date.month,
+                                       day=search_start_date.day,
+                                       hour=int(whs_hour_float),
+                                       minute=int(whs_min_float*60), second=0)
+                                        # TODO get from odoo and give to function
+        # working_hours_start = self.convert_timezone(working_hours_start) #not needed if defined with float_time
+        whe_min_float, whe_hour_float = math.modf(working_hour_end)
+
+        working_hours_end = datetime(year=search_end_date.year,
+                                     month=search_end_date.month,
+                                     day=search_end_date.day,
+                                     hour=int(whe_hour_float), minute=int(whe_min_float*60),
                                      second=0)  # TODO get from odoo and give to function
-        working_hours_end = self.convert_timezone(working_hours_end)
+        # working_hours_end = self.convert_timezone(working_hours_end)
         meetings_sorted_duration = sorted(meetings, key=lambda i: i[1])
 
         free_meetings_list = [[working_hours_start, working_hours_end]]
@@ -153,10 +208,8 @@ class group_scheduler(models.Model):
         import pytz
         user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
         output_datetime = pytz.utc.localize(input_datetime).astimezone(user_timezone)
-
-        #suggestsed solution
-        #user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
-        #output_datetime = input_datetime.astimezone(user_timezone)
+        output_datetime = output_datetime.replace(tzinfo=None) #removes the +2:00 from utc
+        # self.env['print_table'].create({'show_stuff': pytz.utc.localize(output_datetime)})
 
         return output_datetime
 
