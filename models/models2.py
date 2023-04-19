@@ -211,5 +211,9 @@ class group_scheduler(models.Model):
         output_datetime = output_datetime.replace(tzinfo=None) #removes the +2:00 from utc
         # self.env['print_table'].create({'show_stuff': pytz.utc.localize(output_datetime)})
 
+        # suggested solution
+        # user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+        # output_datetime = input_datetime.astimezone(user_timezone)
+
         return output_datetime
 
