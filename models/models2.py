@@ -185,9 +185,7 @@ class group_scheduler(models.Model):
         """
         Given a list of timeslots represented as a list of start and end times,
         returns a list of overlapping timeslots.
-        """
 
-        #otuput_overlaps = None
         overlaps = []
         for i in range(len(timeslots)):
             for j in range(i + 1, len(timeslots)):
@@ -205,20 +203,48 @@ class group_scheduler(models.Model):
         for overlap in overlaps:
             otuput_overlaps = overlap[0] , overlap[1]
         return otuput_overlaps
+        """
+
+        temp = [[None], [None]]
+        for i in range(len(timeslots)):
+
+            timeslots[i][0] = self.convert_timezone(timeslots[i][0])
+            timeslots[i][1] = self.convert_timezone(timeslots[i][1])
+
+            if(i == 0):
+                temp[0] = timeslots[0][0]
+                temp[1] = timeslots[0][1]
+
+            if (temp[0] < timeslots[i][0]):
+                temp[0] = timeslots[i][0]
+
+            if timeslots[i][1] < temp[1]:
+                temp[1] = timeslots[i][1]
+
+        if(temp[0] < temp[1]):
+            output_overlaps = temp[0], temp[1]
+
+        else:
+            output_overlaps = None
+
+        return output_overlaps
+
 
     def convert_timezone(self, input_datetime: datetime) -> datetime:
         import pytz
+
+        """
         user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
         output_datetime = pytz.utc.localize(input_datetime).astimezone(user_timezone)
         output_datetime = output_datetime.replace(tzinfo=None) #removes the +2:00 from utc
         # self.env['print_table'].create({'show_stuff': pytz.utc.localize(output_datetime)})
 
-        # suggested solution
-        """
+        suggested solution
+        
         First we get the users timezone for some comparisons:
             1. If the tz of the input_datetime is None then dont convert anything
             2. Otherwise convert from old tz to new tz
-        
+        """
         user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
 
         if input_datetime.tzname() is None:
@@ -226,7 +252,7 @@ class group_scheduler(models.Model):
 
         else:
             output_datetime = input_datetime.astimezone(user_timezone)
-            """
+            output_datetime = output_datetime.replace(tzinfo=None)
 
         return output_datetime
 

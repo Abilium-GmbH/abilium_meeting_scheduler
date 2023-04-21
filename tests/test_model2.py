@@ -24,18 +24,6 @@ class Model2Test(common.TransactionCase):
         self.assertEqual(result0, expected0)
 
         #2 slots without
-        """
-        Throws error:
-        File "/usr/lib/python3/dist-packages/odoo/addons/meeting_scheduler/tests/test_model2.py", line 30, in test_find_overlapping_timeslots
-            result1 = str(group_scheduler_0.find_overlapping_timeslots(timeslots1))
-        File "/usr/lib/python3/dist-packages/odoo/addons/meeting_scheduler/models/models2.py", line 205, in find_overlapping_timeslots
-            return otuput_overlaps
-        UnboundLocalError: local variable 'otuput_overlaps' referenced before assignment
-        
-        Fix:
-        Already in models2.py line 190
-        """
-        
         timeslots1 = [[datetime.datetime(2023, 4, 10, 12, 0, 0), datetime.datetime(2023, 4, 10, 18, 0, 0)],
                       [datetime.datetime(2023, 4, 10, 9, 0, 0), datetime.datetime(2023, 4, 10, 12, 0, 0)]]
 
@@ -53,13 +41,6 @@ class Model2Test(common.TransactionCase):
         self.assertEqual(result2, expected2)
 
         #3 slots without
-        """
-        This test fails. If this function is supposed to return a overlapping timeslot of all the given times then it
-        doesnt work correctly. It returns the following timeslot instead of None:
-            10:00 - 18:00
-            
-        I think this is because it only checks for the predecessor and not all previous slots.
-        """
         timeslots3 = [[datetime.datetime(2023, 4, 10, 6, 0, 0), datetime.datetime(2023, 4, 10, 10, 0, 0)], #6:00 - 10:00
                       [datetime.datetime(2023, 4, 10, 7, 0, 0), datetime.datetime(2023, 4, 10, 18, 0, 0)], #7:00 - 18:00
                       [datetime.datetime(2023, 4, 10, 10, 0, 0), datetime.datetime(2023, 4, 10, 19, 0, 0)]] #10:00 - 19:00
@@ -67,6 +48,24 @@ class Model2Test(common.TransactionCase):
         result3 = str(group_scheduler_0.find_overlapping_timeslots(timeslots3))
         expected3 = "None"
         self.assertEqual(result3, expected3)
+
+        #2 slots with and diff tz
+
+        chicagoStart = datetime.datetime(2023, 4, 10, 6, 0, 0, 0)
+        chicagoStartTZ = pytz.timezone('America/Chicago').localize(chicagoStart)
+        chicagoEnd = datetime.datetime(2023, 4, 10, 16, 0, 0, 0)
+        chicagoEndTZ = pytz.timezone('America/Chicago').localize(chicagoEnd)
+
+        timbuktuStart = datetime.datetime(2023, 4, 10, 6, 0, 0, 0)
+        timbuktuStartTZ = pytz.timezone('Africa/Timbuktu').localize(timbuktuStart)
+        timbuktuEnd = datetime.datetime(2023, 4, 10, 20, 0, 0, 0)
+        timbuktuEndTZ = pytz.timezone('Africa/Timbuktu').localize(timbuktuEnd)
+        timeslots4 = [[chicagoStartTZ, chicagoEndTZ],
+                      [timbuktuStartTZ, timbuktuEndTZ]]
+
+        result4 = str(group_scheduler_0.find_overlapping_timeslots(timeslots4))
+        expected4 = "(datetime.datetime(2023, 4, 10, 13, 0), datetime.datetime(2023, 4, 10, 22, 0))"
+        self.assertEqual(result4, expected4)
 
 
     def test_convert_timezones(self):
@@ -109,6 +108,14 @@ class Model2Test(common.TransactionCase):
         resultLocal = group_scheduler_0.convert_timezone(localTime).strftime("%Y-%m-%d %H:%M:%S")
 
         self.assertEqual(expectedLocal, resultLocal)
+
+        #Test no tz
+        noTZtime = datetime.datetime(2023, 4, 13, 20, 30, 0)
+
+        expectedNoTZ = noTZtime.strftime("%Y-%m-%d %H:%M:%S")
+        resultNoTZ = group_scheduler_0.convert_timezone(noTZtime).strftime("%Y-%m-%d %H:%M:%S")
+
+        self.assertEqual(expectedNoTZ, resultNoTZ)
 
 
 
