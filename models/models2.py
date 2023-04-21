@@ -20,7 +20,7 @@ class group_scheduler(models.Model):
     # meeting_search_start_date = fields.Datetime(string="Search Start Date", required=True)
     # meeting_search_end_date = fields.Datetime(string="Search End Date", required=True)
 
-    def button_function_test(self,
+    def button_timeslots_from_intersection(self,
                              search_start_date,
                              search_end_date,
                              working_hour_start,
@@ -76,7 +76,7 @@ class group_scheduler(models.Model):
             self.env['print_table'].create({'show_stuff': daily_meetings_sorted})
 
         timeslots_bookable_h = self.calc_bookable_hours(daily_meetings_sorted)
-        self.env['print_table'].create({'show_stuff': timeslots_bookable_h})
+        # self.env['print_table'].create({'show_stuff': timeslots_bookable_h})
         for i in timeslots_bookable_h:
             self.env['timeslots'].create({'timeslots_start_date': i[0],
                                           'timeslots_end_date': i[1],
@@ -109,7 +109,67 @@ class group_scheduler(models.Model):
             # 'context': context,
         }
 
+    def button_timeslots_from_union(self,
+                             search_start_date,
+                             search_end_date,
+                             working_hour_start,
+                             working_hour_end):
+        group_selected_ids = self.env.context.get('active_ids', [])
+        group_selected_records = self.env['group_scheduler'].browse(group_selected_ids)
+    # get ids from group members
+        group_res_users_all_ids = []
+        # this for-loop iterates over the selected groups
+        for group in group_selected_records:
+            # this for-loop iterates over the group members
+    # group_scheduler_res_users_rel has user ids and group ids
+            for group_member in group.meeting_attendees:
+                group_res_users_all_ids.append(group_member['id'])
+        group_res_users_all_ids = list(dict.fromkeys(group_res_users_all_ids))
+    # partner_id NOT EQUAL to user_id!!
+    # get partner_id from res_users
+    #     partner_id_records = self.env['res.users'].browse(group_res_users_all_ids)
+    #     partner_id_list = []
+    #     for partners in partner_id_records:
+    #         for partner_id_entry in partners['partner_id']:
+    #             partner_id_list.append(partner_id_entry['id'])
+        # self.env['print_table'].create({'show_stuff': partner_id_list})
 
+    # get related calendar_event_id from  calendar_event_res_partner_rel
+    # get related meetings from calendar_event
+        day_difference = int((search_end_date - search_start_date).days)
+        daily_meetings_sorted = []
+        for i in range(0, day_difference+1):
+            self.env['print_table'].create({'show_stuff': search_start_date + timedelta(days=i)})
+            meeting_found = self.env['meeting_scheduler'].search(['&',
+                                                               ('meeting_start_date', '>=', search_start_date + timedelta(days=i)),
+                                                               ('meeting_end_date', '<=', search_start_date + timedelta(days=i))])
+            meeting_selected_list = []
+            for ting in meeting_found:
+                for uid in group_res_users_all_ids: #group_res_users_all_ids:
+                    for pflopf in ting.create_uid:
+                        if(uid == pflopf.id):
+                            meeting_selected_list.append(ting)
+                            # self.env['print_table'].create({'show_stuff': str(ting.name) + ', ' + str(ting.start) + ', ' + str(ting.attendee_ids.partner_id)})
+            meeting_selected_list = list(dict.fromkeys(meeting_selected_list))
+            meeting_start_end_list = []
+            for x in meeting_selected_list:
+                meeting_start_end_list.append([x.id, x.meeting_start_date, x.meeting_end_date, x.meeting_duration])
+
+            daily_meetings_temp = self.alg02(meeting_start_end_list,
+                                                  (search_start_date + timedelta(days=i)),
+                                                  (search_start_date + timedelta(days=i)),
+                                                 working_hour_start,
+                                                 working_hour_end)
+            for x in daily_meetings_temp:
+                daily_meetings_sorted.append(x)
+            self.env['print_table'].create({'show_stuff': daily_meetings_sorted})
+
+        timeslots_bookable_h = self.calc_bookable_hours(daily_meetings_sorted)
+        # self.env['print_table'].create({'show_stuff': timeslots_bookable_h})
+        for i in timeslots_bookable_h:
+            self.env['timeslots'].create({'timeslots_start_date': i[0],
+                                          'timeslots_end_date': i[1],
+                                          'timeslots_bookable_hours': i[2]})
 
     def alg01(self, meetings):
         #TODO
@@ -232,30 +292,30 @@ class group_scheduler(models.Model):
 
         return output_overlaps
 
-
     def convert_timezone(self, input_datetime: datetime) -> datetime:
         import pytz
 
-        """
+
         user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
         output_datetime = pytz.utc.localize(input_datetime).astimezone(user_timezone)
         output_datetime = output_datetime.replace(tzinfo=None) #removes the +2:00 from utc
         # self.env['print_table'].create({'show_stuff': pytz.utc.localize(output_datetime)})
 
+        """
         suggested solution
         
         First we get the users timezone for some comparisons:
             1. If the tz of the input_datetime is None then dont convert anything
             2. Otherwise convert from old tz to new tz
         """
-        user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
-
-        if input_datetime.tzname() is None:
-            output_datetime = input_datetime
-
-        else:
-            output_datetime = input_datetime.astimezone(user_timezone)
-            output_datetime = output_datetime.replace(tzinfo=None)
+        # user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+        #
+        # if input_datetime.tzname() is None:
+        #     output_datetime = input_datetime
+        #
+        # else:
+        #     output_datetime = input_datetime.astimezone(user_timezone)
+        #     output_datetime = output_datetime.replace(tzinfo=None)
 
         return output_datetime
-
+        

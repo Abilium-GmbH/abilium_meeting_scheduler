@@ -2,6 +2,7 @@
 
 from odoo import http
 from odoo.http import route, request
+from datetime import datetime
 
 class MeetingScheduler(http.Controller):
     @http.route('/meeting_scheduler/meeting_scheduler/', auth='public')
@@ -25,14 +26,31 @@ class MeetingScheduler(http.Controller):
             inputs_contact.append(kw.get('companyname'))
         if((kw.get('email') is not None) and (kw.get('email') != '')):
             inputs_contact.append(kw.get('email'))
-        if((kw.get('sel_start_h') is not None) and (kw.get('sel_start_h') != '')
+        if((kw.get('id') is not None) and (kw.get('id') != '')
+            and(kw.get('sel_start_h') is not None) and (kw.get('sel_start_h') != '')
             and (kw.get('sel_start_min') is not None) and (kw.get('sel_start_min') != '')
             and (kw.get('sel_end_h') is not None) and (kw.get('sel_end_h') != '')
             and (kw.get('sel_end_min') is not None) and (kw.get('sel_end_min') != '')):
-            temp = kw.get('sel_start_h') + kw.get('sel_start_min');
-            inputs_meeting.append(temp)
-            temp = kw.get('sel_end_h') + kw.get('sel_end_min');
-            inputs_meeting.append(temp)
+            temp_id = kw.get('id')
+            # self.env['timeslots'].get_id(temp_id)
+            temp_start = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date'])
+            temp_start = datetime.strptime(temp_start[0:10], '%Y-%m-%d')
+            temp_start = temp_start.replace(hour = int(kw.get('sel_start_h')), minute= int(kw.get('sel_start_min')))
+            #
+            # import pytz
+            # user_timezone = pytz.timezone(request.env.context.get('tz') or request.env.user.tz)
+            # # temp_start = user_timezone.localize(temp_start, is_dst=None)
+            #
+            #
+            # temp_start = user_timezone.normalize(temp_start)
+            # temp_start = temp_start.astimezone(pytz.utc)
+            inputs_meeting.append(temp_start)
+
+            temp_end = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date'])
+            temp_end = datetime.strptime(temp_end[0:10], '%Y-%m-%d')
+            temp_end = temp_end.replace(hour = int(kw.get('sel_end_h')), minute= int(kw.get('sel_end_min')))
+            inputs_meeting.append(temp_end)
+
         if(len(inputs_contact) == 4) and (len(inputs_meeting) == 2):
             request.env['timeslots_reserved'].create({'firstname': inputs_contact[0],
                                                       'lastname': inputs_contact[1],

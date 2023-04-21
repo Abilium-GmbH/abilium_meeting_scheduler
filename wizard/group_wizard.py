@@ -20,10 +20,19 @@ class group_wizard(models.TransientModel):
     #TODO check that search_start_date is before search_end_date, same for working hour
 
     # @api.model_create_multi
-    def method_a(self):
+    def transit_button_timeslots_from_intersection(self):
         for record in self:
-            return  self.env['group_scheduler'].button_function_test(record.search_start_date,
+            return  self.env['group_scheduler'].button_timeslots_from_intersection(record.search_start_date,
                                                                      record.search_end_date,
                                                                      record.working_hour_start,
                                                                      record.working_hour_end)
         # return True
+
+    def transit_button_timeslots_from_union(self):
+        for record in self:
+            return self.env['group_scheduler'].button_timeslots_from_union(record.search_start_date,
+                                                                        record.search_end_date,
+                                                                        record.working_hour_start,
+                                                                        record.working_hour_end)
+
+
