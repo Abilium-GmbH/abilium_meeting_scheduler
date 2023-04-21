@@ -208,6 +208,9 @@ class group_scheduler(models.Model):
         temp = [[None], [None]]
         for i in range(len(timeslots)):
 
+            if(len(timeslots) < 2 or len(timeslots[0]) != 2 or len(timeslots[1]) != 2 or len(timeslots[i]) != 2):
+                return None
+
             timeslots[i][0] = self.convert_timezone(timeslots[i][0])
             timeslots[i][1] = self.convert_timezone(timeslots[i][1])
 

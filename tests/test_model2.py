@@ -41,9 +41,9 @@ class Model2Test(common.TransactionCase):
         self.assertEqual(result2, expected2)
 
         #3 slots without
-        timeslots3 = [[datetime.datetime(2023, 4, 10, 6, 0, 0), datetime.datetime(2023, 4, 10, 10, 0, 0)], #6:00 - 10:00
-                      [datetime.datetime(2023, 4, 10, 7, 0, 0), datetime.datetime(2023, 4, 10, 18, 0, 0)], #7:00 - 18:00
-                      [datetime.datetime(2023, 4, 10, 10, 0, 0), datetime.datetime(2023, 4, 10, 19, 0, 0)]] #10:00 - 19:00
+        timeslots3 = [[datetime.datetime(2023, 4, 10, 6, 0, 0), datetime.datetime(2023, 4, 10, 10, 0, 0)],
+                      [datetime.datetime(2023, 4, 10, 7, 0, 0), datetime.datetime(2023, 4, 10, 18, 0, 0)],
+                      [datetime.datetime(2023, 4, 10, 10, 0, 0), datetime.datetime(2023, 4, 10, 19, 0, 0)]]
 
         result3 = str(group_scheduler_0.find_overlapping_timeslots(timeslots3))
         expected3 = "None"
@@ -66,6 +66,40 @@ class Model2Test(common.TransactionCase):
         result4 = str(group_scheduler_0.find_overlapping_timeslots(timeslots4))
         expected4 = "(datetime.datetime(2023, 4, 10, 13, 0), datetime.datetime(2023, 4, 10, 22, 0))"
         self.assertEqual(result4, expected4)
+
+        #no slots
+        timeslots5 = [[],[]]
+
+        result5 = str(group_scheduler_0.find_overlapping_timeslots(timeslots5))
+        expected5 = "None"
+        self.assertEqual(result5, expected5)
+
+        #wrong inputs
+        timeslots6 = [[datetime.datetime(2023, 10, 4, 15, 30), datetime.datetime(2023, 10, 4, 19, 45)], []]
+        result6 = str(group_scheduler_0.find_overlapping_timeslots(timeslots6))
+        expected6 = "None"
+
+        self.assertEqual(result6, expected6)
+
+        timeslots7 = [[], [datetime.datetime(2023, 10, 4, 15, 30), datetime.datetime(2023, 10, 4, 19, 45)]]
+        result7 = str(group_scheduler_0.find_overlapping_timeslots(timeslots7))
+        expected7 = "None"
+
+        self.assertEqual(result7, expected7)
+
+        timeslots8 = [[datetime.datetime(2023, 10, 4, 15, 30)], [datetime.datetime(2023, 10, 4, 19, 45)]]
+        result8 = str(group_scheduler_0.find_overlapping_timeslots(timeslots8))
+        expected8 = "None"
+
+        self.assertEqual(result8, expected8)
+
+        timeslots9 = [[datetime.datetime(2023, 4, 10, 6, 0, 0), datetime.datetime(2023, 4, 10, 18, 0, 0)],
+                      [datetime.datetime(2023, 4, 10, 7, 0, 0), datetime.datetime(2023, 4, 10, 19, 0, 0)],
+                      [datetime.datetime(2023, 4, 10, 9, 0, 0), datetime.datetime(2023, 4, 10, 17, 0, 0), datetime.datetime(2023, 4, 10, 11, 30, 0)]]
+        result9 = str(group_scheduler_0.find_overlapping_timeslots(timeslots9))
+        expected9 = "None"
+
+        self.assertEqual(result9, expected9)
 
 
     def test_convert_timezones(self):
