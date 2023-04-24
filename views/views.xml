@@ -197,11 +197,11 @@
                                 <field name="meeting_privacy"/>
                               </group>
                            <group>
-                               <field name="meeting_start_date" />
-                                <field name="meeting_end_date" />
-                                <field name="meeting_duration" />
-                                <field name="meeting_repetitions"/>
-                                <field name="meeting_frequency"/>
+                               <field name="meeting_start_date" widget="daterange" options="{'related_end_date': 'meeting_end_date'}" />
+                               <field name="meeting_end_date" widget="daterange" options="{'related_start_date': 'meeting_start_date'}"/>
+                               <field name="meeting_duration" />
+                               <field name="meeting_repetitions"/>
+                               <field name="meeting_frequency"/>
                             </group>
                         </group>
                         <group>
