@@ -53,6 +53,7 @@ class meeting_scheduler(models.Model):
         meeting_frequency = data_list[0]['meeting_frequency']
         default_title = data_list[0]['meeting_title']
         default_start_date = data_list[0]['meeting_start_date']
+        default_end_date = data_list[0]['meeting_end_date']
 
         # frequency 1 is weekly so add 7 days
         if meeting_frequency == '1':
@@ -62,12 +63,10 @@ class meeting_scheduler(models.Model):
 
                 # datetime is stored as string, so we need to convert string to datetime object then add the days and then convert it back to a string
                 data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(default_start_date,
-                                                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
-                    days=7 * x))
+                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7 * x))
 
-                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_start_date,
-                                                                                  "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
-                    days=7 * x))
+                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_end_date,
+                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=7 * x))
 
                 self.create_entry_to_calendar(data_list[0])
                 x = self.env['calendar.event'].search(
@@ -88,12 +87,10 @@ class meeting_scheduler(models.Model):
             for x in range(meeting_repetitions):
                 data_list[0]['meeting_title'] = default_title + " #" + str(x + 1)
                 data_list[0]['meeting_start_date'] = str(datetime.datetime.strptime(default_start_date,
-                                                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
-                    days=14 * x))
+                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14 * x))
 
-                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_start_date,
-                                                                                  "%Y-%m-%d %H:%M:%S") + datetime.timedelta(
-                    days=14 * x))
+                data_list[0]['meeting_end_date'] = str(datetime.datetime.strptime(default_end_date,
+                                                    "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=14 * x))
 
                 self.create_entry_to_calendar(data_list[0])
                 x = self.env['calendar.event'].search(
