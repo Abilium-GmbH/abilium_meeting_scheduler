@@ -97,8 +97,8 @@
                                     <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
                                         <th t-esc="i.id"/>
                                         <input type="hidden" name="id" t-att-value="i.id"/>
-                                        <th t-esc="i.timeslots_start_date"/>
-                                        <th t-esc="i.timeslots_end_date"/>
+                                        <th t-esc="i.timeslots_start_date_str"/>
+                                        <th t-esc="i.timeslots_end_date_str"/>
                                         <th>
                                             <select id="sel_start_h" name="sel_start_h">
                                                 <!--split separates the string on the whitespaces and list treats it as a list-->
@@ -338,8 +338,11 @@
             <field name="arch" type="xml">
 
                 <tree>
-                    <field name="timeslots_start_date"/>
-                    <field name="timeslots_end_date"/>
+                    <field name="timeslots_groupmembers"/>
+                    <field name="timeslots_start_date_utc"/>
+                    <field name="timeslots_end_date_utc"/>
+                    <field name="timeslots_start_date_str"/>
+                    <field name="timeslots_end_date_str"/>
                 </tree>
 
             </field>
