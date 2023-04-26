@@ -82,6 +82,12 @@ class group_scheduler(models.Model):
                                           'timeslots_end_date': i[1],
                                           'timeslots_bookable_hours': i[2]})
     def calc_bookable_hours(self, timeslots):
+        """
+
+
+        :param timeslots: [[datetime.datetime() startTime, datetime.datetime endTime], [startTime2, endTime2]]
+        :return: [[datetime.datetime() startTime, datetime.datetime() endTime, " x y z" bookable full hours]
+        """
         import math
         output_timeslots = []
         for timeslot in timeslots:
@@ -241,6 +247,7 @@ class group_scheduler(models.Model):
 
         return free_meetings_list
 
+    #not needed
     def find_overlapping_timeslots(self, timeslots: List[List[datetime]]) -> List[List[datetime]]:
         """
         Given a list of timeslots represented as a list of start and end times,
@@ -316,6 +323,19 @@ class group_scheduler(models.Model):
         # else:
         #     output_datetime = input_datetime.astimezone(user_timezone)
         #     output_datetime = output_datetime.replace(tzinfo=None)
+
+
+        """V3"""
+
+        #user_timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+
+        #if input_datetime.tzname() is None:
+        #    output_datetime = input_datetime
+        #    output_datetime = output_datetime.replace(tzinfo=None)
+
+        #else:
+        #    output_datetime = input_datetime.astimezone(user_timezone)
+        #    output_datetime = output_datetime.replace(tzinfo=None)
 
         return output_datetime
         
