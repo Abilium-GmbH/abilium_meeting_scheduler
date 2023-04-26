@@ -15,15 +15,14 @@
                                 <field name="working_hour_start" widget="float_time"/>
                                 <field name="working_hour_end" widget="float_time"/>
 
-
                             </group>
                             <group>
                                 <!--                                <field name="last_seen"/>-->
                                 <button name="transit_button_timeslots_from_intersection"
-                                        string="V1 Generate timeslots from Intersection"
+                                        string="Generate timeslots from Intersection"
                                         class="btn-primary" type="object"/>
                                 <button name="transit_button_timeslots_from_union"
-                                        string="V2 Generate timeslots from Union"
+                                        string="Generate timeslots from Union"
                                         class="btn-primary" type="object"/>
 
                             </group>

@@ -37,50 +37,106 @@ class group_scheduler(models.Model):
                 group_res_users_all_ids.append(group_member['id'])
         group_res_users_all_ids = list(dict.fromkeys(group_res_users_all_ids))
     # partner_id NOT EQUAL to user_id!!
-    # get partner_id from res_users
-        partner_id_records = self.env['res.users'].browse(group_res_users_all_ids)
-        partner_id_list = []
-        for partners in partner_id_records:
-            for partner_id_entry in partners['partner_id']:
-                partner_id_list.append(partner_id_entry['id'])
-        # self.env['print_table'].create({'show_stuff': partner_id_list})
 
-    # get related calendar_event_id from  calendar_event_res_partner_rel
-    # get related meetings from calendar_event
-        day_difference = int((search_end_date - search_start_date).days)
-        daily_meetings_sorted = []
-        for i in range(0, day_difference+1):
-            self.env['print_table'].create({'show_stuff': search_start_date + timedelta(days=i)})
-            meeting_found = self.env['calendar.event'].search(['&',
-                                                               ('start', '>=', search_start_date + timedelta(days=i)),
-                                                               ('stop', '<=', search_start_date + timedelta(days=i))])
-            meeting_selected_list = []
-            for ting in meeting_found:
-                for uid in partner_id_list: #group_res_users_all_ids:
-                    for pflopf in ting.attendee_ids.partner_id:
-                        if(uid == pflopf.id):
-                            meeting_selected_list.append(ting)
-                            # self.env['print_table'].create({'show_stuff': str(ting.name) + ', ' + str(ting.start) + ', ' + str(ting.attendee_ids.partner_id)})
-            meeting_selected_list = list(dict.fromkeys(meeting_selected_list))
-            meeting_start_end_list = []
-            for x in meeting_selected_list:
-                meeting_start_end_list.append([x.id, x.start, x.stop, x.duration])
+        found_meetings_per_group_member = []
+        for group_member in group_res_users_all_ids:
+            meetings_found = self.env['meeting_scheduler'].search(['&',
+                                                              ('meeting_start_date', '>=',
+                                                               search_start_date),
+                                                              ('meeting_end_date', '<=',
+                                                               search_end_date),
+                                                                  ('create_uid', '=', group_member)])
+            found_meetings_per_group_member.append(meetings_found)
+        self.env['print_table'].create({'show_stuff': len(group_res_users_all_ids)})
 
-            daily_meetings_temp = self.alg02(meeting_start_end_list,
-                                                  (search_start_date + timedelta(days=i)),
-                                                  (search_start_date + timedelta(days=i)),
-                                                 working_hour_start,
-                                                 working_hour_end)
-            for x in daily_meetings_temp:
-                daily_meetings_sorted.append(x)
-            self.env['print_table'].create({'show_stuff': daily_meetings_sorted})
+        # if zero not needed because we do not return only create
+        # if(len(group_res_users_all_ids) == 0):
+        #     self.env['print_table'].create({'show_stuff': "no user empty list"})
+        #     return []
+        if(len(group_res_users_all_ids) == 1):
+            self.env['print_table'].create({'show_stuff': len(group_res_users_all_ids)})
+            timeslots_bookable_h = self.transform_meetings_to_bookable_hours(found_meetings_per_group_member[0])
+            for i in timeslots_bookable_h:
+                self.env['timeslots'].create({'timeslots_start_date': i[0],
+                                              'timeslots_end_date': i[1],
+                                              'timeslots_bookable_hours': i[2]})
+        elif (len(group_res_users_all_ids) > 1):
+            free_meetings_list = []
+            for first_user in found_meetings_per_group_member[0]:
+                free_meetings_list.append([first_user.meeting_start_date, first_user.meeting_end_date])
+            self.env['print_table'].create({'show_stuff': "after filling"})
+            self.env['print_table'].create({'show_stuff': free_meetings_list})
 
-        timeslots_bookable_h = self.calc_bookable_hours(daily_meetings_sorted)
-        # self.env['print_table'].create({'show_stuff': timeslots_bookable_h})
-        for i in timeslots_bookable_h:
-            self.env['timeslots'].create({'timeslots_start_date': i[0],
-                                          'timeslots_end_date': i[1],
-                                          'timeslots_bookable_hours': i[2]})
+            for all_other_users in found_meetings_per_group_member[1:]:
+                free_meetings_list_temp = []
+                for meeting in all_other_users:
+                    for index_free, free_meeting in enumerate(free_meetings_list):
+                        # meeting_starttime = self.convert_timezone(meeting.meeting_start_date)
+                        # meeting_endtime = self.convert_timezone(meeting.meeting_end_date)
+                        meeting_starttime = meeting.meeting_start_date
+                        meeting_endtime = meeting.meeting_end_date
+                        free_starttime = free_meeting[0]
+                        free_endtime = free_meeting[1]
+
+                        if (free_starttime <= meeting_starttime) \
+                                and (meeting_starttime <= free_endtime) \
+                                and (free_starttime <= meeting_endtime) \
+                                and (free_endtime <= meeting_endtime):
+                            # case 1, meeting starts before freetime ends
+                            free_meetings_list_temp.append([meeting_starttime, free_endtime])
+
+                        elif (meeting_starttime <= free_starttime) \
+                                and (meeting_starttime <= free_endtime) \
+                                and (free_starttime <= meeting_endtime) \
+                                and (meeting_endtime <= free_endtime):
+                            # case 2, meeting ends after freetime starts
+                            free_meetings_list_temp.append([free_starttime, meeting_endtime])
+
+                        elif (free_starttime < meeting_starttime) \
+                                and (meeting_starttime < free_endtime) \
+                                and (free_starttime < meeting_endtime) \
+                                and (meeting_endtime < free_endtime):
+                            # case 3, meeting lies between free time
+                            free_meetings_list_temp.append([meeting_starttime, meeting_endtime])
+
+                        elif (meeting_starttime <= free_starttime) \
+                                and (meeting_starttime <= free_endtime) \
+                                and (free_starttime <= meeting_endtime) \
+                                and (free_endtime <= meeting_endtime):
+                            # case 4, freetime lies between meeting, delete
+                            free_meetings_list_temp.append([free_starttime, free_endtime])
+
+                free_meetings_list = free_meetings_list_temp
+
+            self.env['print_table'].create({'show_stuff': free_meetings_list})
+
+    def transform_meetings_to_bookable_hours(self, meetings):
+        """
+        TODO
+        :param meetings is a list of following objects [meeting_scheduler objects for user x]:
+        :return: output_timeslots a list of following objects [string startdate,
+                                                                string enddate,
+                                                                list[string bookable_hours],
+                                                                datetime startdate,
+                                                                datetime enddate]
+        """
+        import math
+        output_timeslots = []
+        for meeting in meetings:
+            duration = meeting.meeting_end_date - meeting.meeting_start_date
+            duration = math.floor(duration.total_seconds() / 3600)
+            bookable_hours = ""
+            for i in range(meeting.meeting_start_date.hour, meeting.meeting_start_date.hour+duration+1):
+                bookable_hours += " " + str(i) # the list has to be treated as a string,
+                # # so that the t-foreach from the qweb template can interpret it as a list
+            output_timeslots.append([str(meeting.meeting_start_date),
+                                     str(meeting.meeting_end_date),
+                                     bookable_hours,
+                                     meeting.meeting_start_date,
+                                     meeting.meeting_end_date
+                                     ])
+        return output_timeslots
+
     def calc_bookable_hours(self, timeslots):
         import math
         output_timeslots = []
@@ -118,13 +174,14 @@ class group_scheduler(models.Model):
         group_selected_records = self.env['group_scheduler'].browse(group_selected_ids)
     # get ids from group members
         group_res_users_all_ids = []
-        # this for-loop iterates over the selected groups
+    # this for-loop iterates over the selected groups
         for group in group_selected_records:
-            # this for-loop iterates over the group members
+    # this for-loop iterates over the group members
     # group_scheduler_res_users_rel has user ids and group ids
             for group_member in group.meeting_attendees:
                 group_res_users_all_ids.append(group_member['id'])
         group_res_users_all_ids = list(dict.fromkeys(group_res_users_all_ids))
+        # self.env['print_table'].create({'show_stuff': group_res_users_all_ids})
     # partner_id NOT EQUAL to user_id!!
     # get partner_id from res_users
     #     partner_id_records = self.env['res.users'].browse(group_res_users_all_ids)
@@ -170,12 +227,6 @@ class group_scheduler(models.Model):
             self.env['timeslots'].create({'timeslots_start_date': i[0],
                                           'timeslots_end_date': i[1],
                                           'timeslots_bookable_hours': i[2]})
-
-    def alg01(self, meetings):
-        #TODO
-        return True
-
-
 
     def alg02(self, meetings, search_start_date, search_end_date, working_hour_start, working_hour_end):
         import pytz
@@ -240,57 +291,6 @@ class group_scheduler(models.Model):
             free_meetings_list = free_meetings_list_temp
 
         return free_meetings_list
-
-    def find_overlapping_timeslots(self, timeslots: List[List[datetime]]) -> List[List[datetime]]:
-        """
-        Given a list of timeslots represented as a list of start and end times,
-        returns a list of overlapping timeslots.
-
-        overlaps = []
-        for i in range(len(timeslots)):
-            for j in range(i + 1, len(timeslots)):
-                # check if the two timeslots overlap
-                if timeslots[i][0] < timeslots[j][1] and timeslots[i][1] > timeslots[j][0]:
-                    # add the overlapping timeslot to the list of overlaps
-                    overlap_start = max(timeslots[i][0], timeslots[j][0])
-                    overlap_start_converted = self.convert_timezone(overlap_start)
-
-                    overlap_end = min(timeslots[i][1], timeslots[j][1])
-                    overlap_end_converted = self.convert_timezone(overlap_end)
-
-                    overlaps.append([overlap_start_converted, overlap_end_converted])
-
-        for overlap in overlaps:
-            otuput_overlaps = overlap[0] , overlap[1]
-        return otuput_overlaps
-        """
-
-        temp = [[None], [None]]
-        for i in range(len(timeslots)):
-
-            if(len(timeslots) < 2 or len(timeslots[0]) != 2 or len(timeslots[1]) != 2 or len(timeslots[i]) != 2):
-                return None
-
-            timeslots[i][0] = self.convert_timezone(timeslots[i][0])
-            timeslots[i][1] = self.convert_timezone(timeslots[i][1])
-
-            if(i == 0):
-                temp[0] = timeslots[0][0]
-                temp[1] = timeslots[0][1]
-
-            if (temp[0] < timeslots[i][0]):
-                temp[0] = timeslots[i][0]
-
-            if timeslots[i][1] < temp[1]:
-                temp[1] = timeslots[i][1]
-
-        if(temp[0] < temp[1]):
-            output_overlaps = temp[0], temp[1]
-
-        else:
-            output_overlaps = None
-
-        return output_overlaps
 
     def convert_timezone(self, input_datetime: datetime) -> datetime:
         import pytz
