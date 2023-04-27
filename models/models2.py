@@ -43,11 +43,12 @@ class group_scheduler(models.Model):
             duration = meeting[1] - meeting[0]
             duration = math.floor(duration.total_seconds() / 3600)
             bookable_hours = ""
-            for i in range(meeting[0].hour, meeting[0].hour+duration+1):
-                bookable_hours += " " + str(i) # the list has to be treated as a string,
+            for i in range(meeting[0].hour, meeting[0].hour + duration + 1):
+                bookable_hours += " " + str(i)  # the list has to be treated as a string,
                 # # so that the t-foreach from the qweb template can interpret it as a list
-            output_timeslots.append([str(meeting[0]),
-                                     str(meeting[1]),
+            output_timeslots.append([str(self.convert_timezone(meeting[0])),
+                                     #           (meeting[0].strftime('%Y-%m-%d, %Z')),
+                                     str(self.convert_timezone(meeting[1])),
                                      bookable_hours,
                                      meeting[0],
                                      meeting[1],
@@ -80,10 +81,10 @@ class group_scheduler(models.Model):
         return output_datetime
 
     def button_timeslots_from_intersection(self,
-                             search_start_date,
-                             search_end_date):
+                                           search_start_date,
+                                           search_end_date):
         group_selected_ids = self.env.context.get('active_ids', [])
-        group_selected_records = self.env['group_scheduler'].browse(group_selected_ids) # get ids from group members
+        group_selected_records = self.env['group_scheduler'].browse(group_selected_ids)  # get ids from group members
         group_res_users_all_ids = []
         # this for-loop iterates over the selected groups
         for group in group_selected_records:
@@ -104,7 +105,7 @@ class group_scheduler(models.Model):
                                                                    ('create_uid', '=', group_member)])
             found_meetings_per_group_member.append(meetings_found)
         # if zero not needed because we do not return as in a function, we directly create
-        if(len(group_res_users_all_ids) == 1):
+        if (len(group_res_users_all_ids) == 1):
             timeslots_bookable_h = self.transform_meetings_to_bookable_hours(found_meetings_per_group_member[0])
             for i in timeslots_bookable_h:
                 self.env['timeslots'].create({'timeslots_start_date_str': i[0],
@@ -169,10 +170,10 @@ class group_scheduler(models.Model):
                 # self.env['print_table'].create({'show_stuff': i})
 
     def button_timeslots_from_union(self,
-                             search_start_date,
-                             search_end_date):
+                                    search_start_date,
+                                    search_end_date):
         group_selected_ids = self.env.context.get('active_ids', [])
-        group_selected_records = self.env['group_scheduler'].browse(group_selected_ids) # get ids from group members
+        group_selected_records = self.env['group_scheduler'].browse(group_selected_ids)  # get ids from group members
         group_res_users_all_ids = []
         # this for-loop iterates over the selected groups
         for group in group_selected_records:
