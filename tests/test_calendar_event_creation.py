@@ -6,7 +6,7 @@ class CalendarCreationTest(common.TransactionCase):
 
     def test_calendar_event_creation(self):
 
-        meeting_1 = self.env['meeting_scheduler'].create({'meeting_title': 'calendar event',
+        meeting_1 = self.env['meeting_scheduler'].create({'meeting_title': 'calendar event 1',
                                                           'meeting_repetitions': 1,
                                                           'meeting_frequency': '0',
                                                           'meeting_start_date':
@@ -31,7 +31,7 @@ class CalendarCreationTest(common.TransactionCase):
                                                           'meeting_show_as': 'busy'})
 
 
-        calendar_event_1 = self.env['calendar.event'].search([('name', '=', 'calendar event')])
+        calendar_event_1 = self.env['calendar.event'].search([('name', '=', 'calendar event 1')])
         calendar_event_2 = self.env['calendar.event'].search([('name', '=', 'calendar event 2')])
 
         event_1_title = calendar_event_1.name
@@ -57,3 +57,30 @@ class CalendarCreationTest(common.TransactionCase):
         self.assertEqual(event_2_show_as, meeting_2.meeting_show_as)
         self.assertEqual(event_2_start, meeting_2.meeting_start_date)
         self.assertEqual(event_2_stop, meeting_2.meeting_end_date)
+
+    def test_same_name_event(self):
+
+        meeting = self.env['meeting_scheduler'].create({'meeting_title': 'calendar event',
+                                                          'meeting_repetitions': 1,
+                                                          'meeting_frequency': '0',
+                                                          'meeting_start_date':
+                                                              datetime.datetime(2023, 5, 10, 10, 0, 0),
+                                                          'meeting_end_date':
+                                                              datetime.datetime(2023, 5, 10, 11, 0, 0),
+                                                          'meeting_location': 'airport',
+                                                          'meeting_subject': 'testing',
+                                                          'meeting_privacy': 'public',
+                                                          'meeting_show_as': 'busy'})
+
+        with self.assertRaises(ValueError):
+            meeting_same = self.env['meeting_scheduler'].create({'meeting_title': 'calendar event',
+                                                                'meeting_repetitions': 1,
+                                                                'meeting_frequency': '0',
+                                                                'meeting_start_date':
+                                                                     datetime.datetime(2023, 5, 10, 10, 0, 0),
+                                                                'meeting_end_date':
+                                                                     datetime.datetime(2023, 5, 10, 11, 0, 0),
+                                                                'meeting_location': 'airport',
+                                                                'meeting_subject': 'testing',
+                                                                'meeting_privacy': 'public',
+                                                                'meeting_show_as': 'busy'})
