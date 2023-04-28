@@ -33,7 +33,7 @@ class MeetingScheduler(http.Controller):
             and (kw.get('sel_end_min') is not None) and (kw.get('sel_end_min') != '')):
             temp_id = kw.get('id')
             # self.env['timeslots'].get_id(temp_id)
-            temp_start = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date'])
+            temp_start = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date_str'])
             temp_start = datetime.strptime(temp_start[0:10], '%Y-%m-%d')
             temp_start = temp_start.replace(hour = int(kw.get('sel_start_h')), minute= int(kw.get('sel_start_min')))
             #
@@ -46,7 +46,7 @@ class MeetingScheduler(http.Controller):
             # temp_start = temp_start.astimezone(pytz.utc)
             inputs_meeting.append(temp_start)
 
-            temp_end = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date'])
+            temp_end = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date_str'])
             temp_end = datetime.strptime(temp_end[0:10], '%Y-%m-%d')
             temp_end = temp_end.replace(hour = int(kw.get('sel_end_h')), minute= int(kw.get('sel_end_min')))
             inputs_meeting.append(temp_end)
