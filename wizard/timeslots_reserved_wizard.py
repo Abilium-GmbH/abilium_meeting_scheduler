@@ -10,7 +10,8 @@ class timeslots_reserved_wizard(models.TransientModel):
     _description = 'timeslots_reserved_wizard'
 
     def transit_button_confirm_meeting(self):
-        return True
+        for record in self:
+            return self.env['timeslots_reserved'].button_confirm_meeting()
 
 
 

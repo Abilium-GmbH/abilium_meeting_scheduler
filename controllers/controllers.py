@@ -50,14 +50,16 @@ class MeetingScheduler(http.Controller):
             temp_end = datetime.strptime(temp_end[0:10], '%Y-%m-%d')
             temp_end = temp_end.replace(hour = int(kw.get('sel_end_h')), minute= int(kw.get('sel_end_min')))
             inputs_meeting.append(temp_end)
+            inputs_meeting.append(temp_id)
 
-        if(len(inputs_contact) == 4) and (len(inputs_meeting) == 2):
+        if(len(inputs_contact) == 4) and (len(inputs_meeting) == 3):
             request.env['timeslots_reserved'].create({'firstname': inputs_contact[0],
                                                       'lastname': inputs_contact[1],
                                                       'companyname': inputs_contact[2],
                                                       'email': inputs_contact[3],
                                                       'timeslots_start_date': inputs_meeting[0],
-                                                      'timeslots_end_date': inputs_meeting[1]})
+                                                      'timeslots_end_date': inputs_meeting[1],
+                                                      'timeslots_id': inputs_meeting[2]})
         return response
 
     @http.route('/meeting_scheduler/meeting_scheduler/objects/', auth='public')
