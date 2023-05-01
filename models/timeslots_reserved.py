@@ -21,13 +21,12 @@ class timeslots_reserved(models.Model):
     timeslots_start_date = fields.Datetime(string="Start Date", required=False)
     timeslots_end_date = fields.Datetime(string="End Date", required=False)
     timeslots_id = fields.Integer(string="Foreign Key timeslots")
-
-    # meeting_location = fields.Char(string="Location")
-    # meeting_subject = fields.Text(string="Subject")
-    # meeting_duration = fields.Char(string="Duration", compute="_calc_duration", store=True)
-    # meeting_repetitions = fields.Integer(string="Number of repetitions", default=1)
+    timeslots_reserved_location = fields.Char(string="Location")
+    timeslots_reserved_meeting_subject = fields.Text(string="Subject")
+    timeslots_reserved_meeting_duration = fields.Char(string="Duration")
 
     def open_confirm_form(self):
+
         return {
             'type': 'ir.actions.act_window',
             'view_type': 'form',
@@ -39,7 +38,8 @@ class timeslots_reserved(models.Model):
             # 'context': context,
         }
 
-    def button_confirm_meeting(self):
+    def button_confirm_meeting(self, ourloaction):
+        self.env['print_table'].create({'show_stuff': str(ourloaction)})
         timeslots_minimal_rest_time = timedelta(minutes=15)
         selected_timeslot_reserved = self.env.context.get('active_ids', [])
         timeslot_selected_records = self.env['timeslots_reserved'].browse(selected_timeslot_reserved)
@@ -51,7 +51,6 @@ class timeslots_reserved(models.Model):
         partner_id_list = []
         for i in re.split('\[|,| |\]', timeslots_original.timeslots_groupmembers):
             if i.isnumeric():
-                self.env['print_table'].create({'show_stuff': i})
                 temp_meeting_scheduler = self.env['meeting_scheduler'].search([('create_uid', '=', int(i)),
                                                              ('meeting_start_date', '<=', timeslot_selected_records.timeslots_start_date),
                                                              ('meeting_end_date', '>=', timeslot_selected_records.timeslots_end_date),

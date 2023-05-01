@@ -43,7 +43,7 @@ class group_scheduler(models.Model):
             duration = meeting[1] - meeting[0]
             duration = math.floor(duration.total_seconds() / 3600)
             bookable_hours = ""
-            for i in range(meeting[0].hour, meeting[0].hour + duration + 1):
+            for i in range(meeting[0].hour, meeting[0].hour + duration + 2):
                 bookable_hours += " " + str(i)  # the list has to be treated as a string,
                 # # so that the t-foreach from the qweb template can interpret it as a list
             output_timeslots.append([str(self.convert_timezone(meeting[0])),
