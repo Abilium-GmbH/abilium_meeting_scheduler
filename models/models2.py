@@ -16,6 +16,42 @@ class group_scheduler(models.Model):
     meeting_group = fields.Char(string="Meeting Group", required=True)
     meeting_attendees = fields.Many2many('res.users', string="Attendees")
 
+            daily_meetings_temp = self.alg02(meeting_start_end_list,
+                                                  (search_start_date + timedelta(days=i)),
+                                                  (search_start_date + timedelta(days=i)),
+                                                 working_hour_start,
+                                                 working_hour_end)
+            for x in daily_meetings_temp:
+                daily_meetings_sorted.append(x)
+            self.env['print_table'].create({'show_stuff': daily_meetings_sorted})
+
+        timeslots_bookable_h = self.calc_bookable_hours(daily_meetings_sorted)
+        # self.env['print_table'].create({'show_stuff': timeslots_bookable_h})
+        for i in timeslots_bookable_h:
+            self.env['timeslots'].create({'timeslots_start_date': i[0],
+                                          'timeslots_end_date': i[1],
+                                          'timeslots_bookable_hours': i[2],
+                                          'timeslots_duration_hours': i[3]})
+    def calc_bookable_hours(self, timeslots):
+        import math
+        output_timeslots = []
+        for timeslot in timeslots:
+            duration = timeslot[1] - timeslot[0]
+            duration = math.floor(duration.total_seconds() / 3600)
+            bookable_hours = ""
+            duration_hours = ""
+            n = 0
+            for i in range(timeslot[0].hour, timeslot[0].hour+duration+1):
+                bookable_hours += " " + str(i) # the list has to be treated as a string,
+                # # so that the t-foreach from the qweb template can interpret it as a list
+                duration_hours += " " + str(n)
+                n += 1
+            output_timeslots.append([timeslot[0], timeslot[1], bookable_hours, duration_hours])
+        return output_timeslots
+
+
+
+    # def open_time_form(self, cr, uid, ids, context=None):
     def open_time_form(self):
         return {
             'type': 'ir.actions.act_window',

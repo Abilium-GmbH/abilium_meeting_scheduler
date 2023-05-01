@@ -20,7 +20,7 @@ class timeslots(models.Model):
     timeslots_start_date_utc = fields.Datetime(string="Start Date (UTC)", required=True)
     timeslots_end_date_utc = fields.Datetime(string="End Date (UTC)", required=True)
     timeslots_groupmembers = fields.Char(string="Group Members (String)", required=True)
-
+    timeslots_duration_hours = fields.Char(string="timeslots_duration_hours")
     # meeting_location = fields.Char(string="Location")
     # meeting_subject = fields.Text(string="Subject")
     # meeting_duration = fields.Char(string="Duration", compute="_calc_duration", store=True)

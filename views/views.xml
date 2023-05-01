@@ -117,15 +117,15 @@
                                             </select>
                                         </th>
                                         <th>
-                                            <select id="sel_end_h" name="sel_end_h">
+                                            <select id="sel_duration_h" name="sel_duration_h">
                                                 <!--split separates the string on the whitespaces and list treats it as a list-->
-                                                <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
+                                                <t t-foreach="list(i.timeslots_duration_hours.split())" t-as="item">
                                                     <option t-att-value="item">
                                                         <t t-esc="item"/>
                                                     </option>
                                                 </t>
                                             </select>
-                                            <select id="sel_end_min" name="sel_end_min">
+                                            <select id="sel_duration_min" name="sel_duration_min">
                                                 <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
                                                     <option t-att-value="t_min">
                                                         <t t-esc="t_min"/>

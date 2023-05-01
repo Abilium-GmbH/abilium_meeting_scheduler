@@ -29,8 +29,8 @@ class MeetingScheduler(http.Controller):
         if((kw.get('id') is not None) and (kw.get('id') != '')
             and(kw.get('sel_start_h') is not None) and (kw.get('sel_start_h') != '')
             and (kw.get('sel_start_min') is not None) and (kw.get('sel_start_min') != '')
-            and (kw.get('sel_end_h') is not None) and (kw.get('sel_end_h') != '')
-            and (kw.get('sel_end_min') is not None) and (kw.get('sel_end_min') != '')):
+            and (kw.get('sel_duration_h') is not None) and (kw.get('sel_duration_h') != '')
+            and (kw.get('sel_duration_min') is not None) and (kw.get('sel_duration_min') != '')):
             temp_id = kw.get('id')
             # self.env['timeslots'].get_id(temp_id)
             temp_start = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date_str'])
@@ -48,7 +48,7 @@ class MeetingScheduler(http.Controller):
 
             temp_end = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date_str'])
             temp_end = datetime.strptime(temp_end[0:10], '%Y-%m-%d')
-            temp_end = temp_end.replace(hour = int(kw.get('sel_end_h')), minute= int(kw.get('sel_end_min')))
+            temp_end = temp_end.replace(hour = inputs_meeting[0].hour + int(kw.get('sel_duration_h')), minute= int(kw.get('sel_duration_min')))
             inputs_meeting.append(temp_end)
 
         if(len(inputs_contact) == 4) and (len(inputs_meeting) == 2):
