@@ -24,3 +24,21 @@ class timeslots_reserved(models.Model):
     # meeting_subject = fields.Text(string="Subject")
     # meeting_duration = fields.Char(string="Duration", compute="_calc_duration", store=True)
     # meeting_repetitions = fields.Integer(string="Number of repetitions", default=1)
+
+    def open_confirm_form(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'timeslots_reserved_wizard',  # name of respective model,
+            # 'views': [('group_scheduler_timeform', 'form')],  # view id and type
+            'view_id': self.env.ref('meeting_scheduler.timeslots_reserved_confirmform').id,  # view id
+            'target': 'new',
+            # 'context': context,
+        }
+
+    def button_confirm_meeting(self):
+        return True
+
+    def button_reject_meeting(self):
+        return True

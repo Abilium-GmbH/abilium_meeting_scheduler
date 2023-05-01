@@ -20,7 +20,8 @@
     'data': [
         #'security/ir.model.access.csv',
         'views/views.xml',
-        'wizard/group_wizard_views.xml'
+        'wizard/group_wizard_views.xml',
+        'wizard/timeslots_reserved_wizard_views.xml'
     ],
 
     'demo': [

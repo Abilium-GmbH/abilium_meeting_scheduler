@@ -201,5 +201,3 @@ class Model2Test(common.TransactionCase):
         self.assertEqual(expectedNoTZ, resultNoTZ)
 
 
-
-
