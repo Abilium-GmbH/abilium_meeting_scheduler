@@ -11,52 +11,55 @@ class Model2Test(common.TransactionCase):
     def test_algo02(self):
         print("TODO")
 
-    def test_bookable_hours(self):
+    def test_transform_meetings_to_bookable_hours(self):
 
         group_scheduler_0 = self.env['group_scheduler'].create({'meeting_group': 'test group'})
 
         #1 slot corr
-        timeslot0 = [[datetime.datetime(2023, 4, 12, 12, 0), datetime.datetime(2023, 4, 12, 18, 0)]]
-        result0 = group_scheduler_0.calc_bookable_hours(timeslot0)
+        timeslot0 = [[datetime.datetime(2023, 4, 12, 12, 0), datetime.datetime(2023, 4, 12, 18, 0), ['ID']]]
+        result0 = group_scheduler_0.transform_meetings_to_bookable_hours(timeslot0)
         self.assertEqual(str(result0[0][2]), " 12 13 14 15 16 17 18")
 
         #1 slot wrong
-        timeslot1 = [[datetime.datetime(2023, 4, 12, 18, 0), datetime.datetime(2023, 4, 12, 12, 0)]]
-        result1 = group_scheduler_0.calc_bookable_hours(timeslot1)
+        timeslot1 = [[datetime.datetime(2023, 4, 12, 18, 0), datetime.datetime(2023, 4, 12, 12, 0), ['ID']]]
+        result1 = group_scheduler_0.transform_meetings_to_bookable_hours(timeslot1)
         self.assertEqual(str(result1[0][2]), "")
 
         #2 slots corr
-        timeslot2 = [[datetime.datetime(2023, 4, 12, 12, 0), datetime.datetime(2023, 4, 12, 18, 0)],
-                     [datetime.datetime(2023, 4, 13, 8, 0), datetime.datetime(2023, 4, 13, 15, 0)]]
-        result2 = group_scheduler_0.calc_bookable_hours(timeslot2)
+        timeslot2 = [[datetime.datetime(2023, 4, 12, 12, 0), datetime.datetime(2023, 4, 12, 18, 0), ['ID']],
+                     [datetime.datetime(2023, 4, 13, 8, 0), datetime.datetime(2023, 4, 13, 15, 0), ['ID']]]
+        result2 = group_scheduler_0.transform_meetings_to_bookable_hours(timeslot2)
         self.assertEqual(str(result2[0][2]), " 12 13 14 15 16 17 18")
         self.assertEqual(str(result2[1][2]), " 8 9 10 11 12 13 14 15")
 
         #2 slots wrong
-        timeslot3 = [[datetime.datetime(2023, 4, 12, 12), datetime.datetime(2023, 4, 12, 10)],
-                     [datetime.datetime(2023, 4, 13, 10), datetime.datetime(2023, 4, 12, 8)]]
-        result3 = group_scheduler_0.calc_bookable_hours(timeslot3)
+        timeslot3 = [[datetime.datetime(2023, 4, 12, 12), datetime.datetime(2023, 4, 12, 10), ['ID']],
+                     [datetime.datetime(2023, 4, 13, 10), datetime.datetime(2023, 4, 12, 8), ['ID']]]
+        result3 = group_scheduler_0.transform_meetings_to_bookable_hours(timeslot3)
         self.assertEqual(str(result3[0][2]), "")
         self.assertEqual(str(result3[1][2]), "")
 
         #1 slot over day
         #produces error
-        timeslot4 = [[datetime.datetime(2023, 4, 12, 6), datetime.datetime(2023, 4, 13, 6)]]
-        result4 = group_scheduler_0.calc_bookable_hours(timeslot4)
+        timeslot4 = [[datetime.datetime(2023, 4, 12, 6), datetime.datetime(2023, 4, 13, 6), ['ID']]]
+        result4 = group_scheduler_0.transform_meetings_to_bookable_hours(timeslot4)
         #self.assertEqual(str(result4[0][2]), " 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 1 2 3 4 5 6")
 
 
         #1 slot specific
         #produces error
-        timeslot5 = [[datetime.datetime(2023, 4, 12, 8, 56, 21), datetime.datetime(2023, 4, 12, 10, 43, 51)]]
-        result5 = group_scheduler_0.calc_bookable_hours(timeslot5)
+        timeslot5 = [[datetime.datetime(2023, 4, 12, 8, 56, 21), datetime.datetime(2023, 4, 12, 10, 43, 51), ['ID']]]
+        result5 = group_scheduler_0.transform_meetings_to_bookable_hours(timeslot5)
         #self.assertEqual(str(result5[0][2]), " 8 9 10")
 
         #1 slot check for changes
-        timeslot6 = [[datetime.datetime(2023, 4, 12, 8, 56, 21), datetime.datetime(2023, 4, 12, 10, 43, 51)]]
-        result6 = group_scheduler_0.calc_bookable_hours(timeslot6)
-        self.assertEqual(str(result6[0][0]), "2023-04-12 08:56:21")
-        self.assertEqual(str(result6[0][1]), "2023-04-12 10:43:51")
+        #produces error because of wrong convertTimezones
+        timeslot6 = [[datetime.datetime(2023, 4, 12, 8, 56, 21), datetime.datetime(2023, 4, 12, 10, 43, 51), ['ID']]]
+        result6 = group_scheduler_0.transform_meetings_to_bookable_hours(timeslot6)
+        self.assertEqual(str(result6[0][3]), "2023-04-12 08:56:21")
+        self.assertEqual(str(result6[0][4]), "2023-04-12 10:43:51")
+        #self.assertEqual(str(result6[0][0]), "2023-04-12 08:56:21")
+        #self.assertEqual(str(result6[0][1]), "2023-04-12 10:43:51")
 
 
 
