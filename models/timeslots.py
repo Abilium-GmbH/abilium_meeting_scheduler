@@ -17,6 +17,7 @@ class timeslots(models.Model):
     timeslots_start_date = fields.Char(string="Start Date", required=True)
     timeslots_end_date = fields.Char(string="End Date", required=True)
     timeslots_bookable_hours = fields.Char(string="timeslots_bookable_hours")
+    timeslots_duration_hours = fields.Char(string="timeslots_duration_hours")
     # meeting_location = fields.Char(string="Location")
     # meeting_subject = fields.Text(string="Subject")
     # meeting_duration = fields.Char(string="Duration", compute="_calc_duration", store=True)
