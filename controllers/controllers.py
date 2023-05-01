@@ -60,6 +60,12 @@ class MeetingScheduler(http.Controller):
                                                       'timeslots_start_date': inputs_meeting[0],
                                                       'timeslots_end_date': inputs_meeting[1],
                                                       'timeslots_id': inputs_meeting[2]})
+            list_partner_ids = request.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(inputs_meeting[2])
+            request.env['timeslots_reserved_wizard'].send_internal_notification("NEW timeslot reservation",
+                                                                                "please confirm or reject the reservation",
+                                                                                list_partner_ids,
+                                                                                request.env['timeslots_reserved']._name) # TODO add the messages to variables in a settings model
+
         return response
 
     @http.route('/meeting_scheduler/meeting_scheduler/objects/', auth='public')

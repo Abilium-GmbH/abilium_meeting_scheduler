@@ -32,7 +32,7 @@
                                 <button name="button_mailtester"
                                         string="Mail Tester"
                                         class="btn-primary" type="object"/>
-                                <button name="do_teh_chatter"
+                                <button name="send_internal_notification"
                                         string="Run  Chat"
                                         class="btn-primary" type="object"/>
 

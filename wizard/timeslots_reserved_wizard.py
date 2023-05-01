@@ -21,21 +21,14 @@ class timeslots_reserved_wizard(models.TransientModel):
     wiz_timeslots_reserved_meeting_subject = fields.Text(string="Subject", readonly=True)
     wiz_timeslots_reserved_meeting_duration = fields.Char(string="Duration", readonly=True)
 
-
-
-
-    # firstname2 = fields.Char(related='timeslots_reserverd.firstname')
-
-    # selected_timeslot_reserved = self.env.context.get('active_ids', [])
-    # timeslot_selected_records = self.env['timeslots_reserved'].browse(selected_timeslot_reserved)
-
-    @api.depends('dummy')
+    @api.depends('dummy') #TODO find a solution without the dummy
     def compute_get_selected_field(self):
-
+        """
+        loads the actual values from the selected timeslots_reserved record in the wizard
+        :return:
+        """
         selected_timeslot_reserved = self.env.context.get('active_ids', [])
         timeslot_selected_records = self.env['timeslots_reserved'].browse(selected_timeslot_reserved)
-        # records.firstname = timeslot_selected_records.firstname
-
         for record in self:
             record.wiz_meeting_title = timeslot_selected_records.meeting_title
             record.wiz_firstname = timeslot_selected_records.firstname
@@ -43,7 +36,7 @@ class timeslots_reserved_wizard(models.TransientModel):
             record.wiz_companyname = timeslot_selected_records.companyname
             record.wiz_email = timeslot_selected_records.email
             record.wiz_timeslots_start_date = timeslot_selected_records.timeslots_start_date
-            # record.wiz_timeslots_reserved_location = timeslot_selected_records.timeslots_reserved_location
+            # record.wiz_timeslots_reserved_location = timeslot_selected_records.timeslots_reserved_location #do not load location, else it will be overwritten
             record.wiz_timeslots_reserved_meeting_subject = timeslot_selected_records.timeslots_reserved_meeting_subject
             record.wiz_timeslots_reserved_meeting_duration = timeslot_selected_records.timeslots_reserved_meeting_duration
 
@@ -56,39 +49,65 @@ class timeslots_reserved_wizard(models.TransientModel):
         return True
 
     def button_mailtester(self):
-
+        """
+        sends a mail with meeting description to the guest
+        :return:
+        """
         mail_obj = self.env['mail.mail']
-        body_html = "<p>message</p>"
-        mail = mail_obj.create({
-            'subject': "testtstse",
-            'body_html': body_html,
-            'email_to': ("bla"),
-        })
+        selected_timeslot_reserved = self.env.context.get('active_ids', [])
+        timeslot_selected_records = self.env['timeslots_reserved'].browse(selected_timeslot_reserved)
+        timeslot_selected_record_id = timeslot_selected_records.timeslots_id
+        list_partner_ids = self.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(timeslot_selected_record_id)
+
+        for record in self:
+            # TODO define message in settings model
+            body_html = "We proudly inform you that the following Meeting is confirmed: </br>" \
+                        + "<h1>" + record.wiz_meeting_title + "</h1>" \
+                        + "<p>Starting on the <b>" + str(record.wiz_timeslots_start_date) + "</b></br>" \
+                        + "at Location: <b>" + record.wiz_timeslots_reserved_location + "</b></br>" \
+                        + "with for a duration of " + str(record.wiz_timeslots_reserved_meeting_duration) + "</br>" \
+                        + "participants: " + record.wiz_firstname + " " + record.wiz_lastname + ", " + record.wiz_companyname + "</br>"
+            for i in list_partner_ids:
+                partner = self.env['res.partner'].browse(i)
+                body_html = body_html + str(partner.name) + "</br>"
+            if(str(record.wiz_timeslots_reserved_meeting_subject) == False):
+                body_html = body_html + "description: " + str(record.wiz_timeslots_reserved_meeting_subject)
+            body_html = body_html + " </p>"
+            mail = mail_obj.create({
+                    'subject': "CONFIRMED " + record.wiz_meeting_title,
+                    'body_html': body_html,
+                    'email_to': record.wiz_email,
+            })
         mail.send()
 
-    def do_teh_chatter(self):
-        body = "My Message!"
-        partner_id = 3 #odoobot 2
-        notification_ids = []
-        notification_ids.append((0,0, {
-            'res_partner_id': partner_id,
-            'notification_type': 'inbox'}))
+    def send_internal_notification(self, subject, message, partner_ids, modelname):
+        """
+        Creates an internal message in the Discuss module
+        :param subject: message subject, string
+        :param message: message content, string
+        :param partner_ids: list of partner_ids who are the recipents [partner_id_1, partner_id2]
+        :param modelname: the modelname of the sending model, for example request.env['timeslots_reserved']._name
+        :return:
+        """
+        # partner_id = 3 #odoobot 2
+        for partner_id in partner_ids:
+            notification_ids = []
+            notification_ids.append((0, 0, {
+                'res_partner_id': partner_id,
+                'notification_type': 'inbox'}))
 
-        message_vals = {
-            'body': body,
-            'subject': "run",
-            'author_id': self.env.user.partner_id.id,
-            'model': self._name,
-            'res_id': self.id,
-            # 'partner_ids': [(4, partner_id)]
-            'partner_ids': [(4, partner_id)],
-            # 'notification': True,
-            'message_type': 'notification',
-            'notification_ids': notification_ids,
-            # 'type': 'notification',
-            # 'subtype_id': self.env.ref('mail.mt_notification').id
-        }
-        self.env['mail.message'].create(message_vals)
+            message_vals = {
+                'body': message,
+                'subject': subject,
+                'author_id': self.env.user.partner_id.id,
+                # 'model': self._name,
+                'model': modelname,
+                'res_id': self.id,
+                'partner_ids': [(4, partner_id)],
+                'message_type': 'notification',
+                'notification_ids': notification_ids,
+            }
+            self.env['mail.message'].create(message_vals)
 
         # return {
         #     'effect': {

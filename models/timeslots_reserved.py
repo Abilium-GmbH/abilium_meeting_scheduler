@@ -2,6 +2,7 @@
 import datetime
 
 import pytz
+import re
 
 from odoo import models, fields, api
 from typing import List
@@ -13,7 +14,7 @@ class timeslots_reserved(models.Model):
     _name = 'timeslots_reserved'
     _description = 'timeslots_reserved'
 
-    meeting_title = fields.Char(string="Meeting Title", required=False)
+    meeting_title = fields.Char(string="Meeting Title", default="Meeting")
     firstname = fields.Char(string="firstname", required=False)
     lastname = fields.Char(string="lastname", required=False)
     companyname = fields.Char(string="companyname", required=False)
@@ -26,6 +27,10 @@ class timeslots_reserved(models.Model):
     timeslots_reserved_meeting_duration = fields.Char(string="Duration")
 
     def open_confirm_form(self):
+        """
+        needed for the timeslots_reserved_wizard
+        :return:
+        """
 
         return {
             'type': 'ir.actions.act_window',
@@ -38,6 +43,38 @@ class timeslots_reserved(models.Model):
             # 'context': context,
         }
 
+    # might not be used
+    # def get_user_ids_from_timeslot_id(self, timeslot_id):
+    #     """
+    #     returns a list with the user_ids from the selected meeting timeslot
+    #     :param timeslot_id: an int (or string ?) is accepted, representing the id of the bookable timeslot entry
+    #     :return: a list with the user_ids from the selected meeting [user_id_1, user_id_2]
+    #     """
+    #     timeslots_original = self.env['timeslots'].browse(int(timeslot_id))
+    #     output_user_ids = []
+    #     for i in re.split('\[|,| |\]', timeslots_original.timeslots_groupmembers):
+    #         if i.isnumeric():
+    #             output_user_ids.append(int(i))
+    #     return output_user_ids
+
+    def get_partner_ids_from_timeslot_id(self, timeslot_id):
+        """
+        returns a list with the partner_ids from the selected meeting timeslot
+        :param timeslot_id: an int (or string ?) is accepted, representing the id of the bookable timeslot entry
+        :return: a list with the partner_ids from the selected meeting [partner_id_1, partner_id_2]
+        """
+        timeslots_original = self.env['timeslots'].browse(int(timeslot_id))
+        output_partner_ids = []
+        for i in re.split('\[|,| |\]', timeslots_original.timeslots_groupmembers):
+            if i.isnumeric():
+                selected_user = self.env['res.users'].search([('id', '=', int(i))])
+                output_partner_ids.append(selected_user['partner_id'].id)
+
+        return output_partner_ids
+
+
+
+
     def button_confirm_meeting(self, ourloaction):
         self.env['print_table'].create({'show_stuff': str(ourloaction)})
         timeslots_minimal_rest_time = timedelta(minutes=15)
@@ -47,7 +84,7 @@ class timeslots_reserved(models.Model):
         timeslots_original = self.env['timeslots'].browse(timeslot_selected_record_id)
         # self.env['print_table'].create({'show_stuff': timeslots_original.timeslots_groupmembers.split()})
 
-        import re
+
         partner_id_list = []
         for i in re.split('\[|,| |\]', timeslots_original.timeslots_groupmembers):
             if i.isnumeric():
