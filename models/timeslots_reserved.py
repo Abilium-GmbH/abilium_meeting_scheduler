@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import secrets
 
 import pytz
 import re
@@ -147,10 +148,74 @@ class timeslots_reserved(models.Model):
                                               'stop': timeslot_selected_records.timeslots_end_date,
                                               'partner_ids': [[6, 0, partner_id_list]]})
 
+        list_partner_ids = self.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(timeslot_selected_record_id)
+        for record in timeslot_selected_records:
+            body_html = "<p>We proudly inform you that the following Meeting is confirmed: </p></br>" \
+                        + "<h1>" + str(record.meeting_title) + "</h1>" \
+                        + "<p>Starting on the <b>" + str(record.timeslots_start_date) + "</b></br>" \
+                        + "at Location: <b>" + str(ourloaction) + "</b></br>" \
+                        + "with for a duration of " + str(record.timeslots_reserved_meeting_duration) + "</br>" \
+                        + "participants: " + str(record.firstname) + " " + str(record.lastname) + ", " + str(record.companyname) + "</br>"
+            for i in list_partner_ids:
+                partner = self.env['res.partner'].browse(i)
+                body_html = body_html + str(partner.name) + "</br>"
+            if(str(record.timeslots_reserved_meeting_subject) != "False"):
+                body_html = body_html + "description: " + str(record.timeslots_reserved_meeting_subject)
+            body_html = body_html + " </p>"
+            self.env['timeslots_reserved'].send_mail_to_address("CONFIRMED " + str(record.meeting_title), body_html, str(record.email))
+
         timeslots_original.unlink()
+
+        import secrets
+        for record in timeslot_selected_records:
+            confirmed_token = secrets.token_hex(16) #secrets.token_urlsafe()
+            self.env['timeslots_confirmed'].create({
+                'meeting_title': record.meeting_title,
+                'firstname': record.firstname,
+                'lastname': record.lastname,
+                'companyname': record.companyname,
+                'email': record.email,
+                'timeslots_start_date': record.timeslots_start_date,
+                'timeslots_end_date': record.timeslots_end_date,
+                'timeslots_id': record.timeslots_id,
+                'timeslots_reserved_location': ourloaction,
+                'timeslots_reserved_meeting_subject': record.timeslots_reserved_meeting_subject,
+                'timeslots_reserved_meeting_duration': record.timeslots_reserved_meeting_duration,
+                'timeslots_confirmed_token': confirmed_token,
+            })
         timeslot_selected_records.unlink()
 
         return True
 
+    def send_mail_to_address(self, subject, message, email_address):
+        """
+        sends a mail to the recipient with subject and message
+        :param subject: string
+        :param message: string
+        :param email_address: string
+        :return: none
+        """
+        self.env['print_table'].create({'show_stuff': "test send_mail_to_address"})
+        mail_obj = self.env['mail.mail']
+        mail = mail_obj.create({
+            'subject': subject,
+            'body_html': message,
+            'email_to': email_address,
+        })
+        mail.send()
+
+
     def button_reject_meeting(self):
+        selected_timeslot_reserved = self.env.context.get('active_ids', [])
+        timeslot_selected_records = self.env['timeslots_reserved'].browse(selected_timeslot_reserved)
+        for record in timeslot_selected_records:
+            body_html = "We sadly inform you that the following Meeting has been rejected: </br>" \
+                        + "<h1>" + str(record.meeting_title) + "</h1>" \
+                        + "<p>Starting on the <b>" + str(record.timeslots_start_date) + "</b></br>" \
+                        + "participants: " + str(record.firstname) + " " + str(record.lastname) + ", " + str(record.companyname) + "</br>"
+            if(str(record.timeslots_reserved_meeting_subject) != "False"):
+                body_html = body_html + "description: " + str(record.timeslots_reserved_meeting_subject)
+            body_html = body_html + " </p>"
+            self.env['timeslots_reserved'].send_mail_to_address("REJECTED " + str(record.meeting_title), body_html, str(record.email))
+            record.unlink()
         return True

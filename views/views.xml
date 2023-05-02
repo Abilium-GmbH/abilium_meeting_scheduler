@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
+    <template id="token_entry" name="calendar ass">
+        <!--        <t t-call="web.html_container">  gives an interesting structure, not yeat clear what benefits it gives to us, but atleast its centered nicely-->
+        <t t-call="web.html_container">
+            <!--&lt;!&ndash;            <t t-call="web.external_layout">&ndash;&gt; gives a template structre which we maybe can use-->
+            <html>
+                <head>
+                </head>
+                <body>
+                    <h1>token not valid</h1>
+                </body>
+            </html>
+        </t>
+    </template>
+
+    <template id="token_ok" name="calendar ass">
+        <!--        <t t-call="web.html_container">  gives an interesting structure, not yeat clear what benefits it gives to us, but atleast its centered nicely-->
+        <t t-call="web.html_container">
+            <!--&lt;!&ndash;            <t t-call="web.external_layout">&ndash;&gt; gives a template structre which we maybe can use-->
+            <html>
+                <head>
+                </head>
+                <body>
+                    <h1>token valid</h1>
+                    <form>
+<!--                        <t t-attf-action="value" method="POST">-->
+<!--                        <form action="/meeting_scheduler/scheduled_meeting/" method="POST">-->
+                        <form t-attf-action="/meeting_scheduler/scheduled_meeting/" method="POST">
+
+
+                            <input type="hidden" name="token" t-att-value="value"/>
+                            <input type="hidden" name="id" value="cancel"/>
+                            <input type="submit" value="Submit"/>
+
+                    </form>
+                    </form>
+                </body>
+            </html>
+        </t>
+    </template>
+
+
     <template id="guest_view_loop" name="calendar assets">
 <!--        <t t-call="web.html_container">  gives an interesting structure, not yeat clear what benefits it gives to us, but atleast its centered nicely-->
         <t t-call="web.html_container">
@@ -383,6 +424,40 @@
         </record>
     </data>
 
+    <!-- fifth menu action-->
+    <record id="timeslots_confirmed_action" model="ir.actions.act_window">
+        <field name="name">Confirmed Timeslots</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">timeslots_confirmed</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+    <!-- explicit list view definition second item -->
+    <data>
+        <record model="ir.ui.view" id="timeslot_confirmed_list">
+            <field name="name">Timeslot list</field>
+            <field name="model">timeslots_confirmed</field>
+            <field name="arch" type="xml">
+
+                <tree create="false">
+                    <field name="timeslots_confirmed_token"/>
+                    <field name="meeting_title"/>
+                    <field name="firstname"/>
+                    <field name="lastname"/>
+                    <field name="companyname"/>
+                    <field name="email"/>
+                    <field name="timeslots_start_date"/>
+                    <field name="timeslots_end_date"/>
+                    <field name="timeslots_reserved_location"/>
+                    <field name="timeslots_reserved_meeting_subject"/>
+
+                </tree>
+
+            </field>
+
+        </record>
+    </data>
+
+
     <data>
         <record id="link_to_guest_view" model="ir.actions.act_url">
             <field name="name">Guest View</field>
@@ -422,11 +497,21 @@
               parent="meeting-scheduler-root"
               action="link_to_guest_view"
               groups="base.group_user"/>
+    <menuitem name="Timeslots"
+              id="meeting-scheduler-timeslots-main"
+              parent="meeting-scheduler-root"
+              groups="base.group_user"/>
     <menuitem name="5. Reserved Timeslots"
               id="meeting-scheduler-timeslots-reserved"
-              parent="meeting-scheduler-root"
+              parent="meeting-scheduler-timeslots-main"
               action="timeslots_reserved_action"
               groups="base.group_user"/>
+    <menuitem name="6. Confirmed Timeslots"
+              id="meeting-scheduler-timeslots-confirmed"
+              parent="meeting-scheduler-timeslots-main"
+              action="timeslots_confirmed_action"
+              groups="base.group_user"/>
+
     <menuitem name="Printed Stuff"
               id="meeting-scheduler-stuff-printer"
               parent="meeting-scheduler-root"

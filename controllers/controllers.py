@@ -5,9 +5,10 @@ from odoo.http import route, request
 from datetime import datetime
 
 class MeetingScheduler(http.Controller):
-    @http.route('/meeting_scheduler/meeting_scheduler/', auth='public')
-    def index(self, **kw):
-        return "Hello, world"
+    # @http.route('/meeting_scheduler/meeting_scheduler/', auth='public')
+    # def index(self, **kw):
+    #     return "Hello, world"
+
 
     @route('/meeting_scheduler/guest_view/', auth='public', website=True)
     def index(self, **kw):
@@ -68,29 +69,45 @@ class MeetingScheduler(http.Controller):
 
         return response
 
-    @http.route('/meeting_scheduler/meeting_scheduler/objects/', auth='public')
-    def list(self, **kw):
-        return http.request.render('meeting_scheduler.listing', {
-            'root': '/meeting_scheduler/meeting_scheduler',
-            'objects': http.request.env['meeting_scheduler'].search([]),
-        })
+    # /meeting_scheduler/scheduled_meeting/?token=toki
+    # /meeting_scheduler/scheduled_meeting/?token=23bce225f8dad88de2f89430f6f1dfc0
+    @route('/meeting_scheduler/scheduled_meeting/', auth='public', website=True)
+    def token_check(self, **kw):
+        response = request.render("meeting_scheduler.token_entry", {})
+        check = request.env['timeslots_confirmed'].search([('timeslots_confirmed_token', '=', kw.get('token'))])
+        request.env['print_table'].create({'show_stuff': str(check.id)})
+        request.env['print_table'].create({'show_stuff': "check"})
+        # boolchecker = False
+        if (check.id != False):
+            request.env['print_table'].create({'show_stuff': "tokis token"})
+            response = request.render("meeting_scheduler.token_ok", {'value': "23bce225f8dad88de2f89430f6f1dfc0"})
+        if(kw.get('token') == check['timeslots_confirmed_token']) and (kw.get('id') == 'cancel'):
+            request.env['print_table'].create({'show_stuff': "tokis token canceleed"})
+        return response
 
-    @http.route('/meeting_scheduler/meeting_scheduler/objects/<model("meeting_scheduler"):obj>/', auth='public')
-    def object(self, obj, **kw):
-        return http.request.render('meeting_scheduler.object', {
-            'object': obj
-        })
-
-    @route('/meeting_scheduler/guest_view/update/', auth="public", website=True)
-    # request.env['print_table'].create({'show_stuff': 'backend'})
-    def test(self, **kw):
-        my_input = kw.get('my_input')  # Get the value of the 'my_input' parameter
-        request.env['print_table'].create({'show_stuff': my_input})
-        return True
-
-    @http.route('/my/route', type='http', auth='public')
-    def my_method(self, **post):
-        my_input = post.get('my_input')  # Get the value of the 'my_input' parameter
-        # Do something with my_input
-        request.env['print_table'].create({'show_stuff': str(my_input)})
-        return "Success"
+    # @http.route('/meeting_scheduler/meeting_scheduler/objects/', auth='public')
+    # def list(self, **kw):
+    #     return http.request.render('meeting_scheduler.listing', {
+    #         'root': '/meeting_scheduler/meeting_scheduler',
+    #         'objects': http.request.env['meeting_scheduler'].search([]),
+    #     })
+    #
+    # @http.route('/meeting_scheduler/meeting_scheduler/objects/<model("meeting_scheduler"):obj>/', auth='public')
+    # def object(self, obj, **kw):
+    #     return http.request.render('meeting_scheduler.object', {
+    #         'object': obj
+    #     })
+    #
+    # @route('/meeting_scheduler/guest_view/update/', auth="public", website=True)
+    # # request.env['print_table'].create({'show_stuff': 'backend'})
+    # def test(self, **kw):
+    #     my_input = kw.get('my_input')  # Get the value of the 'my_input' parameter
+    #     request.env['print_table'].create({'show_stuff': my_input})
+    #     return True
+    #
+    # @http.route('/my/route', type='http', auth='public')
+    # def my_method(self, **post):
+    #     my_input = post.get('my_input')  # Get the value of the 'my_input' parameter
+    #     # Do something with my_input
+    #     request.env['print_table'].create({'show_stuff': str(my_input)})
+    #     return "Success"

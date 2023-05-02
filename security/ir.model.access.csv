@@ -1,8 +1,11 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_meeting_scheduler,access.meeting_scheduler,model_meeting_scheduler,,1,1,1,1
-access.group_scheduler,access_group_scheduler,model_group_scheduler,,1,1,1,1
-access.print_table,access_print_table,model_print_table,,1,1,1,1
-access.timeslots,access_timeslots,model_timeslots,,1,1,1,1
-access.timeslots_reserved,access_timeslots_reserved,model_timeslots_reserved,,1,1,1,1
-access.group_wizard,access_group_wizard,model_group_wizard,,1,1,1,1
-access.timeslots_reserved_wizard,access_timeslots_reserved_wizard,model_timeslots_reserved_wizard,,1,1,1,1
+access_group_scheduler,access.group_scheduler,model_group_scheduler,,1,1,1,1
+access_print_table,access.print_table,model_print_table,,1,1,1,1
+access_timeslots,access.timeslots,model_timeslots,,1,1,1,1
+access_timeslots_reserved,access.timeslots_reserved,model_timeslots_reserved,,1,1,1,1
+access_group_wizard,access.group_wizard,model_group_wizard,,1,1,1,1
+access_timeslots_reserved_wizard,access.timeslots_reserved_wizard,model_timeslots_reserved_wizard,,1,1,1,1
+access_timeslots_confirmed,access.timeslots_confirmed,model_timeslots_confirmed,,1,1,1,1
+
+

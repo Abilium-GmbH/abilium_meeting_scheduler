@@ -17,7 +17,7 @@ class timeslots_reserved_wizard(models.TransientModel):
     wiz_email = fields.Char(string="E-Mail", readonly=True)
     wiz_timeslots_start_date = fields.Datetime(string="Start Date", readonly=True)
     wiz_timeslots_end_date = fields.Datetime(string="End Date", readonly=True)
-    wiz_timeslots_reserved_location = fields.Char(string="Location", required=True)
+    wiz_timeslots_reserved_location = fields.Char(string="Location")
     wiz_timeslots_reserved_meeting_subject = fields.Text(string="Subject", readonly=True)
     wiz_timeslots_reserved_meeting_duration = fields.Char(string="Duration", readonly=True)
 
@@ -42,43 +42,35 @@ class timeslots_reserved_wizard(models.TransientModel):
 
     def transit_button_confirm_meeting(self):
         for record in self:
-            self.env['print_table'].create({'show_stuff': str(record.wiz_timeslots_reserved_location)})
-            return self.env['timeslots_reserved'].button_confirm_meeting(record.wiz_timeslots_reserved_location)
+            if (record.wiz_timeslots_reserved_location != False):
+                return self.env['timeslots_reserved'].button_confirm_meeting(record.wiz_timeslots_reserved_location)
+            else:
+                return {
+                    'type': 'ir.actions.client',
+                     'tag': 'display_notification',
+                    'params': {
+                        'title': 'Error',
+                        'type': 'danger',
+                        'message': 'Please enter a location',
+                        'sticky': False,
+                        }}
+
 
     def transit_button_reject_meeting(self):
-        return True
+        return self.env['timeslots_reserved'].button_reject_meeting()
 
     def button_mailtester(self):
         """
         sends a mail with meeting description to the guest
         :return:
         """
-        mail_obj = self.env['mail.mail']
-        selected_timeslot_reserved = self.env.context.get('active_ids', [])
-        timeslot_selected_records = self.env['timeslots_reserved'].browse(selected_timeslot_reserved)
-        timeslot_selected_record_id = timeslot_selected_records.timeslots_id
-        list_partner_ids = self.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(timeslot_selected_record_id)
-
-        for record in self:
-            # TODO define message in settings model
-            body_html = "We proudly inform you that the following Meeting is confirmed: </br>" \
-                        + "<h1>" + record.wiz_meeting_title + "</h1>" \
-                        + "<p>Starting on the <b>" + str(record.wiz_timeslots_start_date) + "</b></br>" \
-                        + "at Location: <b>" + record.wiz_timeslots_reserved_location + "</b></br>" \
-                        + "with for a duration of " + str(record.wiz_timeslots_reserved_meeting_duration) + "</br>" \
-                        + "participants: " + record.wiz_firstname + " " + record.wiz_lastname + ", " + record.wiz_companyname + "</br>"
-            for i in list_partner_ids:
-                partner = self.env['res.partner'].browse(i)
-                body_html = body_html + str(partner.name) + "</br>"
-            if(str(record.wiz_timeslots_reserved_meeting_subject) == False):
-                body_html = body_html + "description: " + str(record.wiz_timeslots_reserved_meeting_subject)
-            body_html = body_html + " </p>"
-            mail = mail_obj.create({
-                    'subject': "CONFIRMED " + record.wiz_meeting_title,
-                    'body_html': body_html,
-                    'email_to': record.wiz_email,
-            })
-        mail.send()
+        return {
+            'effect': {
+                'fadeout': 'slow',
+                'message': 'Hellooo Roger',
+                'type': 'rainbow_man',
+            }
+        }
 
     def send_internal_notification(self, subject, message, partner_ids, modelname):
         """
@@ -109,10 +101,4 @@ class timeslots_reserved_wizard(models.TransientModel):
             }
             self.env['mail.message'].create(message_vals)
 
-        # return {
-        #     'effect': {
-        #         'fadeout': 'slow',
-        #         'message': 'Hellooo',
-        #         'type': 'rainbow_man',
-        #     }
-        # }
+
