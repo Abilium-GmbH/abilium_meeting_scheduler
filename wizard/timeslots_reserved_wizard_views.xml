@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="timeslots_reserved_confirmform" model="ir.ui.view">
+            <field name="name">timeslots_reserved.confirmform</field>
+            <field name="model">timeslots_reserved_wizard</field>
+            <field name="arch" type="xml">
+                <form string="Test">
+                    <sheet>
+                        <group>
+
+
+                            <group>
+                                <field name="dummy" invisible="1"/>
+                                <field name="wiz_meeting_title"/>
+                                <field name="wiz_timeslots_start_date"/>
+                                <field name="wiz_timeslots_reserved_meeting_duration"/>
+                                <field name="wiz_firstname"/>
+                                <field name="wiz_lastname"/>
+                                <field name="wiz_companyname"/>
+                                <field name="wiz_email"/>
+                                <field name="wiz_timeslots_reserved_location"/>
+                                <field name="wiz_timeslots_reserved_meeting_subject"/>
+                            </group>
+                            <group>
+                                <button name="transit_button_confirm_meeting"
+                                        string="Confirm Meeting Request"
+                                        class="btn-primary" type="object"/>
+                                <button name="transit_button_reject_meeting"
+                                        string="Reject Meeting Request"
+                                        class="btn-primary" type="object"/>
+                                <button name="button_mailtester"
+                                        string="Mail Tester"
+                                        class="btn-primary" type="object"/>
+                                <button name="send_internal_notification"
+                                        string="Run  Chat"
+                                        class="btn-primary" type="object"/>
+
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_timeslots_reserved_confirmform" model="ir.actions.act_window">
+            <field name="name">New Stuff</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">timeslots_reserved_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+
+
+    </data>
+</odoo>

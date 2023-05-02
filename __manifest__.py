@@ -15,16 +15,20 @@
     'category': 'Uncategorized',
     'version': '0.1',
 
-    'depends': ['base'],
+    'depends': ['base', 'calendar', 'mail'],
 
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/views.xml',
+        'wizard/group_wizard_views.xml',
+        'wizard/timeslots_reserved_wizard_views.xml'
     ],
 
     'demo': [
         #'demo/demo.xml'
     ],
+    'installable': True,
+    'auto_install': False,
     'application': True,
     'sequence': '0',
 }
