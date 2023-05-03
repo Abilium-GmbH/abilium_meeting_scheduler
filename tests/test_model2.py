@@ -11,6 +11,58 @@ class Model2Test(common.TransactionCase):
     def test_algo02(self):
         print("TODO")
 
+    def test_button_timeslots_from_union(self):
+
+        user0_0 = self.env['res.users'].create({'name': 'Bruno', 'login': 'Bruno'})
+        user0_0_id = self.env['res.users'].search([('name', '=', 'Bruno')]).id
+
+
+
+        self.env['meeting_scheduler'].create([{
+            'meeting_title': 'meetingBookable',
+            'meeting_location': False,
+            'meeting_start_date': str(datetime.datetime(2023, 10, 2, 9, 0)),
+            'meeting_end_date': str(datetime.datetime(2023, 10, 2, 11, 0)),
+            'meeting_repetitions': 1,
+            'meeting_frequency': 0,
+            'meeting_privacy': 'public',
+            'meeting_show_as': 'free',
+            'meeting_subject': False,
+            'create_uid': user0_0_id
+        }])
+
+        user0_1 = self.env['res.users'].create({'name': 'Belinda', 'login': 'Belinda'})
+        user0_1_id = self.env['res.users'].search([('name', '=', 'Belinda')]).id
+
+        self.env['meeting_scheduler'].create([{
+            'meeting_title': 'meetingBookable',
+            'meeting_location': False,
+            'meeting_start_date': str(datetime.datetime(2023, 10, 2, 11, 0)),
+            'meeting_end_date': str(datetime.datetime(2023, 10, 2, 15, 0)),
+            'meeting_repetitions': 1,
+            'meeting_frequency': 0,
+            'meeting_privacy': 'public',
+            'meeting_show_as': 'free',
+            'meeting_subject': False,
+            'create_uid': user0_1_id
+        }])
+
+        group0 = self.env['res.groups'].create({'name': 'group0', 'users': [[user0_0_id], [user0_1_id]]})
+        group0_id = self.env['res.groups'].search([('name', '=', 'group0')]).id
+
+        group_scheduler_0 = self.env['group_scheduler'].with_context({'active_ids': group0_id}).\
+            create({'meeting_group': group0_id, 'meeting_attendees': [user0_0_id, user0_1_id]})
+
+        start_time_0 = datetime.datetime(2023, 10, 2, 10, 0)
+        end_time_0 = datetime.datetime(2023, 10, 2, 18, 0)
+
+        group_scheduler_0.button_timeslots_from_union(start_time_0, end_time_0)
+
+        timeslots = self.env['timeslots'].search([('timeslots_start_date_str', '!=', '0')])
+
+        print(timeslots)
+
+
     def test_transform_meetings_to_bookable_hours(self):
 
         group_scheduler_0 = self.env['group_scheduler'].create({'meeting_group': 'test group'})
@@ -62,98 +114,7 @@ class Model2Test(common.TransactionCase):
         #self.assertEqual(str(result6[0][1]), "2023-04-12 10:43:51")
 
 
-
-    """def test_find_overlapping_timeslots(self):
-
-        group_scheduler_0 = self.env['group_scheduler'].create({'meeting_group': 'test group'})
-
-        #2 slots with
-        timeslots0 = [[datetime.datetime(2023, 4, 10, 10, 0, 0), datetime.datetime(2023, 4, 10, 20, 0, 0)],
-                      [datetime.datetime(2023, 4, 10, 11, 0, 0), datetime.datetime(2023, 4, 10, 19, 0, 0)]]
-
-        result0 = str(group_scheduler_0.find_overlapping_timeslots(timeslots0))
-        expected0 = "(datetime.datetime(2023, 4, 10, 11, 0), datetime.datetime(2023, 4, 10, 19, 0))"
-        self.assertEqual(result0, expected0)
-
-        #2 slots without
-        timeslots1 = [[datetime.datetime(2023, 4, 10, 12, 0, 0), datetime.datetime(2023, 4, 10, 18, 0, 0)],
-                      [datetime.datetime(2023, 4, 10, 9, 0, 0), datetime.datetime(2023, 4, 10, 12, 0, 0)]]
-
-        result1 = str(group_scheduler_0.find_overlapping_timeslots(timeslots1))
-        expected1 = "None"
-        self.assertEqual(result1, expected1)
-
-        #3 slots with
-        timeslots2 = [[datetime.datetime(2023, 4, 10, 6, 0, 0), datetime.datetime(2023, 4, 10, 18, 0, 0)],
-                      [datetime.datetime(2023, 4, 10, 7, 0, 0), datetime.datetime(2023, 4, 10, 19, 0, 0)],
-                      [datetime.datetime(2023, 4, 10, 9, 0, 0), datetime.datetime(2023, 4, 10, 17, 0, 0)]]
-
-        result2 = str(group_scheduler_0.find_overlapping_timeslots(timeslots2))
-        expected2 = "(datetime.datetime(2023, 4, 10, 9, 0), datetime.datetime(2023, 4, 10, 17, 0))"
-        self.assertEqual(result2, expected2)
-
-        #3 slots without
-        timeslots3 = [[datetime.datetime(2023, 4, 10, 6, 0, 0), datetime.datetime(2023, 4, 10, 10, 0, 0)],
-                      [datetime.datetime(2023, 4, 10, 7, 0, 0), datetime.datetime(2023, 4, 10, 18, 0, 0)],
-                      [datetime.datetime(2023, 4, 10, 10, 0, 0), datetime.datetime(2023, 4, 10, 19, 0, 0)]]
-
-        result3 = str(group_scheduler_0.find_overlapping_timeslots(timeslots3))
-        expected3 = "None"
-        self.assertEqual(result3, expected3)
-
-        #2 slots with and diff tz
-
-        chicagoStart = datetime.datetime(2023, 4, 10, 6, 0, 0, 0)
-        chicagoStartTZ = pytz.timezone('America/Chicago').localize(chicagoStart)
-        chicagoEnd = datetime.datetime(2023, 4, 10, 16, 0, 0, 0)
-        chicagoEndTZ = pytz.timezone('America/Chicago').localize(chicagoEnd)
-
-        timbuktuStart = datetime.datetime(2023, 4, 10, 6, 0, 0, 0)
-        timbuktuStartTZ = pytz.timezone('Africa/Timbuktu').localize(timbuktuStart)
-        timbuktuEnd = datetime.datetime(2023, 4, 10, 20, 0, 0, 0)
-        timbuktuEndTZ = pytz.timezone('Africa/Timbuktu').localize(timbuktuEnd)
-        timeslots4 = [[chicagoStartTZ, chicagoEndTZ],
-                      [timbuktuStartTZ, timbuktuEndTZ]]
-
-        result4 = str(group_scheduler_0.find_overlapping_timeslots(timeslots4))
-        expected4 = "(datetime.datetime(2023, 4, 10, 13, 0), datetime.datetime(2023, 4, 10, 22, 0))"
-        self.assertEqual(result4, expected4)
-
-        #no slots
-        timeslots5 = [[],[]]
-
-        result5 = str(group_scheduler_0.find_overlapping_timeslots(timeslots5))
-        expected5 = "None"
-        self.assertEqual(result5, expected5)
-
-        #wrong inputs
-        timeslots6 = [[datetime.datetime(2023, 10, 4, 15, 30), datetime.datetime(2023, 10, 4, 19, 45)], []]
-        result6 = str(group_scheduler_0.find_overlapping_timeslots(timeslots6))
-        expected6 = "None"
-
-        self.assertEqual(result6, expected6)
-
-        timeslots7 = [[], [datetime.datetime(2023, 10, 4, 15, 30), datetime.datetime(2023, 10, 4, 19, 45)]]
-        result7 = str(group_scheduler_0.find_overlapping_timeslots(timeslots7))
-        expected7 = "None"
-
-        self.assertEqual(result7, expected7)
-
-        timeslots8 = [[datetime.datetime(2023, 10, 4, 15, 30)], [datetime.datetime(2023, 10, 4, 19, 45)]]
-        result8 = str(group_scheduler_0.find_overlapping_timeslots(timeslots8))
-        expected8 = "None"
-
-        self.assertEqual(result8, expected8)
-
-        timeslots9 = [[datetime.datetime(2023, 4, 10, 6, 0, 0), datetime.datetime(2023, 4, 10, 18, 0, 0)],
-                      [datetime.datetime(2023, 4, 10, 7, 0, 0), datetime.datetime(2023, 4, 10, 19, 0, 0)],
-                      [datetime.datetime(2023, 4, 10, 9, 0, 0), datetime.datetime(2023, 4, 10, 17, 0, 0), datetime.datetime(2023, 4, 10, 11, 30, 0)]]
-        result9 = str(group_scheduler_0.find_overlapping_timeslots(timeslots9))
-        expected9 = "None"
-
-        self.assertEqual(result9, expected9)"""
-
-
+#function still doesn't work as intended
     def dont_test_convert_timezones(self):
 
         """
