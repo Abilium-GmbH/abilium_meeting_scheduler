@@ -3,6 +3,7 @@
 from odoo import http
 from odoo.http import route, request
 from datetime import datetime
+from datetime import timedelta
 
 class MeetingScheduler(http.Controller):
     # @http.route('/meeting_scheduler/meeting_scheduler/', auth='public')
@@ -73,16 +74,19 @@ class MeetingScheduler(http.Controller):
     # /meeting_scheduler/scheduled_meeting/?token=23bce225f8dad88de2f89430f6f1dfc0
     @route('/meeting_scheduler/scheduled_meeting/', auth='public', website=True)
     def token_check(self, **kw):
+        locktime = timedelta(hours=23)
         response = request.render("meeting_scheduler.token_entry", {})
-        check = request.env['timeslots_confirmed'].search([('timeslots_confirmed_token', '=', kw.get('token'))])
-        request.env['print_table'].create({'show_stuff': str(check.id)})
-        request.env['print_table'].create({'show_stuff': "check"})
-        # boolchecker = False
-        if (check.id != False):
-            request.env['print_table'].create({'show_stuff': "tokis token"})
-            response = request.render("meeting_scheduler.token_ok", {'value': "23bce225f8dad88de2f89430f6f1dfc0"})
-        if(kw.get('token') == check['timeslots_confirmed_token']) and (kw.get('id') == 'cancel'):
-            request.env['print_table'].create({'show_stuff': "tokis token canceleed"})
+        selected_meeting = request.env['timeslots_confirmed'].search([('timeslots_confirmed_token', '=', kw.get('token'))])
+        if (selected_meeting.id != False):
+            if((selected_meeting.timeslots_start_date - datetime.now()) < locktime):
+                response = request.render("meeting_scheduler.token_locktime", {'value': selected_meeting,
+                                                                               'locktime': str(locktime.days)+" days "+str(locktime.seconds//3600)+" hours"})
+            else:
+                response = request.render("meeting_scheduler.token_ok", {'value': selected_meeting})
+        if(kw.get('token') == selected_meeting['timeslots_confirmed_token']) and (kw.get('id') == 'cancel'):
+            request.env['timeslots_confirmed'].button_cancel_meeting(selected_meeting)
+            response = request.render("meeting_scheduler.token_deleted", {})
+
         return response
 
     # @http.route('/meeting_scheduler/meeting_scheduler/objects/', auth='public')

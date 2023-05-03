@@ -26,5 +26,34 @@ class timeslots_confirmed(models.Model):
     timeslots_reserved_meeting_subject = fields.Text(string="Subject")
     timeslots_reserved_meeting_duration = fields.Char(string="Duration")
     timeslots_confirmed_token = fields.Char(string="Token")
+    timeslots_confirmed_link = fields.Char(string="Link")
+    timeslots_confirmed_calendar_event_id = fields.Integer(string="Foreign Key calendar_event")
+
+
+    def button_cancel_meeting(self, timeslots_confirmed_object):
+        """
+        this function deletes the timeslots_confirmed entry and the corresponding calendar_event,
+        and sends an email to the guest about the cancellation
+        :param timeslots_confirmed_object:
+        :return:
+        """
+        body_html = "This E-Mail confirms that you have cancelled the following Meeting: </br>" \
+                        + "<h1>" + str(timeslots_confirmed_object.meeting_title) + "</h1>" \
+                        + "<p>Starting on the <b>" + str(timeslots_confirmed_object.timeslots_start_date) + "</b></br>" \
+                        + "participants: " + str(timeslots_confirmed_object.firstname) + " " \
+                    + str(timeslots_confirmed_object.lastname) + ", " \
+                    + str(timeslots_confirmed_object.companyname) + "</br>"
+        if(str(timeslots_confirmed_object.timeslots_reserved_meeting_subject) != "False"):
+            body_html = body_html + "description: " + str(timeslots_confirmed_object.timeslots_reserved_meeting_subject)
+        body_html = body_html + " </p>"
+        self.env['timeslots_reserved'].send_mail_to_address("CANCELLED " + str(timeslots_confirmed_object.meeting_title), body_html, str(timeslots_confirmed_object.email))
+
+        self.env['calendar.event'].browse(timeslots_confirmed_object.timeslots_confirmed_calendar_event_id).unlink()
+
+        timeslots_confirmed_object.unlink()
+
+        return True
+
+
 
 

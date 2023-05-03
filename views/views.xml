@@ -24,23 +24,59 @@
                 </head>
                 <body>
                     <h1>token valid</h1>
-                    <form>
-<!--                        <t t-attf-action="value" method="POST">-->
-<!--                        <form action="/meeting_scheduler/scheduled_meeting/" method="POST">-->
-                        <form t-attf-action="/meeting_scheduler/scheduled_meeting/" method="POST">
-
-
-                            <input type="hidden" name="token" t-att-value="value"/>
-                            <input type="hidden" name="id" value="cancel"/>
-                            <input type="submit" value="Submit"/>
-
-                    </form>
-                    </form>
+                    <p>To cancel your meeting:
+                        <t t-esc="value.meeting_title"/>
+                    </p>
+                    <p>On the
+                    <t t-esc="value.timeslots_start_date"/>
+                    </p>
+                    <p>Click this button
+                        <form>
+                            <form t-attf-action="/meeting_scheduler/scheduled_meeting/" method="POST">
+                                <input type="hidden" name="token" t-att-value="value.timeslots_confirmed_token"/>
+                                <input type="hidden" name="id" value="cancel"/>
+                                <input type="submit" value="Cancel Meeting"/>
+                            </form>
+                        </form>
+                    </p>
                 </body>
             </html>
         </t>
     </template>
 
+    <template id="token_locktime" name="calendar ass">
+        <!--        <t t-call="web.html_container">  gives an interesting structure, not yeat clear what benefits it gives to us, but atleast its centered nicely-->
+        <t t-call="web.html_container">
+            <!--&lt;!&ndash;            <t t-call="web.external_layout">&ndash;&gt; gives a template structre which we maybe can use-->
+            <html>
+                <head>
+                </head>
+                <body>
+                    <h1>token locktime</h1>
+                    <p>Meetings cannot be cancelled <t t-esc="locktime"/> before the start </p>
+                     <p>  Your meeting:
+                        <t t-esc="value.meeting_title"/>
+                    </p>
+                    <p>On the
+                    <t t-esc="value.timeslots_start_date"/>
+                    </p>
+                </body>
+            </html>
+        </t>
+    </template>
+
+
+    <template id="token_deleted" name="calendar ass">
+        <t t-call="web.html_container">
+            <html>
+                <head>
+                </head>
+                <body>
+                    <h1>Your Meeting has been successfully cancelled</h1>
+                </body>
+            </html>
+        </t>
+    </template>
 
     <template id="guest_view_loop" name="calendar assets">
 <!--        <t t-call="web.html_container">  gives an interesting structure, not yeat clear what benefits it gives to us, but atleast its centered nicely-->
@@ -440,6 +476,7 @@
 
                 <tree create="false">
                     <field name="timeslots_confirmed_token"/>
+                    <field name="timeslots_confirmed_link"/>
                     <field name="meeting_title"/>
                     <field name="firstname"/>
                     <field name="lastname"/>

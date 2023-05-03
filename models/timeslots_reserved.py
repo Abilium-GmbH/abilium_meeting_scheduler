@@ -73,11 +73,7 @@ class timeslots_reserved(models.Model):
 
         return output_partner_ids
 
-
-
-
     def button_confirm_meeting(self, ourloaction):
-        self.env['print_table'].create({'show_stuff': str(ourloaction)})
         timeslots_minimal_rest_time = timedelta(minutes=15)
         selected_timeslot_reserved = self.env.context.get('active_ids', [])
         timeslot_selected_records = self.env['timeslots_reserved'].browse(selected_timeslot_reserved)
@@ -140,35 +136,22 @@ class timeslots_reserved(models.Model):
 
                 temp_calendar_event.unlink()
 
-        self.env['calendar.event'].create({
-                                              'name': "Booked meeting with" + timeslot_selected_records.firstname + " " + timeslot_selected_records.lastname,
+        created_calendar_event = self.env['calendar.event'].create({
+                                              'name': "Booked meeting with " + timeslot_selected_records.firstname + " " + timeslot_selected_records.lastname,
                                               'privacy': 'public',
                                               'show_as': 'busy',
                                               'start': timeslot_selected_records.timeslots_start_date,
                                               'stop': timeslot_selected_records.timeslots_end_date,
-                                              'partner_ids': [[6, 0, partner_id_list]]})
+                                              'partner_ids': [[6, 0, partner_id_list]],
+                                              'description': timeslot_selected_records.timeslots_reserved_meeting_subject})
 
-        list_partner_ids = self.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(timeslot_selected_record_id)
-        for record in timeslot_selected_records:
-            body_html = "<p>We proudly inform you that the following Meeting is confirmed: </p></br>" \
-                        + "<h1>" + str(record.meeting_title) + "</h1>" \
-                        + "<p>Starting on the <b>" + str(record.timeslots_start_date) + "</b></br>" \
-                        + "at Location: <b>" + str(ourloaction) + "</b></br>" \
-                        + "with for a duration of " + str(record.timeslots_reserved_meeting_duration) + "</br>" \
-                        + "participants: " + str(record.firstname) + " " + str(record.lastname) + ", " + str(record.companyname) + "</br>"
-            for i in list_partner_ids:
-                partner = self.env['res.partner'].browse(i)
-                body_html = body_html + str(partner.name) + "</br>"
-            if(str(record.timeslots_reserved_meeting_subject) != "False"):
-                body_html = body_html + "description: " + str(record.timeslots_reserved_meeting_subject)
-            body_html = body_html + " </p>"
-            self.env['timeslots_reserved'].send_mail_to_address("CONFIRMED " + str(record.meeting_title), body_html, str(record.email))
 
-        timeslots_original.unlink()
-
+        ############################## Create Confirmed Entry and Link ##############################
         import secrets
         for record in timeslot_selected_records:
             confirmed_token = secrets.token_hex(16) #secrets.token_urlsafe()
+            domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            link = domain + '/meeting_scheduler/scheduled_meeting/' + '?token=' + confirmed_token
             self.env['timeslots_confirmed'].create({
                 'meeting_title': record.meeting_title,
                 'firstname': record.firstname,
@@ -182,7 +165,33 @@ class timeslots_reserved(models.Model):
                 'timeslots_reserved_meeting_subject': record.timeslots_reserved_meeting_subject,
                 'timeslots_reserved_meeting_duration': record.timeslots_reserved_meeting_duration,
                 'timeslots_confirmed_token': confirmed_token,
+                'timeslots_confirmed_link': link,
+                'timeslots_confirmed_calendar_event_id': int(created_calendar_event.id),
             })
+
+############################## Send Confirmation Mail ##############################
+        list_partner_ids = self.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(timeslot_selected_record_id)
+        body_html = ""
+        for record in timeslot_selected_records:
+            body_html = "<p>We proudly inform you that the following Meeting is confirmed: </p></br>" \
+                        + "<h1>" + str(record.meeting_title) + "</h1>" \
+                        + "<p>Starting on the <b>" + str(record.timeslots_start_date) + "</b></br>" \
+                        + "at Location: <b>" + str(ourloaction) + "</b></br>" \
+                        + "with for a duration of " + str(record.timeslots_reserved_meeting_duration) + "</br>" \
+                        + "participants: " + str(record.firstname) + " " + str(record.lastname) + ", " + str(
+                record.companyname) + "</br>"
+            for i in list_partner_ids:
+                partner = self.env['res.partner'].browse(i)
+                body_html = body_html + str(partner.name) + "</br>"
+            if (str(record.timeslots_reserved_meeting_subject) != "False"):
+                body_html = body_html + "description: " + str(record.timeslots_reserved_meeting_subject)
+            body_html = body_html + "</br>To cancel your meeting follow this link: " \
+                                    "<a href=" + link + ">Cancel Meeting</a>   </p>"
+            self.env['timeslots_reserved'].send_mail_to_address("CONFIRMED " + str(record.meeting_title), body_html,
+                                                                str(record.email))
+
+
+        timeslots_original.unlink()
         timeslot_selected_records.unlink()
 
         return True
@@ -195,7 +204,6 @@ class timeslots_reserved(models.Model):
         :param email_address: string
         :return: none
         """
-        self.env['print_table'].create({'show_stuff': "test send_mail_to_address"})
         mail_obj = self.env['mail.mail']
         mail = mail_obj.create({
             'subject': subject,

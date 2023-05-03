@@ -64,6 +64,11 @@ class timeslots_reserved_wizard(models.TransientModel):
         sends a mail with meeting description to the guest
         :return:
         """
+
+        domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        self.env['print_table'].create({'show_stuff': domain})
+
+
         return {
             'effect': {
                 'fadeout': 'slow',
