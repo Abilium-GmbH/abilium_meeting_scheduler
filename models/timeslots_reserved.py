@@ -81,14 +81,17 @@ class timeslots_reserved(models.Model):
         timeslots_original = self.env['timeslots'].browse(timeslot_selected_record_id)
         # self.env['print_table'].create({'show_stuff': timeslots_original.timeslots_groupmembers.split()})
 
-
         partner_id_list = []
+        user_id_list = []
         for i in re.split('\[|,| |\]', timeslots_original.timeslots_groupmembers):
             if i.isnumeric():
                 temp_meeting_scheduler = self.env['meeting_scheduler'].search([('create_uid', '=', int(i)),
-                                                             ('meeting_start_date', '<=', timeslot_selected_records.timeslots_start_date),
-                                                             ('meeting_end_date', '>=', timeslot_selected_records.timeslots_end_date),
-                                                             ('meeting_end_date', '>', timeslot_selected_records.timeslots_start_date)])
+                                                                               ('meeting_start_date', '<=',
+                                                                                timeslot_selected_records.timeslots_start_date),
+                                                                               ('meeting_end_date', '>=',
+                                                                                timeslot_selected_records.timeslots_end_date),
+                                                                               ('meeting_end_date', '>',
+                                                                                timeslot_selected_records.timeslots_start_date)])
 
                 temp_calendar_event = self.env['calendar.event'].search([('create_uid', '=', int(i)),
                                                                          ('start', '<=',
@@ -106,9 +109,11 @@ class timeslots_reserved(models.Model):
                 # (4, ID) link to existing record with id = ID (adds a relationship)
                 # (5) unlink all (like using (3,ID) for all linked records)
                 # (6, 0, [IDs]) replace the list of linked IDs (like using (5) then (4,ID) for each ID in the list of IDs)
+                user_id_list.append(int(i))
                 selected_user = self.env['res.users'].search([('id', '=', int(i))])
                 partner_id_list.append(selected_user['partner_id'].id)
-                if((timeslot_selected_records.timeslots_start_date - temp_meeting_scheduler.meeting_start_date) > timeslots_minimal_rest_time):
+                if ((
+                        timeslot_selected_records.timeslots_start_date - temp_meeting_scheduler.meeting_start_date) >= timeslots_minimal_rest_time):
                     self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
                         'meeting_title': 'meetingBookable',
                         'meeting_location': False,
@@ -120,8 +125,8 @@ class timeslots_reserved(models.Model):
                         'meeting_show_as': 'free',
                         'meeting_subject': False
                     }])
-                if((temp_meeting_scheduler.meeting_end_date - timeslot_selected_records.timeslots_end_date) > timeslots_minimal_rest_time):
-
+                if ((
+                        temp_meeting_scheduler.meeting_end_date - timeslot_selected_records.timeslots_end_date) >= timeslots_minimal_rest_time):
                     self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
                         'meeting_title': 'meetingBookable',
                         'meeting_location': False,
@@ -137,19 +142,18 @@ class timeslots_reserved(models.Model):
                 temp_calendar_event.unlink()
 
         created_calendar_event = self.env['calendar.event'].create({
-                                              'name': "Booked meeting with " + timeslot_selected_records.firstname + " " + timeslot_selected_records.lastname,
-                                              'privacy': 'public',
-                                              'show_as': 'busy',
-                                              'start': timeslot_selected_records.timeslots_start_date,
-                                              'stop': timeslot_selected_records.timeslots_end_date,
-                                              'partner_ids': [[6, 0, partner_id_list]],
-                                              'description': timeslot_selected_records.timeslots_reserved_meeting_subject})
-
+            'name': "Booked meeting with " + timeslot_selected_records.firstname + " " + timeslot_selected_records.lastname,
+            'privacy': 'public',
+            'show_as': 'busy',
+            'start': timeslot_selected_records.timeslots_start_date,
+            'stop': timeslot_selected_records.timeslots_end_date,
+            'partner_ids': [[6, 0, partner_id_list]],
+            'description': timeslot_selected_records.timeslots_reserved_meeting_subject})
 
         ############################## Create Confirmed Entry and Link ##############################
         import secrets
         for record in timeslot_selected_records:
-            confirmed_token = secrets.token_hex(16) #secrets.token_urlsafe()
+            confirmed_token = secrets.token_hex(16)  # secrets.token_urlsafe()
             domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
             link = domain + '/meeting_scheduler/scheduled_meeting/' + '?token=' + confirmed_token
             self.env['timeslots_confirmed'].create({
@@ -167,9 +171,11 @@ class timeslots_reserved(models.Model):
                 'timeslots_confirmed_token': confirmed_token,
                 'timeslots_confirmed_link': link,
                 'timeslots_confirmed_calendar_event_id': int(created_calendar_event.id),
+                'timeslots_reserved_participants': timeslots_original.timeslots_groupmembers,
+
             })
 
-############################## Send Confirmation Mail ##############################
+        ############################## Send Confirmation Mail ##############################
         list_partner_ids = self.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(timeslot_selected_record_id)
         body_html = ""
         for record in timeslot_selected_records:
@@ -189,12 +195,47 @@ class timeslots_reserved(models.Model):
                                     "<a href=" + link + ">Cancel Meeting</a>   </p>"
             self.env['timeslots_reserved'].send_mail_to_address("CONFIRMED " + str(record.meeting_title), body_html,
                                                                 str(record.email))
-
-
+        self.generate_new_bookable_timeslots(timeslots_original.timeslots_start_date_utc, user_id_list)
         timeslots_original.unlink()
         timeslot_selected_records.unlink()
 
         return True
+
+    def generate_new_bookable_timeslots(self, start_date, user_id_list):
+        ############## upon confiming a meeting, this section generates new bookable timeslots for that day ############
+        begin_day = datetime(year=start_date.year,
+                             month=start_date.month,
+                             day=start_date.day,
+                             hour=0,
+                             minute=0,
+                             second=0)
+        end_day = datetime(year=start_date.year,
+                           month=start_date.month,
+                           day=start_date.day,
+                           hour=23,
+                           minute=59,
+                           second=59)
+        daily_bookable_timeslots = []
+        for i in user_id_list:
+            self.env['print_table'].create({'show_stuff': 'user_id'})
+            self.env['print_table'].create({'show_stuff': i})
+
+            daily_bookable_timeslots = self.env['timeslots'].search([('timeslots_start_date_utc', '>', begin_day),
+                                                                     ('timeslots_end_date_utc', '<', end_day),
+                                                                     ('timeslots_groupmembers', '=ilike',
+                                                                      '%' + str(i) + '%'),
+                                                                     ('timeslots_groupmembers', 'not ilike',
+                                                                      '%' + str(i) + str(i) + '%')])
+            self.env['print_table'].create({'show_stuff': 'daily_bookable_timeslots'})
+            self.env['print_table'].create({'show_stuff': daily_bookable_timeslots})
+
+            for x in daily_bookable_timeslots:
+                x.unlink()
+            if (len(user_id_list) == 1):
+                self.env['group_scheduler'].generate_union(user_id_list, begin_day.date(), end_day.date())
+            else:
+                self.env['group_scheduler'].generate_intersection(user_id_list, begin_day.date(), end_day.date())
+
 
     def send_mail_to_address(self, subject, message, email_address):
         """
@@ -212,7 +253,6 @@ class timeslots_reserved(models.Model):
         })
         mail.send()
 
-
     def button_reject_meeting(self):
         selected_timeslot_reserved = self.env.context.get('active_ids', [])
         timeslot_selected_records = self.env['timeslots_reserved'].browse(selected_timeslot_reserved)
@@ -220,10 +260,12 @@ class timeslots_reserved(models.Model):
             body_html = "We sadly inform you that the following Meeting has been rejected: </br>" \
                         + "<h1>" + str(record.meeting_title) + "</h1>" \
                         + "<p>Starting on the <b>" + str(record.timeslots_start_date) + "</b></br>" \
-                        + "participants: " + str(record.firstname) + " " + str(record.lastname) + ", " + str(record.companyname) + "</br>"
-            if(str(record.timeslots_reserved_meeting_subject) != "False"):
+                        + "participants: " + str(record.firstname) + " " + str(record.lastname) + ", " + str(
+                record.companyname) + "</br>"
+            if (str(record.timeslots_reserved_meeting_subject) != "False"):
                 body_html = body_html + "description: " + str(record.timeslots_reserved_meeting_subject)
             body_html = body_html + " </p>"
-            self.env['timeslots_reserved'].send_mail_to_address("REJECTED " + str(record.meeting_title), body_html, str(record.email))
+            self.env['timeslots_reserved'].send_mail_to_address("REJECTED " + str(record.meeting_title), body_html,
+                                                                str(record.email))
             record.unlink()
         return True

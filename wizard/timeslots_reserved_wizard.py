@@ -66,8 +66,6 @@ class timeslots_reserved_wizard(models.TransientModel):
         """
 
         domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        self.env['print_table'].create({'show_stuff': domain})
-
 
         return {
             'effect': {

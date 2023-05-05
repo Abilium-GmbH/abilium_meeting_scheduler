@@ -204,3 +204,12 @@ class meeting_scheduler(models.Model):
     #                                                                         vals.get('meeting_start_date')),
     #                                                                       ('stop', '=', vals.get(
     #                                                                          'meeting_end_date'))])
+
+    def unlink(self):
+        """
+        the renewed unlink function deletes the object by the unlink function from the corresponding_calendar_event,
+        whilst not even completing its own unlink. Due to the fact that it is deleted by cascading effect of
+        the related object.
+        :return:
+        """
+        self.corresponding_calendar_event.unlink()
