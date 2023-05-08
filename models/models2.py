@@ -43,7 +43,7 @@ class group_scheduler(models.Model):
             duration = meeting[1] - meeting[0]
             duration = math.floor(duration.total_seconds() / 3600)
             bookable_hours = ""
-            for i in range(meeting[0].hour, meeting[0].hour + duration + 1):
+            for i in range(meeting[0].hour, meeting[0].hour + duration + 2):
                 bookable_hours += " " + str(i)  # the list has to be treated as a string,
                 # # so that the t-foreach from the qweb template can interpret it as a list
             output_timeslots.append([str(self.convert_timezone(meeting[0])),
@@ -94,7 +94,9 @@ class group_scheduler(models.Model):
                 group_res_users_all_ids.append(group_member['id'])
         group_res_users_all_ids = list(dict.fromkeys(group_res_users_all_ids))
         # partner_id NOT EQUAL to user_id!!
+        self.generate_intersection(group_res_users_all_ids, search_start_date, search_end_date)
 
+    def generate_intersection(self, group_res_users_all_ids, search_start_date, search_end_date):
         found_meetings_per_group_member = []
         for group_member in group_res_users_all_ids:
             meetings_found = self.env['meeting_scheduler'].search(['&',
@@ -183,7 +185,9 @@ class group_scheduler(models.Model):
                 group_res_users_all_ids.append(group_member['id'])
         group_res_users_all_ids = list(dict.fromkeys(group_res_users_all_ids))
         # partner_id NOT EQUAL to user_id!!
+        self.generate_union(group_res_users_all_ids, search_start_date, search_end_date)
 
+    def generate_union(self, group_res_users_all_ids, search_start_date, search_end_date):
         found_meetings_per_group_member = []
         for group_member in group_res_users_all_ids:
             meetings_found = self.env['meeting_scheduler'].search(['&',

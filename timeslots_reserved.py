@@ -82,7 +82,6 @@ class timeslots_reserved(models.Model):
         # self.env['print_table'].create({'show_stuff': timeslots_original.timeslots_groupmembers.split()})
 
         partner_id_list = []
-        user_id_list = []
         for i in re.split('\[|,| |\]', timeslots_original.timeslots_groupmembers):
             if i.isnumeric():
                 temp_meeting_scheduler = self.env['meeting_scheduler'].search([('create_uid', '=', int(i)),
@@ -109,11 +108,10 @@ class timeslots_reserved(models.Model):
                 # (4, ID) link to existing record with id = ID (adds a relationship)
                 # (5) unlink all (like using (3,ID) for all linked records)
                 # (6, 0, [IDs]) replace the list of linked IDs (like using (5) then (4,ID) for each ID in the list of IDs)
-                user_id_list.append(int(i))
                 selected_user = self.env['res.users'].search([('id', '=', int(i))])
                 partner_id_list.append(selected_user['partner_id'].id)
                 if ((
-                        timeslot_selected_records.timeslots_start_date - temp_meeting_scheduler.meeting_start_date) >= timeslots_minimal_rest_time):
+                        timeslot_selected_records.timeslots_start_date - temp_meeting_scheduler.meeting_start_date) > timeslots_minimal_rest_time):
                     self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
                         'meeting_title': 'meetingBookable',
                         'meeting_location': False,
@@ -126,7 +124,7 @@ class timeslots_reserved(models.Model):
                         'meeting_subject': False
                     }])
                 if ((
-                        temp_meeting_scheduler.meeting_end_date - timeslot_selected_records.timeslots_end_date) >= timeslots_minimal_rest_time):
+                        temp_meeting_scheduler.meeting_end_date - timeslot_selected_records.timeslots_end_date) > timeslots_minimal_rest_time):
                     self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
                         'meeting_title': 'meetingBookable',
                         'meeting_location': False,
@@ -195,47 +193,11 @@ class timeslots_reserved(models.Model):
                                     "<a href=" + link + ">Cancel Meeting</a>   </p>"
             self.env['timeslots_reserved'].send_mail_to_address("CONFIRMED " + str(record.meeting_title), body_html,
                                                                 str(record.email))
-        self.generate_new_bookable_timeslots(timeslots_original.timeslots_start_date_utc, user_id_list)
+
         timeslots_original.unlink()
         timeslot_selected_records.unlink()
 
         return True
-
-    def generate_new_bookable_timeslots(self, start_date, user_id_list):
-        ############## upon confiming a meeting, this section generates new bookable timeslots for that day ############
-        begin_day = datetime(year=start_date.year,
-                             month=start_date.month,
-                             day=start_date.day,
-                             hour=0,
-                             minute=0,
-                             second=0)
-        end_day = datetime(year=start_date.year,
-                           month=start_date.month,
-                           day=start_date.day,
-                           hour=23,
-                           minute=59,
-                           second=59)
-        daily_bookable_timeslots = []
-        for i in user_id_list:
-            self.env['print_table'].create({'show_stuff': 'user_id'})
-            self.env['print_table'].create({'show_stuff': i})
-
-            daily_bookable_timeslots = self.env['timeslots'].search([('timeslots_start_date_utc', '>', begin_day),
-                                                                     ('timeslots_end_date_utc', '<', end_day),
-                                                                     ('timeslots_groupmembers', '=ilike',
-                                                                      '%' + str(i) + '%'),
-                                                                     ('timeslots_groupmembers', 'not ilike',
-                                                                      '%' + str(i) + str(i) + '%')])
-            self.env['print_table'].create({'show_stuff': 'daily_bookable_timeslots'})
-            self.env['print_table'].create({'show_stuff': daily_bookable_timeslots})
-
-            for x in daily_bookable_timeslots:
-                x.unlink()
-            if (len(user_id_list) == 1):
-                self.env['group_scheduler'].generate_union(user_id_list, begin_day.date(), end_day.date())
-            else:
-                self.env['group_scheduler'].generate_intersection(user_id_list, begin_day.date(), end_day.date())
-
 
     def send_mail_to_address(self, subject, message, email_address):
         """
