@@ -21,24 +21,61 @@
             <!--&lt;!&ndash;            <t t-call="web.external_layout">&ndash;&gt; gives a template structre which we maybe can use-->
             <html>
                 <head>
+                    <style>
+                        .logo{
+                            position: absolute;
+                            right: 0%;
+                            top: 0%;
+                        }
+
+                        body {
+                        background-color: #dbdbdb;
+
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+
+                        transform: translate(-50%, -50%);
+                        }
+
+                        .info {
+
+                        text-align: center;
+                        border: 3px solid red;
+                        }
+
+                        .title {
+
+                        text-align: center;
+                        }
+                    </style>
                 </head>
                 <body>
-                    <h1>token valid</h1>
-                    <p>To cancel your meeting:
-                        <t t-esc="value.meeting_title"/>
-                    </p>
-                    <p>On the
-                    <t t-esc="value.timeslots_start_date"/>
-                    </p>
-                    <p>Click this button
-                        <form>
-                            <form t-attf-action="/meeting_scheduler/scheduled_meeting/" method="POST">
-                                <input type="hidden" name="token" t-att-value="value.timeslots_confirmed_token"/>
-                                <input type="hidden" name="id" value="cancel"/>
-                                <input type="submit" value="Cancel Meeting"/>
+                    <div class="title">
+                        <br/>
+                            <h1><b>Meeting Overview</b></h1>
+                        <br/>
+                    </div>
+
+                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+
+                    <div class="info">
+                        <p>
+                            <b>Start: </b><t t-esc="value.timeslots_start_date"/> <br/>
+                            <b>Duration: </b><t t-esc="value.timeslots_reserved_meeting_duration"/> <br/>
+                            <b>Location: </b><t t-esc="value.timeslots_reserved_location"/> <br/>
+                        </p>
+                        <p>To cancel your meeting, click the button below.
+                            <form>
+                                <form t-attf-action="/meeting_scheduler/scheduled_meeting/" method="POST">
+                                    <input type="hidden" name="token" t-att-value="value.timeslots_confirmed_token"/>
+                                    <input type="hidden" name="id" value="cancel"/>
+                                    <input type="submit" value="Cancel Meeting"/>
+                                </form>
                             </form>
-                        </form>
-                    </p>
+                        </p>
+                    </div>
                 </body>
             </html>
         </t>
@@ -50,9 +87,14 @@
             <!--&lt;!&ndash;            <t t-call="web.external_layout">&ndash;&gt; gives a template structre which we maybe can use-->
             <html>
                 <head>
+                    <style>
+
+                    </style>
                 </head>
                 <body>
                     <h1>token locktime</h1>
+
+
                     <p>Meetings cannot be cancelled <t t-esc="locktime"/> before the start </p>
                      <p>  Your meeting:
                         <t t-esc="value.meeting_title"/>
@@ -84,61 +126,61 @@
             <!--&lt;!&ndash;            <t t-call="web.external_layout">&ndash;&gt; gives a template structre which we maybe can use-->
             <html>
                 <head>
-                    <style>
 
-                        .timeslots{
 
-                        }
+                        <style>
+                            table {color: black;
+                            }
+
+                            body {
+                            background-color: #dbdbdb;
+
+                            margin: 0;
+                            position: absolute;
+                            top: 50%;
+                            left: 40%;
+
+                            transform: translate(-50%, -50%);
+                            }
+
+                            tr:nth-child(even){background-color:#db0000;}
+                            tr:nth-child(odd){background-color:#943029;}
+
+                            .logo{
+                                position: absolute;
+                                right: 0%;
+                                top: 0%;
+                            }
+
+                            th, td{padding: 10px;}
+
+                            .welcomeText{
+
+                            text-align: center;
+                            border: 3px solid red;
+                            }
+
+                            .timeslots {
+
+                            width: 100%;
+
+                            text-align: center;
+                            border: 3px solid red;
+                            }
+
                     </style>
+
                 </head>
                 <body>
                     <div class="welcomeText">
 
-                        <h1><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo" />
-                            <br></br>
-                            Welcome to the Abilium meeting scheduler</h1>
-                        You can select free timeslots, reserve them for a meeting request and submit your contact information.
+                        <h1>Welcome to the Abilium Meeting Scheduler</h1>
+
+                        <p>Please select the timeslot, that is most convenient for you.</p>
                     </div>
-<!--                    <t t-foreach="[1,2,3]" t-as="i">-->
-<!--&lt;!&ndash;                        use t-esc instead of t-out&ndash;&gt;-->
-<!--                        <h1 t-esc="i"/>-->
-<!--                    </t>-->
-<!--                    <p>hello</p>-->
-<!--                    <div class="contactinfos">-->
-<!--                        <h2>Your contact information</h2>-->
-<!--                        <form>-->
-<!--                            <table>-->
-<!--                                <tr>-->
-<!--                                    <th><label for="firstname">First name:</label></th>-->
-<!--                                    <th><label for="lastname">Last name:</label></th>-->
-<!--                                    <th><label for="companyname">Company name:</label></th>-->
-<!--                                    <th><label for="email">E-Mail address:</label></th>-->
-<!--                                </tr>-->
-<!--                                <tr>-->
-<!--                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">-->
-<!--                                        <th>-->
-<!--                                            <input type="text" id="firstname" name="firstname"/>-->
-<!--                                        </th>-->
-<!--                                        <th>-->
-<!--                                            <input type="text" id="lastname" name="lastname"/>-->
-<!--                                        </th>-->
-<!--                                        <th>-->
-<!--                                            <input type="text" id="companyname" name="companyname"/>-->
-<!--                                        </th>-->
-<!--                                        <th>-->
-<!--                                            <input type="text" id="email" name="email"/>-->
-<!--                                        </th>-->
 
-<!--                                        <input type="submit" t-att-value="Submit"/>-->
-<!--&lt;!&ndash;                                        <button type="submit" class="btn btn-primary mt8"&ndash;&gt;-->
-<!--&lt;!&ndash;                                                onclick="window.location.href='www.sbb.ch';">Post&ndash;&gt;-->
-<!--&lt;!&ndash;                                        </button>&ndash;&gt;-->
-<!--                                    </form>-->
-<!--                                </tr>-->
-<!--                            </table>-->
-<!--                        </form>-->
+                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
 
-<!--                    </div>-->
                     <div class="timeslots">
                         <style>
                             table, th, td{border: 1px solid black;}
@@ -237,6 +279,7 @@
                         </table>
 
                     </div>
+
                 </body>
 
             </html>
