@@ -6,3 +6,4 @@ from . import models3
 from . import timeslots
 from . import timeslots_reserved
 from . import timeslots_confirmed
+from . import settings

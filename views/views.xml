@@ -422,6 +422,7 @@
                     <field name="timeslots_end_date_str"/>
                 </tree>
 
+
             </field>
 
         </record>
@@ -432,7 +433,7 @@
         <field name="name">Reserved Timeslots</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">timeslots_reserved</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">tree,form</field>
     </record>
         <!-- explicit list view definition second item -->
     <data>
@@ -455,10 +456,47 @@
                     <field name="timeslots_end_date"/>
                 </tree>
 
+
             </field>
 
         </record>
+
+        <record model="ir.ui.view" id="timeslot_reserved_form">
+            <field name="name">Timeslot form</field>
+            <field name="model">timeslots_reserved</field>
+            <field name="arch" type="xml">
+                <form save="false" edit="false" create="false">
+                    <header>
+                        <button name="open_confirm_form"
+                                type="object"
+                                string="Handle meeting request"
+                                class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="meeting_title"/>
+                                <field name="timeslots_start_date"/>
+                                <field name="timeslots_reserved_meeting_duration"/>
+                                <field name="timeslots_reserved_location"/>
+                              </group>
+                           <group>
+                                <field name="firstname"/>
+                                <field name="lastname"/>
+                                <field name="companyname"/>
+                                <field name="email"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="timeslots_reserved_meeting_subject"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
     </data>
+
+
 
     <!-- fifth menu action-->
     <record id="timeslots_confirmed_action" model="ir.actions.act_window">
@@ -493,6 +531,42 @@
 
         </record>
     </data>
+    <data>
+<record id="res_config_settings_view_form" model="ir.ui.view">
+     <field name="name">res.config.settings.view.form.inherit.employee.dept</field>
+     <field name="model">res.config.settings</field>
+     <field name="priority" eval="15"/>
+     <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+     <field name="arch" type="xml">
+         <xpath expr="//div[hasclass('settings')]" position="inside">
+             <div class="app_settings_block" data-string="Employee Department" string="Employee Department" data-key="employee_department">
+                 <h2>Employee Department</h2>
+                 <div class="row mt16 o_settings_container">
+                     <div class="col-12 col-lg-6 o_setting_box">
+                         <div class="o_setting_left_pane"/>
+                         <div class="o_setting_right_pane">
+                             <span class="o_form_label">Salary</span>
+                             <div class="text-muted content-group mt16">
+                                 <field name="base_salary" class="text-center oe_inline" />
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </xpath>
+     </field>
+ </record>    </data>
+    <!--<data>-->
+<!--    </record>-->
+<!--        <record id="action_Employee_general_config" model="ir.actions.act_window">-->
+<!--        <field name="name">Employee Config</field>-->
+<!--        <field name="type">ir.actions.act_window</field>-->
+<!--        <field name="res_model">res.config.settings</field>-->
+<!--        <field name="view_mode">form</field>-->
+<!--        <field name="target">inline</field>-->
+<!--        <field name="context">{'module' : 'employee_kdepartment'}</field>-->
+<!--    </record>-->
+<!--</data>-->
 
 
     <data>

@@ -55,25 +55,9 @@ class timeslots_reserved_wizard(models.TransientModel):
                         'sticky': False,
                         }}
 
-
     def transit_button_reject_meeting(self):
-        return self.env['timeslots_reserved'].button_reject_meeting()
-
-    def button_mailtester(self):
-        """
-        sends a mail with meeting description to the guest
-        :return:
-        """
-
-        domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-
-        return {
-            'effect': {
-                'fadeout': 'slow',
-                'message': 'Hellooo Roger',
-                'type': 'rainbow_man',
-            }
-        }
+        self.env['timeslots_reserved'].button_reject_meeting()
+        return self.env.ref('meeting_scheduler.timeslots_reserved_action').read()[0]
 
     def send_internal_notification(self, subject, message, partner_ids, modelname):
         """

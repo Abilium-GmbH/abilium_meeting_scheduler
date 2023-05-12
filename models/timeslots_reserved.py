@@ -15,6 +15,8 @@ class timeslots_reserved(models.Model):
     _name = 'timeslots_reserved'
     _description = 'timeslots_reserved'
 
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
     meeting_title = fields.Char(string="Meeting Title", default="Meeting")
     firstname = fields.Char(string="firstname", required=False)
     lastname = fields.Char(string="lastname", required=False)
@@ -44,19 +46,18 @@ class timeslots_reserved(models.Model):
             # 'context': context,
         }
 
-    # might not be used
-    # def get_user_ids_from_timeslot_id(self, timeslot_id):
-    #     """
-    #     returns a list with the user_ids from the selected meeting timeslot
-    #     :param timeslot_id: an int (or string ?) is accepted, representing the id of the bookable timeslot entry
-    #     :return: a list with the user_ids from the selected meeting [user_id_1, user_id_2]
-    #     """
-    #     timeslots_original = self.env['timeslots'].browse(int(timeslot_id))
-    #     output_user_ids = []
-    #     for i in re.split('\[|,| |\]', timeslots_original.timeslots_groupmembers):
-    #         if i.isnumeric():
-    #             output_user_ids.append(int(i))
-    #     return output_user_ids
+    def get_user_ids_from_timeslot_id(self, timeslot_id):
+        """
+        returns a list with the user_ids from the selected meeting timeslot
+        :param timeslot_id: an int (or string ?) is accepted, representing the id of the bookable timeslot entry
+        :return: a list with the user_ids from the selected meeting [user_id_1, user_id_2]
+        """
+        timeslots_original = self.env['timeslots'].browse(int(timeslot_id))
+        output_user_ids = []
+        for i in re.split('\[|,| |\]', timeslots_original.timeslots_groupmembers):
+            if i.isnumeric():
+                output_user_ids.append(int(i))
+        return output_user_ids
 
     def get_partner_ids_from_timeslot_id(self, timeslot_id):
         """

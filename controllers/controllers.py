@@ -55,7 +55,7 @@ class MeetingScheduler(http.Controller):
             inputs_meeting.append(temp_id)
 
         if(len(inputs_contact) == 4) and (len(inputs_meeting) == 3):
-            request.env['timeslots_reserved'].create({'firstname': inputs_contact[0],
+            reservation = request.env['timeslots_reserved'].create({'firstname': inputs_contact[0],
                                                       'lastname': inputs_contact[1],
                                                       'companyname': inputs_contact[2],
                                                       'email': inputs_contact[3],
@@ -63,6 +63,19 @@ class MeetingScheduler(http.Controller):
                                                       'timeslots_end_date': inputs_meeting[1],
                                                       'timeslots_id': inputs_meeting[2]})
             list_partner_ids = request.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(inputs_meeting[2])
+
+            # create an activity
+            list_guest_ids = request.env['timeslots_reserved'].get_user_ids_from_timeslot_id(inputs_meeting[2])
+            for user in list_guest_ids:
+                request.env['mail.activity'].create({
+                    'display_name': 'NEW timeslot reservation',
+                    'summary': 'please confirm or reject the reservation',
+                    'date_deadline': datetime.now(),
+                    'user_id': user,
+                    'res_id': reservation.id,
+                    'res_model_id': request.env['ir.model']._get(request.env['timeslots_reserved']._name).id,
+                    'activity_type_id': request.env.ref('mail.mail_activity_data_todo').id
+                })
             request.env['timeslots_reserved_wizard'].send_internal_notification("NEW timeslot reservation",
                                                                                 "please confirm or reject the reservation",
                                                                                 list_partner_ids,
