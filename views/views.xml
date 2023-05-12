@@ -2,14 +2,57 @@
 
 <odoo>
     <template id="token_entry" name="calendar ass">
-        <!--        <t t-call="web.html_container">  gives an interesting structure, not yeat clear what benefits it gives to us, but atleast its centered nicely-->
-        <t t-call="web.html_container">
+       <t t-call="web.html_container">
             <!--&lt;!&ndash;            <t t-call="web.external_layout">&ndash;&gt; gives a template structre which we maybe can use-->
             <html>
                 <head>
+                    <style>
+                        .logo{
+                            position: absolute;
+                            right: 0%;
+                            top: 0%;
+                        }
+
+                        body {
+                        background-color: #dbdbdb;
+
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+
+                        transform: translate(-50%, -50%);
+                        }
+
+                        .info {
+
+                        text-align: center;
+                        border: 3px solid red;
+                        }
+
+                        .title {
+
+                        text-align: center;
+                        }
+                    </style>
                 </head>
                 <body>
-                    <h1>token not valid</h1>
+                    <div class="title">
+                        <br/>
+                            <h1><b>Abilium Meeting Scheduler</b></h1>
+                        <br/>
+                    </div>
+
+                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+
+                    <div class="info">
+
+                        <h2>Invalid Link</h2>
+                        <p>
+                            The link you entered is not valid. <br/>
+                            Please make sure you have the correct link and try again.
+                        </p>
+                    </div>
                 </body>
             </html>
         </t>
@@ -54,13 +97,15 @@
                 <body>
                     <div class="title">
                         <br/>
-                            <h1><b>Meeting Overview</b></h1>
+                            <h1><b>Abilium Meeting Scheduler</b></h1>
                         <br/>
                     </div>
 
                     <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
 
                     <div class="info">
+
+                        <h2>Meeting Overview</h2>
                         <p>
                             <b>Start: </b><t t-esc="value.timeslots_start_date"/> <br/>
                             <b>Duration: </b><t t-esc="value.timeslots_reserved_meeting_duration"/> <br/>
@@ -88,20 +133,56 @@
             <html>
                 <head>
                     <style>
+                        .logo{
+                            position: absolute;
+                            right: 0%;
+                            top: 0%;
+                        }
 
+                        body {
+                        background-color: #dbdbdb;
+
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+
+                        transform: translate(-50%, -50%);
+                        }
+
+                        .info {
+
+                        text-align: center;
+                        border: 3px solid red;
+                        }
+
+                        .title {
+
+                        text-align: center;
+                        }
                     </style>
                 </head>
                 <body>
-                    <h1>token locktime</h1>
+                    <div class="title">
+                        <br/>
+                            <h1><b>Abilium Meeting Scheduler</b></h1>
+                        <br/>
+                    </div>
 
+                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
 
-                    <p>Meetings cannot be cancelled <t t-esc="locktime"/> before the start </p>
-                     <p>  Your meeting:
-                        <t t-esc="value.meeting_title"/>
-                    </p>
-                    <p>On the
-                    <t t-esc="value.timeslots_start_date"/>
-                    </p>
+                    <div class="info">
+
+                        <h2>Meeting Overview</h2>
+                        <p>
+                            <b>Start: </b><t t-esc="value.timeslots_start_date"/> <br/>
+                            <b>Duration: </b><t t-esc="value.timeslots_reserved_meeting_duration"/> <br/>
+                            <b>Location: </b><t t-esc="value.timeslots_reserved_location"/> <br/>
+                        </p>
+                        <p>
+                            Meetings cannot be cancelled <t t-esc="locktime"/> before the start.
+                        </p>
+                    </div>
                 </body>
             </html>
         </t>
@@ -110,30 +191,69 @@
 
     <template id="token_deleted" name="calendar ass">
         <t t-call="web.html_container">
+            <!--&lt;!&ndash;            <t t-call="web.external_layout">&ndash;&gt; gives a template structre which we maybe can use-->
             <html>
                 <head>
+                    <style>
+                        .logo{
+                            position: absolute;
+                            right: 0%;
+                            top: 0%;
+                        }
+
+                        body {
+                        background-color: #dbdbdb;
+
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+
+                        transform: translate(-50%, -50%);
+                        }
+
+                        .info {
+
+                        text-align: center;
+                        border: 3px solid red;
+                        }
+
+                        .title {
+
+                        text-align: center;
+                        }
+                    </style>
                 </head>
                 <body>
-                    <h1>Your Meeting has been successfully cancelled</h1>
+                    <div class="title">
+                        <br/>
+                            <h1><b>Abilium Meeting Scheduler</b></h1>
+                        <br/>
+                    </div>
+
+                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+
+                    <div class="info">
+
+                        <h2>Meeting cancelled</h2>
+                        <p>
+                            Your meeting has been successfully cancelled.
+                        </p>
+                    </div>
                 </body>
             </html>
         </t>
     </template>
 
     <template id="guest_view_loop" name="calendar assets">
-<!--        <t t-call="web.html_container">  gives an interesting structure, not yeat clear what benefits it gives to us, but atleast its centered nicely-->
         <t t-call="web.html_container">
-            <!--&lt;!&ndash;            <t t-call="web.external_layout">&ndash;&gt; gives a template structre which we maybe can use-->
             <html>
                 <head>
-
-
                         <style>
                             table {color: black;
                             }
 
                             body {
-                            background-color: #dbdbdb;
 
                             margin: 0;
                             position: absolute;
@@ -143,30 +263,29 @@
                             transform: translate(-50%, -50%);
                             }
 
-                            tr:nth-child(even){background-color:#db0000;}
-                            tr:nth-child(odd){background-color:#943029;}
+
+                            tr:nth-child(odd){background-color:#c3edfa;}
+                            tr:nth-child(even){background-color:#dbdbdb;}
 
                             .logo{
                                 position: absolute;
-                                right: 0%;
+                                right: -20%;
                                 top: 0%;
                             }
 
-                            th, td{padding: 10px;}
+                            th, td{padding: 5px;}
 
                             .welcomeText{
 
                             text-align: center;
-                            border: 3px solid red;
                             }
 
                             .timeslots {
 
-                            width: 100%;
-
-                            text-align: center;
-                            border: 3px solid red;
+                            test-align: center;
                             }
+
+
 
                     </style>
 
@@ -174,116 +293,118 @@
                 <body>
                     <div class="welcomeText">
 
-                        <h1>Welcome to the Abilium Meeting Scheduler</h1>
+                        <h1><b>Abilium Meeting Scheduler</b></h1>
 
                         <p>Please select the timeslot, that is most convenient for you.</p>
+
+                        <br/>
+                        <h2>Available Timeslots</h2>
                     </div>
 
                     <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
 
+
                     <div class="timeslots">
-                        <style>
-                            table, th, td{border: 1px solid black;}
-                            tr:nth-child(even){background-color:#D6EEEE;}
-                        </style>
 
-                        <h2>Timeslot selector</h2>
 
-                        <table>
-                            <tr>
-                                <th>#</th>
-                                <!--                                <th>Meeting title (TBremoved)</th>-->
-                                <th>Start date</th>
-                                <th>End date</th>
-                                <th>Your start time</th>
-                                <th>Your end time</th>
-                                <th><label for="firstname">First name:</label></th>
-                                <th>
-                                    <label for="lastname">Last name:</label>
-                                </th>
-                                <th>
-                                    <label for="companyname">Company name:</label>
-                                </th>
-                                <th>
-                                    <label for="email">E-Mail address:</label>
-                                </th>
 
-                                <th></th>
-                            </tr>
-                            <t t-foreach="value" t-as="i">
+
+
+
+                        <form>
+                        <form t-attf-action="/meeting_scheduler/guest_view/update" method="POST">
+                            <table>
                                 <tr>
-                                    <form>
-                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
-                                        <th t-esc="i.id"/>
-                                        <input type="hidden" name="id" t-att-value="i.id"/>
-                                        <th t-esc="i.timeslots_start_date_str"/>
-                                        <th t-esc="i.timeslots_end_date_str"/>
-                                        <th>
-                                            <select id="sel_start_h" name="sel_start_h">
-                                                <!--split separates the string on the whitespaces and list treats it as a list-->
-                                                <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
-                                                    <option t-att-value="item">
-                                                        <t t-esc="item"/>
-                                                    </option>
-                                                </t>
-                                            </select>
-                                            <select id="sel_start_min" name="sel_start_min">
-                                                <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
-                                                    <option t-att-value="t_min">
-                                                        <t t-esc="t_min"/>
-                                                    </option>
-                                                </t>
-                                            </select>
-                                        </th>
-                                        <th>
-                                            <select id="sel_end_h" name="sel_end_h">
-                                                <!--split separates the string on the whitespaces and list treats it as a list-->
-                                                <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
-                                                    <option t-att-value="item">
-                                                        <t t-esc="item"/>
-                                                    </option>
-                                                </t>
-                                            </select>
-                                            <select id="sel_end_min" name="sel_end_min">
-                                                <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
-                                                    <option t-att-value="t_min">
-                                                        <t t-esc="t_min"/>
-                                                    </option>
-                                                </t>
-                                            </select>
-
-                                        </th>
-                                        <!--    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
-                                        <!--    <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>-->
-                                        <th>
-                                            <input type="text" id="firstname" name="firstname"/>
-                                        </th>
-                                        <th>
-                                            <input type="text" id="lastname" name="lastname"/>
-                                        </th>
-                                        <th>
-                                            <input type="text" id="companyname" name="companyname"/>
-                                        </th>
-                                        <th>
-                                            <input type="text" id="email" name="email"/>
-                                        </th>
+                                    <th>#</th>
+                                    <th>Slot Start</th>
+                                    <th>Slot End</th>
+                                    <th>Meeting Start</th>
+                                    <th>Meeting End</th>
+                                    <th><label for="firstname">First Name</label></th>
+                                    <th><label for="lastname">Last Name</label></th>
+                                    <th><label for="companyname">Company Name</label></th>
+                                    <th><label for="email">E-Mail</label></th>
+                                    <th></th>
 
 
-                                        <th>
-                                            <input type="submit" t-att-value="Submit"/>
-                                        </th>
-                                    </form>
-                                    </form>
                                 </tr>
+                                <t t-foreach="value" t-as="i">
+                                    <tr>
+                                        <form>
+                                        <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
+                                            <td t-esc="i.id"/>
+                                            <input type="hidden" name="id" t-att-value="i.id"/>
+                                            <td t-esc="i.timeslots_start_date_str"/>
+                                            <td t-esc="i.timeslots_end_date_str"/>
+                                            <td>
+                                                <select id="sel_start_h" name="sel_start_h">
+                                                    <!--split separates the string on the whitespaces and list treats it as a list-->
+                                                    <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
+                                                        <option t-att-value="item">
+                                                            <t t-esc="item"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                                <select id="sel_start_min" name="sel_start_min">
+                                                    <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
+                                                        <option t-att-value="t_min">
+                                                            <t t-esc="t_min"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select id="sel_end_h" name="sel_end_h">
+                                                    <!--split separates the string on the whitespaces and list treats it as a list-->
+                                                    <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
+                                                        <option t-att-value="item">
+                                                            <t t-esc="item"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                                <select id="sel_end_min" name="sel_end_min">
+                                                    <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
+                                                        <option t-att-value="t_min">
+                                                            <t t-esc="t_min"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+
+                                            </td>
+                                            <!--    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
+                                            <!--    <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>-->
+                                            <td>
+                                                <input type="text" id="firstname" name="firstname"/>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="lastname" name="lastname"/>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="companyname" name="companyname"/>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="email" name="email"/>
+                                            </td>
+
+
+                                            <td>
+                                                <input type="submit" t-att-value="Submit"/>
+                                            </td>
+                                        </form>
+                                        </form>
+                                    </tr>
                             </t>
                         </table>
 
+
+
+                        </form>
+                        </form>
                     </div>
 
                 </body>
 
             </html>
-            <!--            </t> part of template structre which we maybe can use-->
         </t>
     </template>
 
