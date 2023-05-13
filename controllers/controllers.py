@@ -87,7 +87,8 @@ class MeetingScheduler(http.Controller):
     # /meeting_scheduler/scheduled_meeting/?token=23bce225f8dad88de2f89430f6f1dfc0
     @route('/meeting_scheduler/scheduled_meeting/', auth='public', website=True)
     def token_check(self, **kw):
-        locktime = timedelta(hours=23)
+        hours_int = int(request.env['ir.config_parameter'].sudo().get_param('meeting_scheduler.locktime_hours_default'))
+        locktime = timedelta(hours=hours_int)
         response = request.render("meeting_scheduler.token_entry", {})
         selected_meeting = request.env['timeslots_confirmed'].search([('timeslots_confirmed_token', '=', kw.get('token'))])
         if (selected_meeting.id != False):

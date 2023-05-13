@@ -17,7 +17,7 @@ class timeslots_reserved(models.Model):
 
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    meeting_title = fields.Char(string="Meeting Title", default="Meeting")
+    meeting_title = fields.Char(string="Meeting Title", default=lambda self: self.env['ir.config_parameter'].sudo().get_param('meeting_scheduler.meeting_title_default'))
     firstname = fields.Char(string="firstname", required=False)
     lastname = fields.Char(string="lastname", required=False)
     companyname = fields.Char(string="companyname", required=False)

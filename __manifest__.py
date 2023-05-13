@@ -11,6 +11,7 @@
     """,
 
     'author': "PSE-Team",
+    'icon': 'static/description/icon.png',
     'website': "https://www.abilium.io/",
     'category': 'Uncategorized',
     'version': '0.1',

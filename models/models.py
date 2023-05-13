@@ -8,11 +8,13 @@ class meeting_scheduler(models.Model):
     _name = 'meeting_scheduler'
     _description = 'meeting_scheduler'
 
-    meeting_title = fields.Char(string="Meeting Title", required=True)
+    meeting_title = fields.Char(string="Meeting Title",
+                                default=lambda self: self.env['ir.config_parameter'].sudo().get_param(
+                                    'meeting_scheduler.meeting_title_default'),
+                                required=True)
     meeting_start_date = fields.Datetime(string="Start Date", required=True)
     meeting_end_date = fields.Datetime(string="End Date", required=True)
-    meeting_location = fields.Char(string="Location")
-    meeting_subject = fields.Text(string="Subject")
+    # meeting_location = fields.Char(string="Location") #TODO add functionality to handle different locations
     meeting_duration = fields.Char(string="Duration", compute="_calc_duration", store=True)
     meeting_repetitions = fields.Integer(string="Number of repetitions", default=1)
     meeting_frequency = fields.Selection([('0', 'Not repeating'),
