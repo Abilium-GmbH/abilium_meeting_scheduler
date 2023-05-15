@@ -22,46 +22,7 @@
                             Welcome to the Abilium meeting scheduler</h1>
                         You can select free timeslots, reserve them for a meeting request and submit your contact information.
                     </div>
-<!--                    <t t-foreach="[1,2,3]" t-as="i">-->
-<!--&lt;!&ndash;                        use t-esc instead of t-out&ndash;&gt;-->
-<!--                        <h1 t-esc="i"/>-->
-<!--                    </t>-->
-<!--                    <p>hello</p>-->
-<!--                    <div class="contactinfos">-->
-<!--                        <h2>Your contact information</h2>-->
-<!--                        <form>-->
-<!--                            <table>-->
-<!--                                <tr>-->
-<!--                                    <th><label for="firstname">First name:</label></th>-->
-<!--                                    <th><label for="lastname">Last name:</label></th>-->
-<!--                                    <th><label for="companyname">Company name:</label></th>-->
-<!--                                    <th><label for="email">E-Mail address:</label></th>-->
-<!--                                </tr>-->
-<!--                                <tr>-->
-<!--                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">-->
-<!--                                        <th>-->
-<!--                                            <input type="text" id="firstname" name="firstname"/>-->
-<!--                                        </th>-->
-<!--                                        <th>-->
-<!--                                            <input type="text" id="lastname" name="lastname"/>-->
-<!--                                        </th>-->
-<!--                                        <th>-->
-<!--                                            <input type="text" id="companyname" name="companyname"/>-->
-<!--                                        </th>-->
-<!--                                        <th>-->
-<!--                                            <input type="text" id="email" name="email"/>-->
-<!--                                        </th>-->
 
-<!--                                        <input type="submit" t-att-value="Submit"/>-->
-<!--&lt;!&ndash;                                        <button type="submit" class="btn btn-primary mt8"&ndash;&gt;-->
-<!--&lt;!&ndash;                                                onclick="window.location.href='www.sbb.ch';">Post&ndash;&gt;-->
-<!--&lt;!&ndash;                                        </button>&ndash;&gt;-->
-<!--                                    </form>-->
-<!--                                </tr>-->
-<!--                            </table>-->
-<!--                        </form>-->
-
-<!--                    </div>-->
                     <div class="timeslots">
                         <style>
                             table, th, td{border: 1px solid black;}
@@ -91,49 +52,52 @@
 
                                 <th></th>
                             </tr>
+
                             <t t-foreach="value" t-as="i">
                                 <tr>
                                     <form>
-                                    <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
+                                        <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
                                         <th t-esc="i.id"/>
                                         <input type="hidden" name="id" t-att-value="i.id"/>
                                         <th t-esc="i.timeslots_start_date_str"/>
                                         <th t-esc="i.timeslots_end_date_str"/>
                                         <th>
-                                            <select id="sel_start_h" name="sel_start_h">
-                                                <!--split separates the string on the whitespaces and list treats it as a list-->
-                                                <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
-                                                    <option t-att-value="item">
-                                                        <t t-esc="item"/>
-                                                    </option>
-                                                </t>
-                                            </select>
-                                            <select id="sel_start_min" name="sel_start_min">
-                                                <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
-                                                    <option t-att-value="t_min">
-                                                        <t t-esc="t_min"/>
-                                                    </option>
-                                                </t>
-                                            </select>
+                                          <select id="sel_start_h" name="sel_start_h" data-id="t-att-value='i.id'">
+                                            <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
+                                              <option t-att-value="item">
+                                                <t t-esc="item"/>
+                                              </option>
+                                            </t>
+                                          </select>
+                                          <select id="sel_start_min" name="sel_start_min">
+                                            <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
+                                              <option t-att-value="t_min">
+                                                <t t-esc="t_min"/>
+                                              </option>
+                                            </t>
+                                          </select>
                                         </th>
                                         <th>
-                                            <select id="sel_duration_h" name="sel_duration_h">
-                                                <!--split separates the string on the whitespaces and list treats it as a list-->
-                                                <t t-foreach="list(i.timeslots_duration_hours.split())" t-as="item">
-                                                    <option t-att-value="item">
-                                                        <t t-esc="item"/>
-                                                    </option>
-                                                </t>
-                                            </select>
-                                            <select id="sel_duration_min" name="sel_duration_min">
-                                                <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
-                                                    <option t-att-value="t_min">
-                                                        <t t-esc="t_min"/>
-                                                    </option>
-                                                </t>
-                                            </select>
-
+                                          <select id="sel_duration_h" name="sel_duration_h" data-id="t-att-value='i.id'">
+                                            <t t-foreach="list(i.timeslots_duration_hours.split())" t-as="item_duration">
+                                              <option t-att-value="item_duration">
+                                                <t t-esc="item_duration"/>
+                                              </option>
+                                            </t>
+                                          </select>
+                                          <select id="sel_duration_min" name="sel_duration_min">
+                                            <t t-foreach="[0, 15, 30, 45]" t-as="t_min_duration">
+                                              <option t-att-value="t_min_duration">
+                                                <t t-esc="t_min_duration"/>
+                                              </option>
+                                            </t>
+                                          </select>
                                         </th>
+
+
+
+
+
                                         <!--    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
                                         <!--    <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>-->
                                         <th>
@@ -160,6 +124,28 @@
                         </table>
 
                     </div>
+                    <script>
+                        const selStartHElements = document.querySelectorAll('#sel_start_h');
+
+                    for (let j = 0; selStartHElements.length > j; j++) {
+                        const selStartH = selStartHElements[j];
+                        const id = selStartH.dataset.id;
+                        const selDurationH = document.querySelector(`#sel_duration_h[data-id="${id}"]`);
+
+                        selStartH.addEventListener('change', () => {
+                            const selectedIndex = selStartH.selectedIndex;
+                            const options = selDurationH.options;
+                            for (let i = 0, k = options.length - 1; options.length > i; i++) {
+                                if (selectedIndex > i) {
+                                    options[k].disabled = true;
+                                } else {
+                                    options[k].disabled = false;
+                                }
+                                k--;
+                            }
+                        });
+                    }
+                                        </script>
                 </body>
 
             </html>
