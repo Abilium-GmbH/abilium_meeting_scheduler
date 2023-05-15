@@ -70,7 +70,7 @@
                                             </t>
                                           </select>
                                           <select class="sel_start_min" t-att-data-id="i.id" name="sel_start_min">
-                                            <t t-foreach="list(i.timeslots_time_min.split())" t-as="t_min">
+                                            <t t-foreach="list(i.timeslots_time_min_start.split())" t-as="t_min">
                                               <option t-att-value="t_min">
                                                 <t t-esc="t_min"/>
                                               </option>
@@ -86,7 +86,7 @@
                                             </t>
                                           </select>
                                           <select class="sel_duration_min" t-att-data-id="i.id" name="sel_duration_min">
-                                            <t t-foreach="list(i.timeslots_time_min.split())" t-as="t_min_duration">
+                                            <t t-foreach="list(i.timeslots_time_min_end.split())" t-as="t_min_duration">
                                               <option t-att-value="t_min_duration">
                                                 <t t-esc="t_min_duration"/>
                                               </option>
@@ -129,12 +129,15 @@
                         // Zugriff auf alle Elemente mit der Klasse "sel_start_h" und "sel_duration_h"
                         const selStartH = document.querySelectorAll('.sel_start_h');
                         const selDurationH = document.querySelectorAll('.sel_duration_h');
+                        const selDurationMin = document.querySelectorAll('.sel_duration_min');
 
                         // Füge jedem Element ein Event-Listener hinzu
                         selStartH.forEach((element) => {
                             element.addEventListener('change', (event) => {
+
                                 // Zugriff auf das ausgewählte Element
                                 const selectedElement = event.target;
+
                                 // Zugriff auf die ID des ausgewählten Elements
                                 const selectedId = selectedElement.getAttribute('data-id');
 
@@ -159,9 +162,20 @@
                                 }
                             });
                         });
-                    </script>
-                    <script>
-
+                        selDurationH.forEach((element) => {
+                            element.addEventListener('change', (event) => {
+                                const selectedElement = event.target;
+                                const selectedId = selectedElement.getAttribute('data-id');
+                                const matchingDurationElementMin = Array.from(selDurationMin).find(
+                                    (element) => element.getAttribute('data-id') === selectedId
+                                );
+                                if (selectedElement.selectedIndex === selectedElement.length - 1) {
+                                    for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                        matchingDurationElementMin[i].disabled = true;
+                                    }
+                                }
+                            });
+                        });
                     </script>
                 </body>
 

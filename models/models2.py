@@ -41,11 +41,11 @@ class group_scheduler(models.Model):
         """
         output_timeslots = []
         for meeting in meetings:
-            duration = meeting[1] - meeting[0]
-            duration = math.floor(duration.total_seconds() / 3600)
+            duration = meeting[1].hour - meeting[0].hour
             bookable_hours = ""
             duration_hours = ""
-            time_min = " 0 15 30 45"
+            time_min_start = " 0 15 30 45"
+            time_min_end = " 0 15 30 45"
             n = 0
             for i in range(self.convert_timezone(meeting[0]).hour, self.convert_timezone(meeting[0]).hour + duration + 1):
                 bookable_hours += " " + str(i)  # the list has to be treated as a string,
@@ -60,7 +60,8 @@ class group_scheduler(models.Model):
                                      meeting[1],
                                      meeting[2],
                                      duration_hours,
-                                     time_min])
+                                     time_min_start,
+                                     time_min_end])
         return output_timeslots
 
     def convert_timezone(self, input_datetime: datetime) -> datetime:
@@ -123,7 +124,8 @@ class group_scheduler(models.Model):
                                               'timeslots_end_date_utc': i[4],
                                               'timeslots_groupmembers': i[5],
                                               'timeslots_duration_hours':i[6],
-                                              'timeslots_time_min':i[7]})
+                                              'timeslots_time_min_start':i[7],
+                                              'timeslots_time_min_end':i[8]})
         elif (len(group_res_users_all_ids) > 1):
             free_meetings_list = []
             for first_user in found_meetings_per_group_member[0]:
@@ -178,7 +180,8 @@ class group_scheduler(models.Model):
                                               'timeslots_end_date_utc': i[4],
                                               'timeslots_groupmembers': i[5],
                                               'timeslots_duration_hours':i[6],
-                                              'timeslots_time_min':i[7]})
+                                              'timeslots_time_min_start':i[7],
+                                              'timeslots_time_min_end':i[8]})
                 # self.env['print_table'].create({'show_stuff': i})
 
     def button_timeslots_from_union(self,
@@ -218,5 +221,6 @@ class group_scheduler(models.Model):
                                           'timeslots_end_date_utc': i[4],
                                           'timeslots_groupmembers': i[5],
                                           'timeslots_duration_hours':i[6],
-                                          'timeslots_time_min':i[7]})
+                                          'timeslots_time_min_start':i[7],
+                                          'timeslots_time_min_end':i[8]})
             # self.env['print_table'].create({'show_stuff': i})
