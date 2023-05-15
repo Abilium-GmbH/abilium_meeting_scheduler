@@ -59,6 +59,8 @@
                                         <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
                                         <th t-esc="i.id"/>
                                         <input type="hidden" name="id" t-att-value="i.id"/>
+                                            <input type="hidden" name="timeslots_start_date_utc" t-att-value="i.timeslots_start_date_utc"/>
+                                            <input type="hidden" name="timeslots_end_date_utc" t-att-value="i.timeslots_end_date_utc"/>
                                         <th t-esc="i.timeslots_start_date_str"/>
                                         <th t-esc="i.timeslots_end_date_str"/>
                                         <th>
@@ -177,6 +179,7 @@
                             });
                         });
                     </script>
+
                 </body>
 
             </html>
