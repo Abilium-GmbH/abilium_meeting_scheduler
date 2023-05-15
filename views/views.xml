@@ -62,15 +62,15 @@
                                         <th t-esc="i.timeslots_start_date_str"/>
                                         <th t-esc="i.timeslots_end_date_str"/>
                                         <th>
-                                          <select id="sel_start_h" name="sel_start_h" data-id="t-att-value='i.id'">
+                                          <select class="sel_start_h" t-att-data-id="i.id" name="sel_start_h">
                                             <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
                                               <option t-att-value="item">
                                                 <t t-esc="item"/>
                                               </option>
                                             </t>
                                           </select>
-                                          <select id="sel_start_min" name="sel_start_min">
-                                            <t t-foreach="[0, 15, 30, 45]" t-as="t_min">
+                                          <select class="sel_start_min" t-att-data-id="i.id" name="sel_start_min">
+                                            <t t-foreach="list(i.timeslots_time_min.split())" t-as="t_min">
                                               <option t-att-value="t_min">
                                                 <t t-esc="t_min"/>
                                               </option>
@@ -78,21 +78,22 @@
                                           </select>
                                         </th>
                                         <th>
-                                          <select id="sel_duration_h" name="sel_duration_h" data-id="t-att-value='i.id'">
+                                          <select class="sel_duration_h" t-att-data-id="i.id" name="sel_duration_h">
                                             <t t-foreach="list(i.timeslots_duration_hours.split())" t-as="item_duration">
                                               <option t-att-value="item_duration">
                                                 <t t-esc="item_duration"/>
                                               </option>
                                             </t>
                                           </select>
-                                          <select id="sel_duration_min" name="sel_duration_min">
-                                            <t t-foreach="[0, 15, 30, 45]" t-as="t_min_duration">
+                                          <select class="sel_duration_min" t-att-data-id="i.id" name="sel_duration_min">
+                                            <t t-foreach="list(i.timeslots_time_min.split())" t-as="t_min_duration">
                                               <option t-att-value="t_min_duration">
                                                 <t t-esc="t_min_duration"/>
                                               </option>
                                             </t>
                                           </select>
                                         </th>
+
 
 
 
@@ -125,27 +126,43 @@
 
                     </div>
                     <script>
-                        const selStartHElements = document.querySelectorAll('#sel_start_h');
+                        // Zugriff auf alle Elemente mit der Klasse "sel_start_h" und "sel_duration_h"
+                        const selStartH = document.querySelectorAll('.sel_start_h');
+                        const selDurationH = document.querySelectorAll('.sel_duration_h');
 
-                    for (let j = 0; selStartHElements.length > j; j++) {
-                        const selStartH = selStartHElements[j];
-                        const id = selStartH.dataset.id;
-                        const selDurationH = document.querySelector(`#sel_duration_h[data-id="${id}"]`);
+                        // Füge jedem Element ein Event-Listener hinzu
+                        selStartH.forEach((element) => {
+                            element.addEventListener('change', (event) => {
+                                // Zugriff auf das ausgewählte Element
+                                const selectedElement = event.target;
+                                // Zugriff auf die ID des ausgewählten Elements
+                                const selectedId = selectedElement.getAttribute('data-id');
 
-                        selStartH.addEventListener('change', () => {
-                            const selectedIndex = selStartH.selectedIndex;
-                            const options = selDurationH.options;
-                            for (let i = 0, k = options.length - 1; options.length > i; i++) {
-                                if (selectedIndex > i) {
-                                    options[k].disabled = true;
-                                } else {
-                                    options[k].disabled = false;
+                                // Finde das zugehörige Element in sel_duration_h
+                                const matchingDurationElement = Array.from(selDurationH).find(
+                                (element) => element.getAttribute('data-id') === selectedId
+                                );
+
+                                // Überprüfe, ob die ID des ausgewählten Elements und des zugehörigen Elements übereinstimmen
+                                if (selectedId === matchingDurationElement.getAttribute('data-id')) {
+                                    // Passe die Liste an
+                                    const selectedIndex = selectedElement.selectedIndex;
+                                    const options = matchingDurationElement.options;
+                                    for (let i = 0, k = options.length - 1; options.length > i; i++) {
+                                        if (selectedIndex > i) {
+                                            options[k].disabled = true;
+                                        } else {
+                                            options[k].disabled = false;
+                                        }
+                                        k--;
+                                    }
                                 }
-                                k--;
-                            }
+                            });
                         });
-                    }
-                                        </script>
+                    </script>
+                    <script>
+
+                    </script>
                 </body>
 
             </html>
