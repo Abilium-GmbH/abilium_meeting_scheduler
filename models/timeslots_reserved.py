@@ -75,7 +75,8 @@ class timeslots_reserved(models.Model):
         return output_partner_ids
 
     def button_confirm_meeting(self, ourloaction):
-        timeslots_minimal_rest_time = timedelta(minutes=15)
+        minutes_int = int(self.env['ir.config_parameter'].sudo().get_param('meeting_scheduler.timeslots_minimal_rest_time_default'))
+        timeslots_minimal_rest_time = timedelta(minutes=minutes_int)
         selected_timeslot_reserved = self.env.context.get('active_ids', [])
         timeslot_selected_records = self.env['timeslots_reserved'].browse(selected_timeslot_reserved)
         timeslot_selected_record_id = timeslot_selected_records.timeslots_id
@@ -113,10 +114,12 @@ class timeslots_reserved(models.Model):
                 user_id_list.append(int(i))
                 selected_user = self.env['res.users'].search([('id', '=', int(i))])
                 partner_id_list.append(selected_user['partner_id'].id)
-                if ((
-                        timeslot_selected_records.timeslots_start_date - temp_meeting_scheduler.meeting_start_date) >= timeslots_minimal_rest_time):
+                if ((timeslot_selected_records.timeslots_start_date - temp_meeting_scheduler.meeting_start_date)
+                        >= timeslots_minimal_rest_time):
                     self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
-                        'meeting_title': 'meetingBookable',
+                        # 'meeting_title': 'meetingBookable',
+                        'meeting_title': self.env['ir.config_parameter'].sudo().get_param(
+                            'meeting_scheduler.meeting_title_default'), #use the values from the settings
                         'meeting_location': False,
                         'meeting_start_date': temp_meeting_scheduler.meeting_start_date,
                         'meeting_end_date': timeslot_selected_records.timeslots_start_date,
@@ -124,12 +127,13 @@ class timeslots_reserved(models.Model):
                         'meeting_frequency': 0,
                         'meeting_privacy': 'public',
                         'meeting_show_as': 'free',
-                        'meeting_subject': False
+                        # 'meeting_subject': False  #no longer in use
                     }])
-                if ((
-                        temp_meeting_scheduler.meeting_end_date - timeslot_selected_records.timeslots_end_date) >= timeslots_minimal_rest_time):
+                if ((temp_meeting_scheduler.meeting_end_date - timeslot_selected_records.timeslots_end_date)
+                        >= timeslots_minimal_rest_time):
                     self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
-                        'meeting_title': 'meetingBookable',
+                        'meeting_title': self.env['ir.config_parameter'].sudo().get_param(
+                            'meeting_scheduler.meeting_title_default'), #use the values from the settings
                         'meeting_location': False,
                         'meeting_start_date': timeslot_selected_records.timeslots_end_date,
                         'meeting_end_date': temp_meeting_scheduler.meeting_end_date,
@@ -137,7 +141,7 @@ class timeslots_reserved(models.Model):
                         'meeting_frequency': 0,
                         'meeting_privacy': 'public',
                         'meeting_show_as': 'free',
-                        'meeting_subject': False
+                        # 'meeting_subject': False  #no longer in use
                     }])
 
                 temp_calendar_event.unlink()

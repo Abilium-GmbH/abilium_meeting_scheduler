@@ -14,7 +14,7 @@ class meeting_scheduler(models.Model):
                                 required=True)
     meeting_start_date = fields.Datetime(string="Start Date", required=True)
     meeting_end_date = fields.Datetime(string="End Date", required=True)
-    # meeting_location = fields.Char(string="Location") #TODO add functionality to handle different locations
+    meeting_location = fields.Char(string="Location") #TODO add functionality to handle different locations given by the user
     meeting_duration = fields.Char(string="Duration", compute="_calc_duration", store=True)
     meeting_repetitions = fields.Integer(string="Number of repetitions", default=1)
     meeting_frequency = fields.Selection([('0', 'Not repeating'),
@@ -31,9 +31,6 @@ class meeting_scheduler(models.Model):
     corresponding_calendar_event = fields.Many2one('calendar.event',
                                                    string="Corresponding Calendar Event",
                                                    ondelete="cascade", readonly="True")
-
-    # compute = lambda self: self._allocate_corresponding_field(
-    #   self.meeting_title),
 
     @api.depends('meeting_start_date', 'meeting_end_date')
     def _calc_duration(self):

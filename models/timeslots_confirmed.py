@@ -65,7 +65,8 @@ class timeslots_confirmed(models.Model):
                 if (meeting_before_found_id.id != False):
                     if (meeting_after_found_id.id != False):
                         self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
-                            'meeting_title': 'meetingBookable replaced',
+                            'meeting_title': self.env['ir.config_parameter'].sudo().get_param(
+                                'meeting_scheduler.meeting_title_default'),  # use the values from the settings
                             'meeting_location': False,
                             'meeting_start_date': meeting_before_found_id.meeting_start_date,
                             'meeting_end_date': meeting_after_found_id.meeting_end_date,
@@ -80,7 +81,8 @@ class timeslots_confirmed(models.Model):
 
                     else:
                         self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
-                            'meeting_title': 'meetingBookable replaced',
+                            'meeting_title': self.env['ir.config_parameter'].sudo().get_param(
+                                'meeting_scheduler.meeting_title_default'),  # use the values from the settings
                             'meeting_location': False,
                             'meeting_start_date': meeting_before_found_id.meeting_start_date,
                             'meeting_end_date': timeslots_confirmed_object.timeslots_end_date,
@@ -95,7 +97,8 @@ class timeslots_confirmed(models.Model):
 
                 if (meeting_after_found_id.id != False) & (not meeting_before_found_id.id):
                     self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
-                        'meeting_title': 'meetingBookable replaced',
+                        'meeting_title': self.env['ir.config_parameter'].sudo().get_param(
+                            'meeting_scheduler.meeting_title_default'), #use the values from the settings
                         'meeting_location': False,
                         'meeting_start_date': timeslots_confirmed_object.timeslots_start_date,
                         'meeting_end_date': meeting_after_found_id.meeting_end_date,
@@ -110,7 +113,8 @@ class timeslots_confirmed(models.Model):
                 if(not meeting_before_found_id.id) and (not meeting_after_found_id.id):
                     #for the case that the meeting has no meetings directly before or after
                     self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
-                        'meeting_title': 'meetingBookable replaced',
+                        'meeting_title': self.env['ir.config_parameter'].sudo().get_param(
+                            'meeting_scheduler.meeting_title_default'), #use the values from the settings
                         'meeting_location': False,
                         'meeting_start_date': timeslots_confirmed_object.timeslots_start_date,
                         'meeting_end_date': timeslots_confirmed_object.timeslots_end_date,

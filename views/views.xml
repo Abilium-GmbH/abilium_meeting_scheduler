@@ -551,10 +551,24 @@
                                         <field name="meeting_title_default"/>
                                     </div>
                                     <div class="text-muted content-group mt16">
-                                    Hours before a meeting can no longer be cancelled by the guest
+                                    Set the default title which is shown when the users create new free slots for meetings.
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="crm_lead">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="timeslots_minimal_rest_time_default"/>
+                                    <div>
+                                        <field name="timeslots_minimal_rest_time_default"/>
+                                    </div>
+                                    <div class="text-muted content-group mt16">
+                                    This defines how long the minimal time remnant can be, when reserving a meeting.
+                                        This time remnant can be booked by the guest.
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-12 col-lg-6 o_setting_box" id="crm_lead">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
@@ -563,7 +577,7 @@
                                         <field name="locktime_hours_default"/>
                                     </div>
                                     <div class="text-muted content-group mt16">
-                                    Hours before a meeting can no longer be cancelled by the guest
+                                    Hours before a meeting can no longer be cancelled by the guest.
                                     </div>
                                 </div>
                             </div>
