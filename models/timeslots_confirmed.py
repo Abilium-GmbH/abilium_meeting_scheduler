@@ -15,10 +15,10 @@ class timeslots_confirmed(models.Model):
     _description = 'timeslots_confirmed'
 
     meeting_title = fields.Char(string="Meeting Title", default="Meeting")
-    firstname = fields.Char(string="firstname", required=False)
-    lastname = fields.Char(string="lastname", required=False)
-    companyname = fields.Char(string="companyname", required=False)
-    email = fields.Char(string="email", required=False)
+    firstname = fields.Char(string="First name", required=False)
+    lastname = fields.Char(string="Last name", required=False)
+    companyname = fields.Char(string="Company", required=False)
+    email = fields.Char(string="E-Mail", required=False)
     timeslots_start_date = fields.Datetime(string="Start Date", required=False)
     timeslots_end_date = fields.Datetime(string="End Date", required=False)
     timeslots_id = fields.Integer(string="Foreign Key timeslots")

@@ -58,18 +58,19 @@ class MeetingScheduler(http.Controller):
                                             minute=(inputs_meeting[0].minute + int(kw.get('sel_duration_min')))-60)
                 inputs_meeting.append(temp_end)
                 
-            inputs_meeting.append(temp_id)  #lvk
+            inputs_meeting.append(temp_id)
 
         if(len(inputs_contact) == 4) and (len(inputs_meeting) == 3):
+            duration = inputs_meeting[1] -inputs_meeting[0]
+            # create a new timeslots reserved element
             reservation = request.env['timeslots_reserved'].create({'firstname': inputs_contact[0],
                                                       'lastname': inputs_contact[1],
                                                       'companyname': inputs_contact[2],
                                                       'email': inputs_contact[3],
                                                       'timeslots_start_date': inputs_meeting[0],
                                                       'timeslots_end_date': inputs_meeting[1],
-                                                      'timeslots_id': inputs_meeting[2]})
-           list_partner_ids = request.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(inputs_meeting[2])
-
+                                                      'timeslots_id': inputs_meeting[2],
+                                                      'timeslots_reserved_meeting_duration': duration})
             # create an activity
             list_guest_ids = request.env['timeslots_reserved'].get_user_ids_from_timeslot_id(inputs_meeting[2])
             for user in list_guest_ids:
@@ -82,14 +83,20 @@ class MeetingScheduler(http.Controller):
                     'res_model_id': request.env['ir.model']._get(request.env['timeslots_reserved']._name).id,
                     'activity_type_id': request.env.ref('mail.mail_activity_data_todo').id
                 })
+            # create a confirmation mail
+            list_partner_ids = request.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(inputs_meeting[2])
             request.env['timeslots_reserved_wizard'].send_internal_notification("NEW timeslot reservation",
                                                                                 "please confirm or reject the reservation",
                                                                                 list_partner_ids,
                                                                                 request.env['timeslots_reserved']._name) # TODO add the messages to variables in a settings model           
+            # show a confirmation for the received reservation
+            response = request.render("meeting_scheduler.guest_view_confirm", {'value': reservation,
+                                                                               'converted_start_date': str(request.env['group_scheduler'].convert_timezone(reservation.timeslots_start_date))})
+        if((len(inputs_contact) != 4) or (len(inputs_meeting) != 3)) and (kw.get('id') is not None) and (kw.get('id') != ''):
+            response = request.render("meeting_scheduler.guest_view_error", {})
         return response
 
-
-   @route('/meeting_scheduler/scheduled_meeting/', auth='public', website=True)
+    @route('/meeting_scheduler/scheduled_meeting/', auth='public', website=True)
     def token_check(self, **kw):
         hours_int = int(request.env['ir.config_parameter'].sudo().get_param('meeting_scheduler.locktime_hours_default'))
         locktime = timedelta(hours=hours_int)
