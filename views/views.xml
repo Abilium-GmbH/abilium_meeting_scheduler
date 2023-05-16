@@ -301,6 +301,109 @@
                         <h2>Available Timeslots</h2>
                     </div>
 
+
+    <!--    <<<<<<< Tasks-99-->
+                    <div class="timeslots">
+                        <style>
+                            table, th, td{border: 1px solid black;}
+                            tr:nth-child(even){background-color:#D6EEEE;}
+                        </style>
+
+                        <h2>Timeslot selector</h2>
+
+                        <table>
+                            <tr>
+                                <th>#</th>
+                                <!--                                <th>Meeting title (TBremoved)</th>-->
+                                <th>Start date</th>
+                                <th>End date</th>
+                                <th>Your start time</th>
+                                <th>Your end time</th>
+                                <th><label for="firstname">First name:</label></th>
+                                <th>
+                                    <label for="lastname">Last name:</label>
+                                </th>
+                                <th>
+                                    <label for="companyname">Company name:</label>
+                                </th>
+                                <th>
+                                    <label for="email">E-Mail address:</label>
+                                </th>
+
+                                <th></th>
+                            </tr>
+
+                            <t t-foreach="value" t-as="i">
+                                <tr>
+                                    <form>
+                                        <form t-attf-action="/meeting_scheduler/guest_view/update/" method="POST">
+                                        <th t-esc="i.id"/>
+                                        <input type="hidden" name="id" t-att-value="i.id"/>
+                                          
+                                           <!--    <<<<<<< Tasks-99-->
+                                            <input type="hidden" name="timeslots_start_date_utc" t-att-value="i.timeslots_start_date_utc"/>
+                                            <input type="hidden" name="timeslots_end_date_utc" t-att-value="i.timeslots_end_date_utc"/>
+                                           <!--    >>>>>>> Tasks-99-->
+                                          
+                                        <th t-esc="i.timeslots_start_date_str"/>
+                                        <th t-esc="i.timeslots_end_date_str"/>
+                                        <th>
+                                          
+                                          <select class="sel_start_h" t-att-data-id="i.id" name="sel_start_h"><!--    <<<<<<< Tasks-99-->
+                                            <t t-foreach="list(i.timeslots_bookable_hours.split())" t-as="item">
+                                              <option t-att-value="item">
+                                                <t t-esc="item"/>
+                                              </option>
+                                            </t>
+                                          </select>
+                                          <select class="sel_start_min" t-att-data-id="i.id" name="sel_start_min"><!--    <<<<<<< Tasks-99-->
+                                            <t t-foreach="list(i.timeslots_time_min_start.split())" t-as="t_min"><!--    <<<<<<< Tasks-99-->
+                                              <option t-att-value="t_min">
+                                                <t t-esc="t_min"/>
+                                              </option>
+                                            </t>
+                                          </select>
+                                        </th>
+                                        <th>
+                                          <select class="sel_duration_h" t-att-data-id="i.id" name="sel_duration_h"><!--    <<<<<<< Tasks-99-->
+                                            <t t-foreach="list(i.timeslots_duration_hours.split())" t-as="item_duration"><!--    <<<<<<< Tasks-99-->
+                                              <option t-att-value="item_duration"><!--    <<<<<<< Tasks-99-->
+                                                <t t-esc="item_duration"/><!--    <<<<<<< Tasks-99-->
+                                              </option>
+                                            </t>
+                                          </select>
+                                          <select class="sel_duration_min" t-att-data-id="i.id" name="sel_duration_min"><!--    <<<<<<< Tasks-99-->
+                                            <t t-foreach="list(i.timeslots_time_min_end.split())" t-as="t_min_duration"><!--    <<<<<<< Tasks-99-->
+                                              <option t-att-value="t_min_duration"><!--    <<<<<<< Tasks-99-->
+                                                <t t-esc="t_min_duration"/><!--    <<<<<<< Tasks-99-->
+                                              </option>
+                                            </t>
+                                          </select>
+                                        </th>
+
+                                        <th>
+                                            <input type="text" id="firstname" name="firstname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="lastname" name="lastname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="companyname" name="companyname"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" id="email" name="email"/>
+                                        </th>
+
+
+                                        <th>
+                                            <input type="submit" t-att-value="Submit"/>
+                                        </th>
+                                    </form>
+                                    </form>
+                                  
+                                  
+      <!--    >>>>>>>>>> Tasks-99-->
+
                     <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
 
 
@@ -401,6 +504,60 @@
                         </form>
                         </form>
                     </div>
+ <!--    <<<<<<< Tasks-99-->
+                    <script>
+                        // Zugriff auf alle Elemente mit der Klasse "sel_start_h" und "sel_duration_h"
+                        const selStartH = document.querySelectorAll('.sel_start_h');
+                        const selDurationH = document.querySelectorAll('.sel_duration_h');
+                        const selDurationMin = document.querySelectorAll('.sel_duration_min');
+
+                        // Füge jedem Element ein Event-Listener hinzu
+                        selStartH.forEach((element) => {
+                            element.addEventListener('change', (event) => {
+
+                                // Zugriff auf das ausgewählte Element
+                                const selectedElement = event.target;
+
+                                // Zugriff auf die ID des ausgewählten Elements
+                                const selectedId = selectedElement.getAttribute('data-id');
+
+                                // Finde das zugehörige Element in sel_duration_h
+                                const matchingDurationElement = Array.from(selDurationH).find(
+                                (element) => element.getAttribute('data-id') === selectedId
+                                );
+
+                                // Überprüfe, ob die ID des ausgewählten Elements und des zugehörigen Elements übereinstimmen
+                                if (selectedId === matchingDurationElement.getAttribute('data-id')) {
+                                    // Passe die Liste an
+                                    const selectedIndex = selectedElement.selectedIndex;
+                                    const options = matchingDurationElement.options;
+                                    for (let i = 0, k = options.length - 1; options.length > i; i++) {
+                                        if (selectedIndex > i) {
+                                            options[k].disabled = true;
+                                        } else {
+                                            options[k].disabled = false;
+                                        }
+                                        k--;
+                                    }
+                                }
+                            });
+                        });
+                        selDurationH.forEach((element) => {
+                            element.addEventListener('change', (event) => {
+                                const selectedElement = event.target;
+                                const selectedId = selectedElement.getAttribute('data-id');
+                                const matchingDurationElementMin = Array.from(selDurationMin).find(
+                                    (element) => element.getAttribute('data-id') === selectedId
+                                );
+                                if (selectedElement.selectedIndex === selectedElement.length - 1) {
+                                    for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                        matchingDurationElementMin[i].disabled = true;
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+ <!--    <<<<<<< Tasks-99-->
 
                 </body>
 
