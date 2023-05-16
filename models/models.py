@@ -8,11 +8,13 @@ class meeting_scheduler(models.Model):
     _name = 'meeting_scheduler'
     _description = 'meeting_scheduler'
 
-    meeting_title = fields.Char(string="Meeting Title", required=True)
+    meeting_title = fields.Char(string="Meeting Title",
+                                default=lambda self: self.env['ir.config_parameter'].sudo().get_param(
+                                    'meeting_scheduler.meeting_title_default'),
+                                required=True)
     meeting_start_date = fields.Datetime(string="Start Date", required=True)
     meeting_end_date = fields.Datetime(string="End Date", required=True)
-    meeting_location = fields.Char(string="Location")
-    meeting_subject = fields.Text(string="Subject")
+    meeting_location = fields.Char(string="Location") #TODO add functionality to handle different locations given by the user
     meeting_duration = fields.Char(string="Duration", compute="_calc_duration", store=True)
     meeting_repetitions = fields.Integer(string="Number of repetitions", default=1)
     meeting_frequency = fields.Selection([('0', 'Not repeating'),
@@ -29,9 +31,6 @@ class meeting_scheduler(models.Model):
     corresponding_calendar_event = fields.Many2one('calendar.event',
                                                    string="Corresponding Calendar Event",
                                                    ondelete="cascade", readonly="True")
-
-    # compute = lambda self: self._allocate_corresponding_field(
-    #   self.meeting_title),
 
     @api.depends('meeting_start_date', 'meeting_end_date')
     def _calc_duration(self):
@@ -204,3 +203,12 @@ class meeting_scheduler(models.Model):
     #                                                                         vals.get('meeting_start_date')),
     #                                                                       ('stop', '=', vals.get(
     #                                                                          'meeting_end_date'))])
+
+    def unlink(self):
+        """
+        the renewed unlink function deletes the object by the unlink function from the corresponding_calendar_event,
+        whilst not even completing its own unlink. Due to the fact that it is deleted by cascading effect of
+        the related object.
+        :return:
+        """
+        self.corresponding_calendar_event.unlink()

@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 import datetime
-
 import pytz
-
 from odoo import models, fields, api
 from typing import List
 from datetime import datetime, timedelta
 import math
-
 
 class group_scheduler(models.Model):
     _name = 'group_scheduler'
@@ -16,7 +13,6 @@ class group_scheduler(models.Model):
     meeting_group = fields.Char(string="Meeting Group", required=True)
     meeting_attendees = fields.Many2many('res.users', string="Attendees")
 
-    # def open_time_form(self, cr, uid, ids, context=None):
     def open_time_form(self):
         return {
             'type': 'ir.actions.act_window',
@@ -41,7 +37,21 @@ class group_scheduler(models.Model):
         """
         output_timeslots = []
         for meeting in meetings:
-            duration = meeting[1].hour - meeting[0].hour
+     #     duration = meeting[1] - meeting[0]
+     #       duration = math.floor(duration.total_seconds() / 3600)
+     #       bookable_hours = ""
+     #       for i in range(meeting[0].hour, meeting[0].hour + duration + 2):
+     #           bookable_hours += " " + str(i)  # the list has to be treated as a string,
+     #           # # so that the t-foreach from the qweb template can interpret it as a list
+     #       output_timeslots.append([str(self.convert_timezone(meeting[0])),
+     #                                #           (meeting[0].strftime('%Y-%m-%d, %Z')),
+     #                                str(self.convert_timezone(meeting[1])),
+     #                                bookable_hours,
+     #                                meeting[0],
+     #                                meeting[1],
+     #                                meeting[2]])
+          
+            duration = meeting[1].hour - meeting[0].hour  #lvk check if still working for meetings which are longer than 1 day
             bookable_hours = ""
             duration_hours = ""
             time_min_start = " 0 15 30 45"
@@ -103,7 +113,9 @@ class group_scheduler(models.Model):
                 group_res_users_all_ids.append(group_member['id'])
         group_res_users_all_ids = list(dict.fromkeys(group_res_users_all_ids))
         # partner_id NOT EQUAL to user_id!!
+        self.generate_intersection(group_res_users_all_ids, search_start_date, search_end_date)
 
+    def generate_intersection(self, group_res_users_all_ids, search_start_date, search_end_date):
         found_meetings_per_group_member = []
         for group_member in group_res_users_all_ids:
             meetings_found = self.env['meeting_scheduler'].search(['&',
@@ -123,9 +135,9 @@ class group_scheduler(models.Model):
                                               'timeslots_start_date_utc': i[3],
                                               'timeslots_end_date_utc': i[4],
                                               'timeslots_groupmembers': i[5],
-                                              'timeslots_duration_hours':i[6],
-                                              'timeslots_time_min_start':i[7],
-                                              'timeslots_time_min_end':i[8]})
+                                              'timeslots_duration_hours':i[6],  #lvk to del?
+                                              'timeslots_time_min_start':i[7],  #lvk to del?
+                                              'timeslots_time_min_end':i[8]})  #lvk to del?
         elif (len(group_res_users_all_ids) > 1):
             free_meetings_list = []
             for first_user in found_meetings_per_group_member[0]:
@@ -179,9 +191,9 @@ class group_scheduler(models.Model):
                                               'timeslots_start_date_utc': i[3],
                                               'timeslots_end_date_utc': i[4],
                                               'timeslots_groupmembers': i[5],
-                                              'timeslots_duration_hours':i[6],
-                                              'timeslots_time_min_start':i[7],
-                                              'timeslots_time_min_end':i[8]})
+                                              'timeslots_duration_hours':i[6],  #lvk to del?
+                                              'timeslots_time_min_start':i[7],  #lvk to del?
+                                              'timeslots_time_min_end':i[8]})  #lvk to del?
                 # self.env['print_table'].create({'show_stuff': i})
 
     def button_timeslots_from_union(self,
@@ -198,7 +210,9 @@ class group_scheduler(models.Model):
                 group_res_users_all_ids.append(group_member['id'])
         group_res_users_all_ids = list(dict.fromkeys(group_res_users_all_ids))
         # partner_id NOT EQUAL to user_id!!
+        self.generate_union(group_res_users_all_ids, search_start_date, search_end_date)
 
+    def generate_union(self, group_res_users_all_ids, search_start_date, search_end_date):
         found_meetings_per_group_member = []
         for group_member in group_res_users_all_ids:
             meetings_found = self.env['meeting_scheduler'].search(['&',
@@ -220,7 +234,7 @@ class group_scheduler(models.Model):
                                           'timeslots_start_date_utc': i[3],
                                           'timeslots_end_date_utc': i[4],
                                           'timeslots_groupmembers': i[5],
-                                          'timeslots_duration_hours':i[6],
-                                          'timeslots_time_min_start':i[7],
-                                          'timeslots_time_min_end':i[8]})
+                                          'timeslots_duration_hours':i[6],  #lvk to del?
+                                          'timeslots_time_min_start':i[7],  #lvk to del?
+                                          'timeslots_time_min_end':i[8]})  #lvk to del?
             # self.env['print_table'].create({'show_stuff': i})
