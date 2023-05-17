@@ -272,19 +272,19 @@
 <!--                                                    <td t-esc="i.id"/>-->
                                                     <input type="hidden" name="id" t-att-value="i.id"/>
 
-                                                    <!--    <<<<<<< Tasks-99-->
+                                                    <!--    <<<<<<< Tasks-99
                                                     <input type="hidden" name="timeslots_start_date_utc"
                                                            t-att-value="i.timeslots_start_date_utc"/>
                                                     <input type="hidden" name="timeslots_end_date_utc"
                                                            t-att-value="i.timeslots_end_date_utc"/>
-                                                    <!--    >>>>>>> Tasks-99-->
+                                                        >>>>>>> Tasks-99-->
 
                                                     <td t-esc="i.timeslots_start_date_str"/>
                                                     <td t-esc="i.timeslots_end_date_str"/>
                                                     <td>
                                                         <div class="dropdownfields">
                                                             <select class="sel_start_h" t-att-data-id="i.id"
-                                                                    name="sel_start_h">
+                                                                    name="sel_start_h" t-att-value="i.timeslots_start_date_str">
                                                                 <!--split separates the string on the whitespaces and list treats it as a list-->
                                                                 <t t-foreach="list(i.timeslots_bookable_hours.split())"
                                                                    t-as="item">
@@ -294,7 +294,7 @@
                                                                 </t>
                                                             </select>:
                                                             <select class="sel_start_min" t-att-data-id="i.id"
-                                                                    name="sel_start_min">
+                                                                    name="sel_start_min" t-att-value="i.timeslots_start_date_str">
                                                                 <t t-foreach="list(i.timeslots_time_min_start.split())"
                                                                    t-as="t_min">
                                                                     <option t-att-value="t_min">
@@ -307,7 +307,7 @@
                                                     <td>
                                                         <div class="dropdownfields">
                                                             <select class="sel_duration_h" t-att-data-id="i.id"
-                                                                    name="sel_duration_h">
+                                                                    name="sel_duration_h" t-att-value="i.timeslots_end_date_str">
                                                                 <t t-foreach="list(i.timeslots_duration_hours.split())"
                                                                    t-as="item_duration">
                                                                     <option t-att-value="item_duration">
@@ -316,7 +316,7 @@
                                                                 </t>
                                                             </select>:
                                                             <select class="sel_duration_min" t-att-data-id="i.id"
-                                                                    name="sel_duration_min">
+                                                                    name="sel_duration_min" t-att-value="i.timeslots_end_date_str">
                                                                 <t t-foreach="list(i.timeslots_time_min_end.split())"
                                                                    t-as="t_min_duration">
                                                                     <option t-att-value="t_min_duration">
@@ -353,57 +353,233 @@
                     </div>
  <!--    <<<<<<< Tasks-99-->
                     <script>
-                        // Zugriff auf alle Elemente mit der Klasse "sel_start_h" und "sel_duration_h"
+                        <!-- Zugriff auf alle Elemente mit der Klasse "sel_start_h", "sel_duration_h", "sel_duration_min" und "sel_start_min". -->
                         const selStartH = document.querySelectorAll('.sel_start_h');
                         const selDurationH = document.querySelectorAll('.sel_duration_h');
                         const selDurationMin = document.querySelectorAll('.sel_duration_min');
+                        const selStartMin = document.querySelectorAll('.sel_start_min');
+                        let saveIndex = 0;
 
-                        // Füge jedem Element ein Event-Listener hinzu
-                        selStartH.forEach((element) => {
-                            element.addEventListener('change', (event) => {
+                        <!--Adjusts the values of sel_start_min when loading the web page so that you cannot start an appointment too early.-->
+                        window.onload = function() {
+                                const minutes = [];
+                                const dataIds = [];
+                                for (const element of selStartMin) {
+                                    dataIds.push(element.getAttribute('data-id'));
+                                    minutes.push(new Date(element.getAttribute('value')).getMinutes());
+                                }
 
-                                // Zugriff auf das ausgewählte Element
-                                const selectedElement = event.target;
+                                for (let i = 0; dataIds.length > i; i++) {
+                                    const listStartMin = Array.from(selStartMin).find(
+                                        (element) => element.getAttribute('data-id') === dataIds[i]);
 
-                                // Zugriff auf die ID des ausgewählten Elements
-                                const selectedId = selectedElement.getAttribute('data-id');
-
-                                // Finde das zugehörige Element in sel_duration_h
-                                const matchingDurationElement = Array.from(selDurationH).find(
-                                (element) => element.getAttribute('data-id') === selectedId
-                                );
-
-                                // Überprüfe, ob die ID des ausgewählten Elements und des zugehörigen Elements übereinstimmen
-                                if (selectedId === matchingDurationElement.getAttribute('data-id')) {
-                                    // Passe die Liste an
-                                    const selectedIndex = selectedElement.selectedIndex;
-                                    const options = matchingDurationElement.options;
-                                    for (let i = 0, k = options.length - 1; options.length > i; i++) {
-                                        if (selectedIndex > i) {
-                                            options[k].disabled = true;
+                                    if (60 > minutes[i]) {
+                                        if (45 > minutes[i]) {
+                                            if (30 > minutes[i]) {
+                                                if (15 > minutes[i]) {
+                                                    listStartMin[0].disabled = true;
+                                                }
+                                            } else {
+                                                listStartMin[0].disabled = true;
+                                                listStartMin[1].disabled = true;
+                                            }
                                         } else {
-                                            options[k].disabled = false;
+                                            listStartMin[0].disabled = true;
+                                            listStartMin[1].disabled = true;
+                                            listStartMin[2].disabled = true;
                                         }
-                                        k--;
                                     }
+
                                 }
+                            }
+
+                            <!--Resets all values when you reload the website.-->
+                            window.addEventListener('load', () => {
+                                const selStartH = document.querySelectorAll('.sel_start_h');
+                                const selDurationH = document.querySelectorAll('.sel_duration_h');
+                                const selDurationMin = document.querySelectorAll('.sel_duration_min');
+                                const selStartMin = document.querySelectorAll('.sel_start_min');
+
+                                selStartH.forEach((element) => {
+                                    element.selectedIndex = 0;
+                                });
+                                selDurationH.forEach((element) => {
+                                    element.selectedIndex = 0;
+                                });
+                                selDurationMin.forEach((element) => {
+                                    element.selectedIndex = 0;
+                                });
+                                selStartMin.forEach((element) => {
+                                    element.selectedIndex = 0;
+                                });
                             });
-                        });
-                        selDurationH.forEach((element) => {
-                            element.addEventListener('change', (event) => {
-                                const selectedElement = event.target;
-                                const selectedId = selectedElement.getAttribute('data-id');
-                                const matchingDurationElementMin = Array.from(selDurationMin).find(
-                                    (element) => element.getAttribute('data-id') === selectedId
-                                );
-                                if (selectedElement.selectedIndex === selectedElement.length - 1) {
-                                    for (let i = 0; matchingDurationElementMin.length > i; i++) {
-                                        matchingDurationElementMin[i].disabled = true;
+
+                        <!--Resets all values when you change the start time in sel_start_h.-->
+                            selStartH.forEach((element) => {
+                                element.addEventListener('change', (event) => {
+
+                                    const selectedElement = event.target;
+
+
+                                    const selectedId = selectedElement.getAttribute('data-id');
+
+
+                                    const matchingDurationElement = Array.from(selDurationH).find(
+                                        (element) => element.getAttribute('data-id') === selectedId
+                                    );
+
+
+                                    const matchingDurationElementMin = Array.from(selDurationMin).find(
+                                        (element) => element.getAttribute('data-id') === selectedId
+                                    );
+
+
+                                    const matchingStartElementMin = Array.from(selStartMin).find(
+                                        (element) => element.getAttribute('data-id') === selectedId
+                                    );
+
+
+                                    if (selectedId === matchingDurationElement.getAttribute('data-id')) {
+
+                                        matchingDurationElement.selectedIndex = 0;
+                                        matchingDurationElementMin.selectedIndex = 0;
+                                        matchingStartElementMin.selectedIndex = 0;
                                     }
-                                }
+                                });
                             });
-                        });
+
+                        <!--Adjusts the duration selection when changing the start time in sel_start_h.-->
+                            selStartH.forEach((element) => {
+                                element.addEventListener('change', (event) => {
+
+
+                                    const selectedElement = event.target;
+
+
+                                    const selectedId = selectedElement.getAttribute('data-id');
+
+
+                                    const matchingDurationElement = Array.from(selDurationH).find(
+                                        (element) => element.getAttribute('data-id') === selectedId
+                                    );
+
+
+                                    if (selectedId === matchingDurationElement.getAttribute('data-id')) {
+                                        // Passe die Liste an
+                                        const selectedIndex = selectedElement.selectedIndex;
+                                        saveIndex = selectedIndex;
+                                        const options = matchingDurationElement.options;
+                                        for (let i = 0, k = options.length - 1; options.length > i; i++) {
+                                            if (selectedIndex > i) {
+                                                options[k].disabled = true;
+                                            } else {
+                                                options[k].disabled = false;
+                                            }
+                                            k--;
+                                        }
+
+                                        const matchingDurationElementMin = Array.from(selDurationMin).find(
+                                            (element) => element.getAttribute('data-id') === selectedId
+                                        );
+
+                                        if (selectedIndex === options.length - 1) {
+                                            for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                                matchingDurationElementMin[i].disabled = true;
+                                            }
+                                        } else {
+                                            for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                                matchingDurationElementMin[i].disabled = false;
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+
+                        <!--Adjusts the sel_duration_min to the end time when you change the sel_duration_h so that you cannot select a time that is too long.-->
+                            selDurationH.forEach((element) => {
+                                element.addEventListener('change', (event) => {
+                                    const selectedElement = event.target;
+                                    const selectedId = selectedElement.getAttribute('data-id');
+                                    const matchingDurationElementMin = Array.from(selDurationMin).find(
+                                        (element) => element.getAttribute('data-id') === selectedId
+                                    );
+                                    const minutes = new Date(element.getAttribute('value')).getMinutes();
+
+                                    if (selectedElement.selectedIndex === selectedElement.length - 1) {
+                                        for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                            matchingDurationElementMin[i].disabled = true;
+                                        }
+                                        if (minutes >= 15) {
+                                            matchingDurationElementMin[0].disabled = false;
+                                            matchingDurationElementMin[1].disabled = false;
+                                            if (minutes >= 30) {
+                                                matchingDurationElementMin[2].disabled = false;
+                                                if (minutes >= 45) {
+                                                    matchingDurationElementMin[3].disabled = false;
+                                                }
+                                            }
+                                        }
+
+                                    } else if (selectedElement.selectedIndex === selectedElement.length - 1 - saveIndex) {
+                                        for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                            matchingDurationElementMin[i].disabled = true;
+                                        }
+                                        if (minutes >= 15) {
+                                            matchingDurationElementMin[0].disabled = false;
+                                            matchingDurationElementMin[1].disabled = false;
+                                            if (minutes >= 30) {
+                                                matchingDurationElementMin[2].disabled = false;
+                                                if (minutes >= 45) {
+                                                    matchingDurationElementMin[3].disabled = false;
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                            matchingDurationElementMin[i].disabled = false;
+                                        }
+                                    }
+                                });
+                            });
+
+                        <!--Adjusts the selection of sel_start_min according to the selection of sel_start_h so that you cannot book a date that is too early.-->
+                            selStartH.forEach((element) => {
+                                element.addEventListener('change', (event) => {
+
+                                    const selectedElement = event.target;
+                                    const selectedId = selectedElement.getAttribute('data-id');
+                                    const selectedIndex = selectedElement.selectedIndex;
+                                    const listStartMin = Array.from(selStartMin).find(
+                                        (element) => element.getAttribute('data-id') === selectedId);
+                                    const minutes = new Date(element.getAttribute('value')).getMinutes();
+
+                                    if (selectedIndex === 0) {
+                                        if (60 > minutes) {
+                                            if (45 > minutes) {
+                                                if (30 > minutes) {
+                                                    if (15 > minutes) {
+                                                        listStartMin[0].disabled = true;
+                                                    }
+                                                } else {
+                                                    listStartMin[0].disabled = true;
+                                                    listStartMin[1].disabled = true;
+                                                }
+                                            } else {
+                                                listStartMin[0].disabled = true;
+                                                listStartMin[1].disabled = true;
+                                                listStartMin[2].disabled = true;
+                                            }
+                                        }
+                                    } else {
+                                        for (let i = 0; listStartMin.length > i; i++) {
+                                            listStartMin[i].disabled = false;
+                                        }
+                                    }
+                                });
+                            });
                     </script>
+
+
  <!--    <<<<<<< Tasks-99-->
 
                 </body>
