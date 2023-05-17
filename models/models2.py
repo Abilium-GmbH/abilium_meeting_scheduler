@@ -50,7 +50,7 @@ class group_scheduler(models.Model):
      #                                meeting[0],
      #                                meeting[1],
      #                                meeting[2]])
-          
+
             duration = meeting[1].hour - meeting[0].hour  #lvk check if still working for meetings which are longer than 1 day
             bookable_hours = ""
             duration_hours = ""
