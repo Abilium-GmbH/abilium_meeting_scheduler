@@ -364,6 +364,7 @@
                         window.onload = function() {
                                 const minutes = [];
                                 const dataIds = [];
+
                                 for (const element of selStartMin) {
                                     dataIds.push(element.getAttribute('data-id'));
                                     minutes.push(new Date(element.getAttribute('value')).getMinutes());
@@ -377,7 +378,14 @@
                                         if (45 > minutes[i]) {
                                             if (30 > minutes[i]) {
                                                 if (15 > minutes[i]) {
+                                                    if (minutes[i] === 0){
+                                                        for (let j = 0; j > minutes[j]; j++){
+                                                            listStartMin[j].disabled = false;
+                                                        }
+                                                    }
+                                                    else {
                                                     listStartMin[0].disabled = true;
+                                                    }
                                                 }
                                             } else {
                                                 listStartMin[0].disabled = true;
@@ -410,7 +418,21 @@
                                     element.selectedIndex = 0;
                                 });
                                 selStartMin.forEach((element) => {
-                                    element.selectedIndex = 0;
+                                    const dataIds = element.getAttribute('data-id');
+                                    const minutes = [];
+                                    minutes.push(new Date(element.getAttribute('value')).getMinutes());
+                                    if (60 > minutes[0]) {
+                                        if (45 > minutes[0]) {
+                                            if (30 > minutes[0]) {
+                                                if (15 > minutes[0]) {
+                                                    if (minutes[0] === 0){element.selectedIndex = 0;}
+                                                    else {element.selectedIndex = 1;}
+                                                }
+                                            }
+                                            else {element.selectedIndex = 2;}
+                                        }
+                                        else {element.selectedIndex = 3;}
+                                    }
                                 });
                             });
 
@@ -465,7 +487,6 @@
 
 
                                     if (selectedId === matchingDurationElement.getAttribute('data-id')) {
-                                        // Passe die Liste an
                                         const selectedIndex = selectedElement.selectedIndex;
                                         saveIndex = selectedIndex;
                                         const options = matchingDurationElement.options;
@@ -483,8 +504,10 @@
                                         );
 
                                         if (selectedIndex === options.length - 1) {
-                                            for (let i = 0; matchingDurationElementMin.length > i; i++) {
-                                                matchingDurationElementMin[i].disabled = true;
+                                            for (let i = 0, t = matchingDurationElementMin.length -1; matchingDurationElementMin.length - 1  > i; i++) {
+                                                matchingDurationElementMin[t].disabled = true;
+                                                matchingDurationElementMin.selectedIndex = 0;
+                                                t -= 1;
                                             }
                                         } else {
                                             for (let i = 0; matchingDurationElementMin.length > i; i++) {
@@ -506,8 +529,10 @@
                                     const minutes = new Date(element.getAttribute('value')).getMinutes();
 
                                     if (selectedElement.selectedIndex === selectedElement.length - 1) {
-                                        for (let i = 0; matchingDurationElementMin.length > i; i++) {
-                                            matchingDurationElementMin[i].disabled = true;
+                                        for (let i = 0, t = matchingDurationElementMin.length - 1; matchingDurationElementMin.length - 1 > i; i++) {
+                                            matchingDurationElementMin[t].disabled = true;
+                                            matchingDurationElementMin.selectedIndex = 0;
+                                            t -= 1;
                                         }
                                         if (minutes >= 15) {
                                             matchingDurationElementMin[0].disabled = false;
@@ -521,8 +546,10 @@
                                         }
 
                                     } else if (selectedElement.selectedIndex === selectedElement.length - 1 - saveIndex) {
-                                        for (let i = 0; matchingDurationElementMin.length > i; i++) {
-                                            matchingDurationElementMin[i].disabled = true;
+                                        for (let i = 0, t = matchingDurationElementMin.length - 1; matchingDurationElementMin.length - 1 > i; i++) {
+                                            matchingDurationElementMin[t].disabled = true;
+                                            matchingDurationElementMin.selectedIndex = 0;
+                                            t -= 1;
                                         }
                                         if (minutes >= 15) {
                                             matchingDurationElementMin[0].disabled = false;
@@ -534,7 +561,9 @@
                                                 }
                                             }
                                         }
-                                    } else {
+                                    }
+
+                                    else {
                                         for (let i = 0; matchingDurationElementMin.length > i; i++) {
                                             matchingDurationElementMin[i].disabled = false;
                                         }
@@ -558,16 +587,27 @@
                                             if (45 > minutes) {
                                                 if (30 > minutes) {
                                                     if (15 > minutes) {
+                                                        if (0 === minutes){
+                                                            for (let i = 0; listStartMin.length > i; i++) {
+                                                                listStartMin[i].disabled = false;
+                                                            }
+                                                            listStartMin.selectedIndex = 0;
+                                                        }
+                                                        else {
                                                         listStartMin[0].disabled = true;
+                                                        listStartMin.selectedIndex = 1;
+                                                        }
                                                     }
                                                 } else {
                                                     listStartMin[0].disabled = true;
                                                     listStartMin[1].disabled = true;
+                                                    listStartMin.selectedIndex = 2;
                                                 }
                                             } else {
                                                 listStartMin[0].disabled = true;
                                                 listStartMin[1].disabled = true;
                                                 listStartMin[2].disabled = true;
+                                                listStartMin.selectedIndex = 3;
                                             }
                                         }
                                     } else {
@@ -575,6 +615,27 @@
                                             listStartMin[i].disabled = false;
                                         }
                                     }
+                                });
+                            });
+
+                            selStartMin.forEach((element) => {
+                                element.addEventListener('change', (event) => {
+                                    const selectedElement = event.target;
+                                    const selectedId = selectedElement.getAttribute('data-id');
+
+                                    const minIndex = selectedElement.selectedIndex;
+                                    const minValue = (Array.from(selStartMin).find(
+                                        (element) => element.getAttribute('data-id') === selectedId))[minIndex];
+                                    const endminutes = [];
+                                    for (const element of selDurationMin) {
+                                        if (selectedId === element.getAttribute('data-id')){
+                                            endminutes.push(new Date(element.getAttribute('value')).getMinutes());
+                                        }
+                                    }
+                                    const startMin = new Date(element.getAttribute('value')).getMinutes();
+
+
+
                                 });
                             });
                     </script>
