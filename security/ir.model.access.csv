@@ -7,5 +7,7 @@ access_timeslots_reserved,access.timeslots_reserved,model_timeslots_reserved,,1,
 access_group_wizard,access.group_wizard,model_group_wizard,,1,1,1,1
 access_timeslots_reserved_wizard,access.timeslots_reserved_wizard,model_timeslots_reserved_wizard,,1,1,1,1
 access_timeslots_confirmed,access.timeslots_confirmed,model_timeslots_confirmed,,1,1,1,1
+access_send_guest_view_to_guest_wizard,access.send_guest_view_to_guest_wizard,model_send_guest_view_to_guest_wizard,,1,1,1,1
+
 
 

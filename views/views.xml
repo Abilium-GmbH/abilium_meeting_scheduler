@@ -647,12 +647,15 @@
     </data>
 
             <!-- third menu action-->
-    <record id="stuff_action" model="ir.actions.act_window">
-        <field name="name">Group Stage</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">print_table</field>
-        <field name="view_mode">tree,kanban,form</field>
+    <record id="action_guest_view_link_wizard" model="ir.actions.act_window">
+    <field name="name">Send Guest Link</field>
+    <field name="res_model">send_guest_view_to_guest_wizard</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="send_guest_view_to_guest_wizardform"/>
+    <field name="target">new</field>
     </record>
+
+
 
         <!-- explicit list view definition third item -->
     <data>
@@ -685,6 +688,10 @@
             <field name="arch" type="xml">
 
                 <tree create="false">
+<!--                    <header>-->
+<!--                    <button name="open_time_form" string="Continue with selection"-->
+<!--                            type="object" class="btn-primary" attrs="{'always_visible': True}"/>-->
+<!--</header>-->
                     <field name="timeslots_groupmembers"/>
                     <field name="timeslots_start_date_utc"/>
                     <field name="timeslots_end_date_utc"/>
@@ -939,10 +946,10 @@
               parent="meeting-scheduler-root"
               action="timeslots_action"
               groups="base.group_user"/>
-    <menuitem name="4. Guest View"
-              id="meeting-scheduler-guest_view"
+    <menuitem name="4. Send Guest view link"
+              id="meeting-scheduler-stuff-printer"
               parent="meeting-scheduler-root"
-              action="link_to_guest_view"
+              action="action_guest_view_link_wizard"
               groups="base.group_user"/>
     <menuitem name="Timeslots"
               id="meeting-scheduler-timeslots-main"
@@ -959,10 +966,11 @@
               action="timeslots_confirmed_action"
               groups="base.group_user"/>
 
-    <menuitem name="Printed Stuff"
-              id="meeting-scheduler-stuff-printer"
+
+        <menuitem name="Guest PreView"
+              id="meeting-scheduler-guest_view"
               parent="meeting-scheduler-root"
-              action="stuff_action"
+              action="link_to_guest_view"
               groups="base.group_user"/>
 
 
