@@ -359,6 +359,7 @@
                         const selDurationMin = document.querySelectorAll('.sel_duration_min');
                         const selStartMin = document.querySelectorAll('.sel_start_min');
                         let saveIndex = 0;
+                        let saveIndexMin = 0;
 
                         <!--Adjusts the values of sel_start_min when loading the web page so that you cannot start an appointment too early.-->
                         window.onload = function() {
@@ -407,32 +408,52 @@
                                 const selDurationH = document.querySelectorAll('.sel_duration_h');
                                 const selDurationMin = document.querySelectorAll('.sel_duration_min');
                                 const selStartMin = document.querySelectorAll('.sel_start_min');
+                                const startMinIndex = [];
 
                                 selStartH.forEach((element) => {
-                                    element.selectedIndex = 0;
-                                });
-                                selDurationH.forEach((element) => {
                                     element.selectedIndex = 0;
                                 });
                                 selDurationMin.forEach((element) => {
                                     element.selectedIndex = 0;
                                 });
                                 selStartMin.forEach((element) => {
-                                    const dataIds = element.getAttribute('data-id');
                                     const minutes = [];
                                     minutes.push(new Date(element.getAttribute('value')).getMinutes());
                                     if (60 > minutes[0]) {
                                         if (45 > minutes[0]) {
                                             if (30 > minutes[0]) {
                                                 if (15 > minutes[0]) {
-                                                    if (minutes[0] === 0){element.selectedIndex = 0;}
-                                                    else {element.selectedIndex = 1;}
+                                                    if (minutes[0] === 0){element.selectedIndex = 0;startMinIndex.push(0);}
+                                                    else {element.selectedIndex = 1;startMinIndex.push(1);}
                                                 }
                                             }
-                                            else {element.selectedIndex = 2;}
+                                            else {element.selectedIndex = 2;startMinIndex.push(2);}
                                         }
-                                        else {element.selectedIndex = 3;}
+                                        else {element.selectedIndex = 3;startMinIndex.push(3);}
                                     }
+                                });
+                                let n = 0;
+                                selDurationH.forEach((element) => {
+                                    const dataId = element.getAttribute('data-id');
+                                    const minutes = [];
+                                    minutes.push(new Date(element.getAttribute('value')).getMinutes());
+                                    const matchingDurationElement = Array.from(selDurationH).find(
+                                        (element) => element.getAttribute('data-id') === dataId);
+
+                                    if (60 > minutes[0]) {
+                                        if (45 >= minutes[0]) {
+                                            if (30 >= minutes[0]) {
+                                                if (15 >= minutes[0]) {
+                                                    if (minutes[0] === 0){if (startMinIndex[n] > 0){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
+                                                    else {if (startMinIndex[n] > 1){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
+                                                }
+                                            }
+                                            else {if (startMinIndex[n] > 2){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
+                                        }
+                                        else {if (startMinIndex[n] > 3){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
+                                    }
+                                    n++;
+                                    element.selectedIndex = 0;
                                 });
                             });
 
@@ -578,6 +599,7 @@
                                     const selectedElement = event.target;
                                     const selectedId = selectedElement.getAttribute('data-id');
                                     const selectedIndex = selectedElement.selectedIndex;
+                                    var setIndex = 0;
                                     const listStartMin = Array.from(selStartMin).find(
                                         (element) => element.getAttribute('data-id') === selectedId);
                                     const minutes = new Date(element.getAttribute('value')).getMinutes();
@@ -592,22 +614,26 @@
                                                                 listStartMin[i].disabled = false;
                                                             }
                                                             listStartMin.selectedIndex = 0;
+                                                            setIndex = 0;
                                                         }
                                                         else {
                                                         listStartMin[0].disabled = true;
                                                         listStartMin.selectedIndex = 1;
+                                                        setIndex = 1;
                                                         }
                                                     }
                                                 } else {
                                                     listStartMin[0].disabled = true;
                                                     listStartMin[1].disabled = true;
                                                     listStartMin.selectedIndex = 2;
+                                                    setIndex = 2;
                                                 }
                                             } else {
                                                 listStartMin[0].disabled = true;
                                                 listStartMin[1].disabled = true;
                                                 listStartMin[2].disabled = true;
                                                 listStartMin.selectedIndex = 3;
+                                                setIndex = 3;
                                             }
                                         }
                                     } else {
@@ -615,6 +641,28 @@
                                             listStartMin[i].disabled = false;
                                         }
                                     }
+                                    const endMinutes = [];
+                                    for (const element of selDurationMin) {
+                                        if (selectedId === element.getAttribute('data-id')){
+                                            endMinutes.push(new Date(element.getAttribute('value')).getMinutes());
+                                        }
+                                    }
+                                    const durationH = Array.from(selDurationH).find(
+                                        (element) => element.getAttribute('data-id') === selectedId);
+
+                                    if (60 > endMinutes[0]) {
+                                        if (45 >= endMinutes[0]) {
+                                            if (30 >= endMinutes[0]) {
+                                                if (15 >= endMinutes[0]) {
+                                                    if (endMinutes[0] === 0){if (setIndex > 0){durationH[durationH.length-1].disabled = true;}}
+                                                    else {if (setIndex > 1){durationH[durationH.length-1].disabled = true;}}
+                                                }
+                                            }
+                                            else {if (setIndex > 2){durationH[durationH.length-1].disabled = true;}}
+                                        }
+                                        else {if (setIndex > 3){durationH[durationH.length-1].disabled = true;}}
+                                    }
+
                                 });
                             });
 
@@ -622,20 +670,29 @@
                                 element.addEventListener('change', (event) => {
                                     const selectedElement = event.target;
                                     const selectedId = selectedElement.getAttribute('data-id');
-
                                     const minIndex = selectedElement.selectedIndex;
-                                    const minValue = (Array.from(selStartMin).find(
-                                        (element) => element.getAttribute('data-id') === selectedId))[minIndex];
-                                    const endminutes = [];
+                                    saveIndexMin = minIndex;
+                                    const endMinutes = [];
                                     for (const element of selDurationMin) {
                                         if (selectedId === element.getAttribute('data-id')){
-                                            endminutes.push(new Date(element.getAttribute('value')).getMinutes());
+                                            endMinutes.push(new Date(element.getAttribute('value')).getMinutes());
                                         }
                                     }
+                                    var min2 = endMinutes[0];
+                                    var min1 = minIndex * 15;
                                     const startMin = new Date(element.getAttribute('value')).getMinutes();
+                                    const durationH = Array.from(selDurationH).find(
+                                        (element) => element.getAttribute('data-id') === selectedId);
+                                    const durationIndex = (durationH.length -1) - saveIndex;
 
+                                    <!-- korrigiert die duration h wenn start min ausgewählt wird  -->
+                                    if (min1 > min2){
+                                        durationH[durationIndex].disabled = true;
+                                    }
 
-
+                                    else {
+                                        durationH[durationIndex].disabled = false;
+                                    }
                                 });
                             });
                     </script>
