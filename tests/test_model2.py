@@ -8,21 +8,130 @@ class Model2Test(common.TransactionCase):
     def test_button_function(self):
         print("TODO")
 
-    def test_algo02(self):
-        print("TODO")
+    def test_button_timeslots_from_intersection(self):
+
+        user0_0 = self.env['res.users'].create({'name': 'Hans', 'login': 'Hans'})
+        user0_0_id = self.env['res.users'].search([('name', '=', 'Hans')]).id
+
+        start_date0_0 = str(datetime.datetime(2023, 10, 2, 9, 0))
+        end_date0_0 = str(datetime.datetime(2023, 10, 2, 13, 0))
+
+        start_date0_1 = str(datetime.datetime(2023, 10, 2, 11, 0))
+        end_date0_1 = str(datetime.datetime(2023, 10, 2, 15, 0))
+
+        self.env['meeting_scheduler'].create([{
+            'meeting_title': 'meetingBookable',
+            'meeting_location': False,
+            'meeting_start_date': start_date0_0,
+            'meeting_end_date': end_date0_0,
+            'meeting_repetitions': 1,
+            'meeting_frequency': 0,
+            'meeting_privacy': 'public',
+            'meeting_show_as': 'free',
+            'meeting_subject': False,
+            'create_uid': user0_0_id
+        }])
+
+        user0_1 = self.env['res.users'].create({'name': 'Helen', 'login': 'Helen'})
+        user0_1_id = self.env['res.users'].search([('name', '=', 'Helen')]).id
+
+        self.env['meeting_scheduler'].create([{
+            'meeting_title': 'meetingBookable',
+            'meeting_location': False,
+            'meeting_start_date': start_date0_1,
+            'meeting_end_date': end_date0_1,
+            'meeting_repetitions': 1,
+            'meeting_frequency': 0,
+            'meeting_privacy': 'public',
+            'meeting_show_as': 'free',
+            'meeting_subject': False,
+            'create_uid': user0_1_id
+        }])
+
+        group0 = self.env['res.groups'].create({'name': 'group0', 'users': [[user0_0_id], [user0_1_id]]})
+        group0_id = self.env['res.groups'].search([('name', '=', 'group0')]).id
+
+        group_scheduler_0 = self.env['group_scheduler'].\
+            create({'meeting_group': group0_id, 'meeting_attendees': [user0_0_id, user0_1_id]})
+
+        start_time_0 = datetime.datetime(2023, 10, 2, 2, 0)
+        end_time_0 = datetime.datetime(2023, 10, 2, 23, 0)
+
+        self.env.context = dict(self.env.context, active_ids=[group_scheduler_0.id])
+
+        group_scheduler_0.button_timeslots_from_intersection(start_time_0, end_time_0)
+
+        date = datetime.datetime(2022, 1, 1, 1, 0, 0)
+
+        timeslots = self.env['timeslots'].search([('timeslots_start_date_str','>=', date)])
+
+        self.assertEqual(len(timeslots), 1)
+
+        self.assertEqual(datetime.datetime(2023, 10, 2, 11, 0, 0), timeslots[0].timeslots_start_date_utc)
+        self.assertEqual(datetime.datetime(2023, 10, 2, 13, 0, 0), timeslots[0].timeslots_end_date_utc)
+        self.assertIn(str(user0_0_id), timeslots[0].timeslots_groupmembers)
+        self.assertIn(str(user0_1_id), timeslots[0].timeslots_groupmembers)
+        self.assertEqual(timeslots[0].timeslots_bookable_hours, ' 11 12 13')
+
+    def test_intersection_only_one_user(self):
+
+        user0_0 = self.env['res.users'].create({'name': 'Markus', 'login': 'Markus'})
+        user0_0_id = self.env['res.users'].search([('name', '=', 'Markus')]).id
+
+        start_date0_0 = str(datetime.datetime(2023, 10, 2, 9, 0))
+        end_date0_0 = str(datetime.datetime(2023, 10, 2, 13, 0))
+
+        start_date0_1 = str(datetime.datetime(2023, 10, 2, 11, 0))
+        end_date0_1 = str(datetime.datetime(2023, 10, 2, 15, 0))
+
+        self.env['meeting_scheduler'].create([{
+            'meeting_title': 'meetingBookable',
+            'meeting_location': False,
+            'meeting_start_date': start_date0_0,
+            'meeting_end_date': end_date0_0,
+            'meeting_repetitions': 1,
+            'meeting_frequency': 0,
+            'meeting_privacy': 'public',
+            'meeting_show_as': 'free',
+            'meeting_subject': False,
+            'create_uid': user0_0_id
+        }])
+
+        group0 = self.env['res.groups'].create({'name': 'group0', 'users': [[user0_0_id]]})
+        group0_id = self.env['res.groups'].search([('name', '=', 'group0')]).id
+
+        group_scheduler_0 = self.env['group_scheduler']. \
+            create({'meeting_group': group0_id, 'meeting_attendees': [user0_0_id]})
+
+        start_time_0 = datetime.datetime(2023, 12, 2, 2, 0)
+        end_time_0 = datetime.datetime(2023, 12, 2, 23, 0)
+
+        self.env.context = dict(self.env.context, active_ids=[group_scheduler_0.id])
+
+        group_scheduler_0.button_timeslots_from_intersection(start_time_0, end_time_0)
+
+        date = datetime.datetime(2022, 1, 1, 1, 0, 0)
+
+        timeslots = self.env['timeslots'].search([('timeslots_start_date_str', '>=', date)])
+
+        print(timeslots)
 
     def test_button_timeslots_from_union(self):
 
         user0_0 = self.env['res.users'].create({'name': 'Bruno', 'login': 'Bruno'})
         user0_0_id = self.env['res.users'].search([('name', '=', 'Bruno')]).id
 
+        start_date0_0 = str(datetime.datetime(2023, 10, 2, 9, 0))
+        end_date0_0 = str(datetime.datetime(2023, 10, 2, 11, 0))
 
+        start_date0_1 = str(datetime.datetime(2023, 10, 2, 11, 0))
+        end_date0_1 = str(datetime.datetime(2023, 10, 2, 15, 0))
 
         self.env['meeting_scheduler'].create([{
             'meeting_title': 'meetingBookable',
             'meeting_location': False,
-            'meeting_start_date': str(datetime.datetime(2023, 10, 2, 9, 0)),
-            'meeting_end_date': str(datetime.datetime(2023, 10, 2, 11, 0)),
+            'meeting_start_date': start_date0_0,
+            'meeting_end_date': end_date0_0,
             'meeting_repetitions': 1,
             'meeting_frequency': 0,
             'meeting_privacy': 'public',
@@ -37,8 +146,8 @@ class Model2Test(common.TransactionCase):
         self.env['meeting_scheduler'].create([{
             'meeting_title': 'meetingBookable',
             'meeting_location': False,
-            'meeting_start_date': str(datetime.datetime(2023, 10, 2, 11, 0)),
-            'meeting_end_date': str(datetime.datetime(2023, 10, 2, 15, 0)),
+            'meeting_start_date': start_date0_1,
+            'meeting_end_date': end_date0_1,
             'meeting_repetitions': 1,
             'meeting_frequency': 0,
             'meeting_privacy': 'public',
@@ -50,17 +159,33 @@ class Model2Test(common.TransactionCase):
         group0 = self.env['res.groups'].create({'name': 'group0', 'users': [[user0_0_id], [user0_1_id]]})
         group0_id = self.env['res.groups'].search([('name', '=', 'group0')]).id
 
-        group_scheduler_0 = self.env['group_scheduler'].with_context({'active_ids': group0_id}).\
+        group_scheduler_0 = self.env['group_scheduler'].\
             create({'meeting_group': group0_id, 'meeting_attendees': [user0_0_id, user0_1_id]})
 
-        start_time_0 = datetime.datetime(2023, 10, 2, 10, 0)
-        end_time_0 = datetime.datetime(2023, 10, 2, 18, 0)
+        start_time_0 = datetime.datetime(2023, 10, 2, 2, 0)
+        end_time_0 = datetime.datetime(2023, 10, 2, 23, 0)
+
+        self.env.context = dict(self.env.context, active_ids=[group_scheduler_0.id])
 
         group_scheduler_0.button_timeslots_from_union(start_time_0, end_time_0)
 
-        timeslots = self.env['timeslots'].search([('timeslots_start_date_str', '!=', '0')])
+        date = datetime.datetime(2022, 1, 1, 1, 0, 0)
 
-        print(timeslots)
+        timeslots = self.env['timeslots'].search([('timeslots_start_date_str','>=', date)])
+
+        self.assertEqual(len(timeslots), 2)
+
+        self.assertEqual(start_date0_0, str(timeslots[0].timeslots_start_date_utc))
+        self.assertEqual(end_date0_0, str(timeslots[0].timeslots_end_date_utc))
+        self.assertIn(str(user0_0_id), timeslots[0].timeslots_groupmembers)
+        self.assertNotIn(str(user0_1_id), timeslots[0].timeslots_groupmembers)
+        self.assertEqual(timeslots[0].timeslots_bookable_hours, ' 9 10 11')
+
+        self.assertEqual(start_date0_1, str(timeslots[1].timeslots_start_date_utc))
+        self.assertEqual(end_date0_1, str(timeslots[1].timeslots_end_date_utc))
+        self.assertIn(str(user0_1_id), timeslots[1].timeslots_groupmembers)
+        self.assertNotIn(str(user0_0_id), timeslots[1].timeslots_groupmembers)
+        self.assertEqual(timeslots[1].timeslots_bookable_hours, ' 11 12 13 14 15')
 
 
     def test_transform_meetings_to_bookable_hours(self):
