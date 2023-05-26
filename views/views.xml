@@ -358,13 +358,12 @@
                         const selDurationH = document.querySelectorAll('.sel_duration_h');
                         const selDurationMin = document.querySelectorAll('.sel_duration_min');
                         const selStartMin = document.querySelectorAll('.sel_start_min');
-                        let saveIndex = 0;
-                        let saveIndexMin = 0;
 
                         <!--Adjusts the values of sel_start_min when loading the web page so that you cannot start an appointment too early.-->
                         window.onload = function() {
                                 const minutes = [];
                                 const dataIds = [];
+                                const listStartH = [];
 
                                 for (const element of selStartMin) {
                                     dataIds.push(element.getAttribute('data-id'));
@@ -373,6 +372,10 @@
 
                                 for (let i = 0; dataIds.length > i; i++) {
                                     const listStartMin = Array.from(selStartMin).find(
+                                        (element) => element.getAttribute('data-id') === dataIds[i]);
+                                    const listStartH = Array.from(selStartH).find(
+                                        (element) => element.getAttribute('data-id') === dataIds[i]);
+                                    const listDurationH = Array.from(selDurationH).find(
                                         (element) => element.getAttribute('data-id') === dataIds[i]);
 
                                     if (60 > minutes[i]) {
@@ -388,19 +391,22 @@
                                                     listStartMin[0].disabled = true;
                                                     }
                                                 }
+                                                else {
+                                                    listStartMin[0].disabled = true;
+                                                    listStartMin[1].disabled = true;
+                                                }
+
                                             } else {
                                                 listStartMin[0].disabled = true;
                                                 listStartMin[1].disabled = true;
                                             }
-                                        } else {
-                                            listStartMin[0].disabled = true;
-                                            listStartMin[1].disabled = true;
-                                            listStartMin[2].disabled = true;
+                                        }else {
+                                            listStartH[0].disabled = true;
+                                            listDurationH[listDurationH.length-1].disabled = true;
                                         }
                                     }
-
                                 }
-                            }
+                        }
 
                             <!--Resets all values when you reload the website.-->
                             window.addEventListener('load', () => {
@@ -411,7 +417,12 @@
                                 const startMinIndex = [];
 
                                 selStartH.forEach((element) => {
-                                    element.selectedIndex = 0;
+                                    const dataId = element.getAttribute('data-id');
+                                    const listStartH = Array.from(selStartH).find(
+                                        (element) => element.getAttribute('data-id') === dataId);
+
+                                    if (listStartH[0].disabled === true){element.selectedIndex = 1;}
+                                    else {element.selectedIndex = 0;}
                                 });
                                 selDurationMin.forEach((element) => {
                                     element.selectedIndex = 0;
@@ -426,10 +437,12 @@
                                                     if (minutes[0] === 0){element.selectedIndex = 0;startMinIndex.push(0);}
                                                     else {element.selectedIndex = 1;startMinIndex.push(1);}
                                                 }
+                                                else{element.selectedIndex = 2;startMinIndex.push(2);}
                                             }
                                             else {element.selectedIndex = 2;startMinIndex.push(2);}
                                         }
-                                        else {element.selectedIndex = 3;startMinIndex.push(3);}
+                                        else if (45 === minutes[0]){element.selectedIndex = 3;startMinIndex.push(3);}
+                                        else {element.selectedIndex = 0;startMinIndex.push(0);}
                                     }
                                 });
                                 let n = 0;
@@ -441,12 +454,13 @@
                                         (element) => element.getAttribute('data-id') === dataId);
 
                                     if (60 > minutes[0]) {
-                                        if (45 >= minutes[0]) {
+                                        if (45 > minutes[0]) {
                                             if (30 >= minutes[0]) {
                                                 if (15 >= minutes[0]) {
                                                     if (minutes[0] === 0){if (startMinIndex[n] > 0){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
                                                     else {if (startMinIndex[n] > 1){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
                                                 }
+                                                else {if (startMinIndex[n] > 2){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
                                             }
                                             else {if (startMinIndex[n] > 2){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
                                         }
@@ -470,16 +484,22 @@
                                     const matchingDurationElement = Array.from(selDurationH).find(
                                         (element) => element.getAttribute('data-id') === selectedId
                                     );
+                                    const matchingDurationElementIndex = (Array.from(selDurationH).find(
+                                                (el) => el.getAttribute('data-id') === selectedId)).selectedIndex;
 
 
                                     const matchingDurationElementMin = Array.from(selDurationMin).find(
                                         (element) => element.getAttribute('data-id') === selectedId
                                     );
+                                    const matchingDurationElementMinIndex = (Array.from(selDurationMin).find(
+                                                (el) => el.getAttribute('data-id') === selectedId)).selectedIndex;
 
 
                                     const matchingStartElementMin = Array.from(selStartMin).find(
                                         (element) => element.getAttribute('data-id') === selectedId
                                     );
+                                    const matchingStartElementMinIndex = (Array.from(selStartMin).find(
+                                                (el) => el.getAttribute('data-id') === selectedId)).selectedIndex;
 
 
                                     if (selectedId === matchingDurationElement.getAttribute('data-id')) {
@@ -509,7 +529,6 @@
 
                                     if (selectedId === matchingDurationElement.getAttribute('data-id')) {
                                         const selectedIndex = selectedElement.selectedIndex;
-                                        saveIndex = selectedIndex;
                                         const options = matchingDurationElement.options;
                                         for (let i = 0, k = options.length - 1; options.length > i; i++) {
                                             if (selectedIndex > i) {
@@ -548,51 +567,177 @@
                                         (element) => element.getAttribute('data-id') === selectedId
                                     );
                                     const minutes = new Date(element.getAttribute('value')).getMinutes();
+                                    let startMinElementIndex = 0;
+                                    let startHElementIndex = 0;
 
-                                    if (selectedElement.selectedIndex === selectedElement.length - 1) {
-                                        for (let i = 0, t = matchingDurationElementMin.length - 1; matchingDurationElementMin.length - 1 > i; i++) {
-                                            matchingDurationElementMin[t].disabled = true;
-                                            matchingDurationElementMin.selectedIndex = 0;
-                                            t -= 1;
-                                        }
-                                        if (minutes >= 15) {
-                                            matchingDurationElementMin[0].disabled = false;
-                                            matchingDurationElementMin[1].disabled = false;
-                                            if (minutes >= 30) {
-                                                matchingDurationElementMin[2].disabled = false;
-                                                if (minutes >= 45) {
-                                                    matchingDurationElementMin[3].disabled = false;
-                                                }
-                                            }
-                                        }
 
-                                    } else if (selectedElement.selectedIndex === selectedElement.length - 1 - saveIndex) {
-                                        for (let i = 0, t = matchingDurationElementMin.length - 1; matchingDurationElementMin.length - 1 > i; i++) {
-                                            matchingDurationElementMin[t].disabled = true;
-                                            matchingDurationElementMin.selectedIndex = 0;
-                                            t -= 1;
-                                        }
-                                        if (minutes >= 15) {
-                                            matchingDurationElementMin[0].disabled = false;
-                                            matchingDurationElementMin[1].disabled = false;
-                                            if (minutes >= 30) {
-                                                matchingDurationElementMin[2].disabled = false;
-                                                if (minutes >= 45) {
-                                                    matchingDurationElementMin[3].disabled = false;
-                                                }
-                                            }
+                                    for (const element of selStartH) {
+                                        if (selectedId === element.getAttribute('data-id')){
+                                            startHElementIndex = (Array.from(selStartH).find(
+                                                (el) => el.getAttribute('data-id') === selectedId)).selectedIndex;
                                         }
                                     }
 
+                                    const startMinutes = [];
+                                    for (const element of selStartMin) {
+                                        if (selectedId === element.getAttribute('data-id')){
+                                            startMinutes.push(new Date(element.getAttribute('value')).getMinutes());
+                                            startMinElementIndex = (Array.from(selStartMin).find(
+                                                (el) => el.getAttribute('data-id') === selectedId)).selectedIndex;
+                                        }
+                                    }
+                                    let startMin = startMinElementIndex * 15;
+
+                                    if (startMinElementIndex === 0){
+                                        <!-- wenn die ausgewählte duration die maximale anzahl studen ist passt es die duration min an-->
+                                        if (selectedElement.selectedIndex === selectedElement.length - 1) {
+                                            for (let i = 0, t = matchingDurationElementMin.length - 1; matchingDurationElementMin.length - 1 > i; i++) {
+                                                matchingDurationElementMin[t].disabled = true;
+                                                matchingDurationElementMin.selectedIndex = 0;
+                                                t -= 1;
+                                            }
+                                            if (minutes >= 15) {
+                                                matchingDurationElementMin[0].disabled = false;
+                                                matchingDurationElementMin[1].disabled = false;
+                                                if (minutes >= 30) {
+                                                    matchingDurationElementMin[2].disabled = false;
+                                                    if (minutes >= 45) {
+                                                        matchingDurationElementMin[3].disabled = false;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        <!-- wenn man die surationH aus wählt und sie die max mögliche ist anhanden der startH-->
+                                        else if (selectedElement.selectedIndex === selectedElement.length - 1 - startHElementIndex) {
+                                            for (let i = 0, t = matchingDurationElementMin.length - 1; matchingDurationElementMin.length - 1 > i; i++) {
+                                                matchingDurationElementMin[t].disabled = true;
+                                                matchingDurationElementMin.selectedIndex = 0;
+                                                t -= 1;
+                                            }
+                                            if (minutes >= 15) {
+                                                matchingDurationElementMin[0].disabled = false;
+                                                matchingDurationElementMin[1].disabled = false;
+                                                if (minutes >= 30) {
+                                                    matchingDurationElementMin[2].disabled = false;
+                                                    if (minutes >= 45) {
+                                                        matchingDurationElementMin[3].disabled = false;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        <!-- wenn man eine andere duration auswählt welche nicht die max duration ist-->
+                                        else {
+                                            for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                                matchingDurationElementMin[i].disabled = false;
+                                            }
+                                        }
+                                    }
                                     else {
-                                        for (let i = 0; matchingDurationElementMin.length > i; i++) {
-                                            matchingDurationElementMin[i].disabled = false;
+                                        <!-- wenn die ausgewählte duration die maximale anzahl studen ist passt es die duration min an-->
+                                        if ((minutes - startMin) === 0){
+                                            if (selectedElement.selectedIndex === selectedElement.length - 1) {
+                                                for (let i = 0, t = matchingDurationElementMin.length - 1; matchingDurationElementMin.length - 1 > i; i++) {
+                                                    matchingDurationElementMin[t].disabled = true;
+                                                    matchingDurationElementMin.selectedIndex = 0;
+                                                    t -= 1;
+                                                }
+                                            }
+                                            <!-- wenn man die surationH aus wählt und sie die max mögliche ist anhanden der startH-->
+                                            else if (selectedElement.selectedIndex === selectedElement.length - 1 - startHElementIndex) {
+                                                for (let i = 0, t = matchingDurationElementMin.length - 1; matchingDurationElementMin.length - 1 > i; i++) {
+                                                    matchingDurationElementMin[t].disabled = true;
+                                                    matchingDurationElementMin.selectedIndex = 0;
+                                                    t -= 1;
+                                                }
+                                            }
+                                            <!-- wenn man eine andere duration auswählt welche nicht die max duration ist-->
+                                            else {
+                                                for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                                    matchingDurationElementMin[i].disabled = false;
+                                                }
+                                            }
+                                        }
+                                        else if ((minutes - startMin) > 0){
+                                            for (let i = 0, t = matchingDurationElementMin.length - 1; matchingDurationElementMin.length - 1 > i; i++) {
+                                                matchingDurationElementMin[t].disabled = true;
+                                                matchingDurationElementMin.selectedIndex = 0;
+                                                t -= 1;
+                                            }
+                                            if (selectedElement.selectedIndex === selectedElement.length - 1) {
+                                                if ((minutes - startMin) >= 15) {
+                                                    matchingDurationElementMin[0].disabled = false;
+                                                    matchingDurationElementMin[1].disabled = false;
+                                                    if ((minutes - startMin) >= 30) {
+                                                        matchingDurationElementMin[2].disabled = false;
+                                                        if ((minutes - startMin) >= 45) {
+                                                            matchingDurationElementMin[3].disabled = false;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else if (selectedElement.selectedIndex === selectedElement.length - 1 - startHElementIndex) {
+                                                if ((minutes - startMin) >= 15) {
+                                                    matchingDurationElementMin[0].disabled = false;
+                                                    matchingDurationElementMin[1].disabled = false;
+                                                    if ((minutes - startMin) >= 30) {
+                                                        matchingDurationElementMin[2].disabled = false;
+                                                        if ((minutes - startMin) >= 45) {
+                                                            matchingDurationElementMin[3].disabled = false;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            <!-- wenn man eine andere duration auswählt welche nicht die max duration ist-->
+                                            else {
+                                                for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                                    matchingDurationElementMin[i].disabled = false;
+                                                }
+                                            }
+                                        }
+                                        <!-- -->
+                                        else if (0 > (minutes - startMin)){
+                                            const reverseMinutes = (minutes - startMin) + 60;
+                                            for (let i = 0, t = matchingDurationElementMin.length - 1; matchingDurationElementMin.length - 1 > i; i++) {
+                                                matchingDurationElementMin[t].disabled = true;
+                                                t -= 1;
+                                            }
+                                            if (selectedElement.selectedIndex === selectedElement.length - 2) {
+                                                if (reverseMinutes >= 15) {
+                                                    matchingDurationElementMin[0].disabled = false;
+                                                    matchingDurationElementMin[1].disabled = false;
+                                                    if (reverseMinutes >= 30) {
+                                                        matchingDurationElementMin[2].disabled = false;
+                                                        if (reverseMinutes >= 45) {
+                                                            matchingDurationElementMin[3].disabled = false;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else if (selectedElement.selectedIndex === selectedElement.length - 2 - startHElementIndex) {
+                                                if (reverseMinutes >= 15) {
+                                                    matchingDurationElementMin[0].disabled = false;
+                                                    matchingDurationElementMin[1].disabled = false;
+                                                    if (reverseMinutes >= 30) {
+                                                        matchingDurationElementMin[2].disabled = false;
+                                                        if (reverseMinutes >= 45) {
+                                                            matchingDurationElementMin[3].disabled = false;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            <!-- wenn man eine andere duration auswählt welche nicht die max duration ist-->
+                                            else {
+                                                for (let i = 0; matchingDurationElementMin.length > i; i++) {
+                                                    matchingDurationElementMin[i].disabled = false;
+                                                }
+                                            }
                                         }
                                     }
                                 });
                             });
 
-                        <!--Adjusts the selection of sel_start_min according to the selection of sel_start_h so that you cannot book a date that is too early.-->
+
+                            <!--Adjusts the selection of sel_start_min according to the selection of sel_start_h so that you cannot book a date that is too early.-->
                             selStartH.forEach((element) => {
                                 element.addEventListener('change', (event) => {
 
@@ -621,6 +766,12 @@
                                                         listStartMin.selectedIndex = 1;
                                                         setIndex = 1;
                                                         }
+                                                    }
+                                                    else {
+                                                        listStartMin[0].disabled = true;
+                                                        listStartMin[1].disabled = true;
+                                                        listStartMin.selectedIndex = 2;
+                                                        setIndex = 2;
                                                     }
                                                 } else {
                                                     listStartMin[0].disabled = true;
@@ -665,34 +816,40 @@
 
                                 });
                             });
-
+                            <!-- korriegier die durationH wenn man die startMin auswählt-->
                             selStartMin.forEach((element) => {
                                 element.addEventListener('change', (event) => {
                                     const selectedElement = event.target;
                                     const selectedId = selectedElement.getAttribute('data-id');
                                     const minIndex = selectedElement.selectedIndex;
-                                    saveIndexMin = minIndex;
+
                                     const endMinutes = [];
                                     for (const element of selDurationMin) {
                                         if (selectedId === element.getAttribute('data-id')){
                                             endMinutes.push(new Date(element.getAttribute('value')).getMinutes());
                                         }
                                     }
-                                    var min2 = endMinutes[0];
                                     var min1 = minIndex * 15;
+                                    var min2 = endMinutes[0];
                                     const startMin = new Date(element.getAttribute('value')).getMinutes();
                                     const durationH = Array.from(selDurationH).find(
                                         (element) => element.getAttribute('data-id') === selectedId);
-                                    const durationIndex = (durationH.length -1) - saveIndex;
+                                    const durationIndex = (durationH.length -1) - ((Array.from(selStartH).find(
+                                                (el) => el.getAttribute('data-id') === selectedId)).selectedIndex);
 
                                     <!-- korrigiert die duration h wenn start min ausgewählt wird  -->
                                     if (min1 > min2){
                                         durationH[durationIndex].disabled = true;
+                                        if ( durationIndex === (Array.from(selDurationH).find(
+                                                (el) => el.getAttribute('data-id') === selectedId)).selectedIndex){
+                                            durationH.selectedIndex = durationIndex - 1;
+                                        }
                                     }
 
                                     else {
                                         durationH[durationIndex].disabled = false;
                                     }
+                                    durationH.dispatchEvent(new Event('change'));
                                 });
                             });
                     </script>
