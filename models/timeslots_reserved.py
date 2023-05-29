@@ -183,12 +183,16 @@ class timeslots_reserved(models.Model):
         ############################## Send Confirmation Mail ##############################
         list_partner_ids = self.env['timeslots_reserved'].get_partner_ids_from_timeslot_id(timeslot_selected_record_id)
         body_html = ""
+        link = "\"" + link + "\""
         for record in timeslot_selected_records:
             body_html = "<p>We proudly inform you that the following Meeting is confirmed: </p></br>" \
                         + "<h1>" + str(record.meeting_title) + "</h1>" \
-                        + "<p>Starting on the <b>" + str(record.timeslots_start_date) + "</b></br>" \
-                        + "at Location: <b>" + str(ourloaction) + "</b></br>" \
-                        + "with for a duration of " + str(record.timeslots_reserved_meeting_duration) + "</br>" \
+                        + "<p>Starting on the <b>" + str(record.timeslots_start_date) + "</b></br>"
+            if("www." in str(ourloaction)) or ("http" in str(ourloaction)):
+                body_html = body_html + "online: <b> <a href=" + "\"" + str(ourloaction) + "\"" + ">" + str(ourloaction) + "</a></b></br>"
+            else:
+                body_html = body_html + "at Location: <b>" + str(ourloaction) + "</b></br>"
+            body_html = body_html + "with for a duration of " + str(record.timeslots_reserved_meeting_duration) + "</br>" \
                         + "participants: " + str(record.firstname) + " " + str(record.lastname) + ", " + str(
                 record.companyname) + "</br>"
             for i in list_partner_ids:

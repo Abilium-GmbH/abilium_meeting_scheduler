@@ -3,3 +3,4 @@
 
 from . import group_wizard
 from . import timeslots_reserved_wizard
+from . import send_guest_view_to_guest_wizard

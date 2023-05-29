@@ -236,40 +236,74 @@
                         <h1><b>Abilium Meeting Scheduler</b></h1>
                         <p>Please select the timeslot, that is most convenient for you.</p>
                         <br/>
-                        <h2>Available Timeslots</h2>
                     </div>
 
                     <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+
+                    <div class="contactinfos">
+                        <h2>Your contact infos:</h2>
+                        <table>
+                            <tr>
+                                <th>
+                                    <label for="firstname">First name</label>
+                                </th>
+                                <th>
+                                    <label for="lastname">Last name</label>
+                                </th>
+                                <th>
+                                    <label for="companyname">Company name</label>
+                                </th>
+                                <th>
+                                    <label for="email">E-Mail</label>
+                                </th>
+                                <th>
+                                    <label for="meetingtitle">Meeting title</label>
+                                </th>
+                            </tr>
+                            <tr>
+                                <form id="guestinfos">
+                                    <td>
+                                        <input type="text" id="firstname" name="firstname"/>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="lastname" name="lastname"/>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="companyname" name="companyname"/>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="email" name="email"/>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="meetingtitle" name="meetingtitle"/>
+                                    </td>
+                                </form>
+                            </tr>
+                        </table>
+                        <br/>
+                    </div>
+
                     <div class="timeslots">
-                        <form>
-                            <form t-attf-action="/meeting_scheduler/guest_view/update" method="POST">
+                        <h2>Available Timeslots</h2>
+
+                        <!--                        <form>-->
+<!--                            <form id="timeslot-infos" t-attf-action="/meeting_scheduler/guest_view/update" method="POST">-->
                                 <table>
                                     <tr>
-<!--                                        <th>#</th>-->
+                                        <th>#</th>
                                         <th>Slot Start</th>
                                         <th>Slot End</th>
                                         <th>Meeting Start</th>
                                         <th>Duration</th>
-                                        <th>
-                                            <label for="firstname">First Name</label>
-                                        </th>
-                                        <th>
-                                            <label for="lastname">Last Name</label>
-                                        </th>
-                                        <th>
-                                            <label for="companyname">Company Name</label>
-                                        </th>
-                                        <th>
-                                            <label for="email">E-Mail</label>
-                                        </th>
-                                        <th></th>
                                     </tr>
                                     <t t-foreach="value" t-as="i">
-                                        <tr>
+                                        <tr t-att-id="i.id">
                                             <form>
-                                                <form t-attf-action="/meeting_scheduler/guest_view/update/"
+                                                <form id="timeslotinfos" t-attf-action="/meeting_scheduler/guest_view/update/"
                                                       method="POST">
-<!--                                                    <td t-esc="i.id"/>-->
+                                                    <td>
+                                                    <input type="checkbox" name="chk" t-att-id="i.id"/>
+                                                    </td>
                                                     <input type="hidden" name="id" t-att-value="i.id"/>
 
                                                     <!--    <<<<<<< Tasks-99
@@ -279,7 +313,7 @@
                                                            t-att-value="i.timeslots_end_date_utc"/>
                                                         >>>>>>> Tasks-99-->
 
-                                                    <td t-esc="i.timeslots_start_date_str"/>
+                                                    <td class="startdate" t-esc="i.timeslots_start_date_str"/>
                                                     <td t-esc="i.timeslots_end_date_str"/>
                                                     <td>
                                                         <div class="dropdownfields">
@@ -326,34 +360,61 @@
                                                             </select>
                                                         </div>
                                                     </td>
-                                                    <!--    TODO the link back to the meeting scheduler is currently hardcoded and needs to be adjusted for demo-->
-                                                    <!--    <th><button type="button" onclick="window.location.href='http://localhost:8069/web#menu_id=188';">reserve this timeslot</button></th>-->
-                                                    <td>
-                                                        <input type="text" id="firstname" name="firstname"/>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" id="lastname" name="lastname"/>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" id="companyname" name="companyname"/>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" id="email" name="email"/>
-                                                    </td>
-                                                    <td>
-                                                        <input type="submit" t-att-value="Submit"/>
-                                                    </td>
                                                 </form>
+
                                             </form>
                                         </tr>
                                     </t>
+
                                 </table>
-                            </form>
-                        </form>
+<!--                            </form>-->
+<!--                        </form>-->
+                            <br/>
+                        <button onclick="combineInputs()">Submit</button>
                     </div>
- <!--    <<<<<<< Tasks-99-->
+                    <!--    <<<<<<< Tasks-99-->
+
                     <script>
+                     
+                        function combineInputs() {
+                            var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+                            var ids = [];
+                            for (var i = 0; i &lt; checkboxes.length; i++) {
+                                ids.push(checkboxes[i].id);
+                            }
+                            var row = $('#' + ids[0]);
+                            var values = [];
+                            var idVal = ids[0]
+                            var sel_start_hVal = row.find('.sel_start_h').val();
+                            var sel_start_minVal = row.find('.sel_start_min').val();
+                            var sel_duration_hVal = row.find('.sel_duration_h').val();
+                            var sel_duration_minVal = row.find('.sel_duration_min').val();
+
+                            var firstnameVal = guestinfos.elements.firstname.value;
+                            var lastnameVal = guestinfos.elements.lastname.value;
+                            var companynameVal = guestinfos.elements.companyname.value;
+                            var emailVal = guestinfos.elements.email.value;
+                            var meetingtitleVal = guestinfos.elements.meetingtitle.value;
+
+                            // Combine inputs into a query string
+                            var queryString = "?id=" + encodeURIComponent(idVal) +
+                                            "&amp;sel_start_h=" + encodeURIComponent(sel_start_hVal) +
+                                            "&amp;sel_start_min=" + encodeURIComponent(sel_start_minVal) +
+                                            "&amp;sel_duration_h=" + encodeURIComponent(sel_duration_hVal) +
+                                            "&amp;sel_duration_min=" + encodeURIComponent(sel_duration_minVal) +
+                                            "&amp;firstname=" + encodeURIComponent(firstnameVal) +
+                                            "&amp;lastname=" + encodeURIComponent(lastnameVal) +
+                                            "&amp;companyname=" + encodeURIComponent(companynameVal) +
+                                            "&amp;email=" + encodeURIComponent(emailVal) +
+                                            "&amp;meetingtitle=" + encodeURIComponent(meetingtitleVal);
+
+                            // Redirect to the combined URL
+                            window.location.href = "/meeting_scheduler/guest_view/" + queryString;
+                        }
+                
                         <!-- Zugriff auf alle Elemente mit der Klasse "sel_start_h", "sel_duration_h", "sel_duration_min" und "sel_start_min". -->
+                        // Zugriff auf alle Elemente mit der Klasse "sel_start_h" und "sel_duration_h"
+
                         const selStartH = document.querySelectorAll('.sel_start_h');
                         const selDurationH = document.querySelectorAll('.sel_duration_h');
                         const selDurationMin = document.querySelectorAll('.sel_duration_min');
@@ -1098,12 +1159,15 @@
     </data>
 
             <!-- third menu action-->
-    <record id="stuff_action" model="ir.actions.act_window">
-        <field name="name">Group Stage</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">print_table</field>
-        <field name="view_mode">tree,kanban,form</field>
+    <record id="action_guest_view_link_wizard" model="ir.actions.act_window">
+    <field name="name">Send Guest Link</field>
+    <field name="res_model">send_guest_view_to_guest_wizard</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="send_guest_view_to_guest_wizardform"/>
+    <field name="target">new</field>
     </record>
+
+
 
         <!-- explicit list view definition third item -->
     <data>
@@ -1136,6 +1200,10 @@
             <field name="arch" type="xml">
 
                 <tree create="false">
+<!--                    <header>-->
+<!--                    <button name="open_time_form" string="Continue with selection"-->
+<!--                            type="object" class="btn-primary" attrs="{'always_visible': True}"/>-->
+<!--</header>-->
                     <field name="timeslots_groupmembers"/>
                     <field name="timeslots_start_date_utc"/>
                     <field name="timeslots_end_date_utc"/>
@@ -1390,10 +1458,10 @@
               parent="meeting-scheduler-root"
               action="timeslots_action"
               groups="base.group_user"/>
-    <menuitem name="4. Guest View"
-              id="meeting-scheduler-guest_view"
+    <menuitem name="4. Send Guest view link"
+              id="meeting-scheduler-stuff-printer"
               parent="meeting-scheduler-root"
-              action="link_to_guest_view"
+              action="action_guest_view_link_wizard"
               groups="base.group_user"/>
     <menuitem name="Timeslots"
               id="meeting-scheduler-timeslots-main"
@@ -1410,10 +1478,11 @@
               action="timeslots_confirmed_action"
               groups="base.group_user"/>
 
-    <menuitem name="Printed Stuff"
-              id="meeting-scheduler-stuff-printer"
+
+        <menuitem name="Guest PreView"
+              id="meeting-scheduler-guest_view"
               parent="meeting-scheduler-root"
-              action="stuff_action"
+              action="link_to_guest_view"
               groups="base.group_user"/>
 
 
