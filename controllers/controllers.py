@@ -11,7 +11,8 @@ class MeetingScheduler(http.Controller):
     @route('/meeting_scheduler/guest_view/', auth='public', website=True)
     def index(self, **kw):
         records = request.env['timeslots'].sudo().search([])
-        response = request.render("meeting_scheduler.guest_view_loop", {'value': records})
+        response = request.render("meeting_scheduler.guest_view_loop", {'value': records,
+                                                                        'checkboxValue': True})
         inputs_contact = []
         inputs_meeting = []
         if((kw.get('firstname') is not None) and (kw.get('firstname') != '')):
@@ -22,6 +23,8 @@ class MeetingScheduler(http.Controller):
             inputs_contact.append(kw.get('companyname'))
         if((kw.get('email') is not None) and (kw.get('email') != '')):
             inputs_contact.append(kw.get('email'))
+        if((kw.get('meetingtitle') is not None) and (kw.get('meetingtitle') != '')):
+            inputs_contact.append(kw.get('meetingtitle'))
         if((kw.get('id') is not None) and (kw.get('id') != '')
             and(kw.get('sel_start_h') is not None) and (kw.get('sel_start_h') != '')
             and (kw.get('sel_start_min') is not None) and (kw.get('sel_start_min') != '')
@@ -60,13 +63,14 @@ class MeetingScheduler(http.Controller):
                 
             inputs_meeting.append(temp_id)
 
-        if(len(inputs_contact) == 4) and (len(inputs_meeting) == 3):
+        if(len(inputs_contact) == 5) and (len(inputs_meeting) == 3):
             duration = inputs_meeting[1] -inputs_meeting[0]
             # create a new timeslots reserved element
             reservation = request.env['timeslots_reserved'].create({'firstname': inputs_contact[0],
                                                       'lastname': inputs_contact[1],
                                                       'companyname': inputs_contact[2],
                                                       'email': inputs_contact[3],
+                                                      'meeting_title': inputs_contact[4],
                                                       'timeslots_start_date': inputs_meeting[0],
                                                       'timeslots_end_date': inputs_meeting[1],
                                                       'timeslots_id': inputs_meeting[2],
@@ -92,7 +96,7 @@ class MeetingScheduler(http.Controller):
             # show a confirmation for the received reservation
             response = request.render("meeting_scheduler.guest_view_confirm", {'value': reservation,
                                                                                'converted_start_date': str(request.env['group_scheduler'].convert_timezone(reservation.timeslots_start_date))})
-        if((len(inputs_contact) != 4) or (len(inputs_meeting) != 3)) and (kw.get('id') is not None) and (kw.get('id') != ''):
+        if((len(inputs_contact) != 5) or (len(inputs_meeting) != 3)) and (kw.get('id') is not None) and (kw.get('id') != ''):
             response = request.render("meeting_scheduler.guest_view_error", {})
         return response
 
