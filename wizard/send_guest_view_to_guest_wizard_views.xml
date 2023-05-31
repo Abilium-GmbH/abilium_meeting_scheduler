@@ -31,10 +31,11 @@
         </record>
 
         <record id="action_send_guest_view_to_guest_wizardform" model="ir.actions.act_window">
-            <field name="name">New Stuff 2</field>
+            <field name="name">Link Sender</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">send_guest_view_to_guest_wizard</field>
             <field name="view_mode">form</field>
+<!--            <field name="view_id" ref="send_guest_view_to_guest_wizardform"/>-->
             <field name="target">new</field>
         </record>
 

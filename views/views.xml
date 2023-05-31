@@ -2,43 +2,48 @@
 
 <odoo>
     <template id="token_entry" name="calendar ass">
-       <t t-call="web.html_container">
+        <t t-call="web.html_container">
             <html>
                 <head>
                     <style>
                         .logo{
-                            position: absolute;
-                            right: 0%;
-                            top: 0%;
+                        position: absolute;
+                        right: 0%;
+                        top: 0%;
                         }
                         body {
-                            background-color: #dbdbdb;
-                            margin: 0;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
+                        background-color: #dbdbdb;
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
                         }
                         .info {
-                            text-align: center;
-                            border: 3px solid red;
+                        text-align: center;
+                        border: 3px solid red;
                         }
                         .title {
-                            text-align: center;
+                        text-align: center;
                         }
                     </style>
                 </head>
                 <body>
                     <div class="title">
                         <br/>
-                            <h1><b>Abilium Meeting Scheduler</b></h1>
+                        <h1>
+                            <b>Abilium Meeting Scheduler</b>
+                        </h1>
                         <br/>
                     </div>
-                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+                    <div class="logo">
+                        <img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/>
+                    </div>
                     <div class="info">
                         <h2>Invalid Link</h2>
                         <p>
-                            The link you entered is not valid. <br/>
+                            The link you entered is not valid.
+                            <br/>
                             Please make sure you have the correct link and try again.
                         </p>
                     </div>
@@ -53,40 +58,50 @@
                 <head>
                     <style>
                         .logo{
-                            position: absolute;
-                            right: 0%;
-                            top: 0%;
+                        position: absolute;
+                        right: 0%;
+                        top: 0%;
                         }
                         body {
-                            background-color: #dbdbdb;
-                            margin: 0;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
+                        background-color: #dbdbdb;
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
                         }
                         .info {
-                            text-align: center;
-                            border: 3px solid red;
+                        text-align: center;
+                        border: 3px solid red;
                         }
                         .title {
-                            text-align: center;
+                        text-align: center;
                         }
                     </style>
                 </head>
                 <body>
                     <div class="title">
                         <br/>
-                            <h1><b>Abilium Meeting Scheduler</b></h1>
+                        <h1>
+                            <b>Abilium Meeting Scheduler</b>
+                        </h1>
                         <br/>
                     </div>
-                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+                    <div class="logo">
+                        <img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/>
+                    </div>
                     <div class="info">
                         <h2>Meeting Overview</h2>
                         <p>
-                            <b>Start: </b><t t-esc="value.timeslots_start_date"/> <br/>
-                            <b>Duration: </b><t t-esc="value.timeslots_reserved_meeting_duration"/> <br/>
-                            <b>Location: </b><t t-esc="value.timeslots_reserved_location"/> <br/>
+                            <b>Start:</b>
+                            <t t-esc="value.timeslots_start_date"/>
+                            <br/>
+                            <b>Duration:</b>
+                            <t t-esc="value.timeslots_reserved_meeting_duration"/>
+                            <br/>
+                            <b>Location:</b>
+                            <t t-esc="value.timeslots_reserved_location"/>
+                            <br/>
                         </p>
                         <p>To cancel your meeting, click the button below.
                             <form>
@@ -109,43 +124,55 @@
                 <head>
                     <style>
                         .logo{
-                            position: absolute;
-                            right: 0%;
-                            top: 0%;
+                        position: absolute;
+                        right: 0%;
+                        top: 0%;
                         }
                         body {
-                            background-color: #dbdbdb;
-                            margin: 0;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
+                        background-color: #dbdbdb;
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
                         }
                         .info {
-                            text-align: center;
-                            border: 3px solid red;
+                        text-align: center;
+                        border: 3px solid red;
                         }
                         .title {
-                            text-align: center;
+                        text-align: center;
                         }
                     </style>
                 </head>
                 <body>
                     <div class="title">
                         <br/>
-                            <h1><b>Abilium Meeting Scheduler</b></h1>
+                        <h1>
+                            <b>Abilium Meeting Scheduler</b>
+                        </h1>
                         <br/>
                     </div>
-                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+                    <div class="logo">
+                        <img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/>
+                    </div>
                     <div class="info">
                         <h2>Meeting Overview</h2>
                         <p>
-                            <b>Start: </b><t t-esc="value.timeslots_start_date"/> <br/>
-                            <b>Duration: </b><t t-esc="value.timeslots_reserved_meeting_duration"/> <br/>
-                            <b>Location: </b><t t-esc="value.timeslots_reserved_location"/> <br/>
+                            <b>Start:</b>
+                            <t t-esc="value.timeslots_start_date"/>
+                            <br/>
+                            <b>Duration:</b>
+                            <t t-esc="value.timeslots_reserved_meeting_duration"/>
+                            <br/>
+                            <b>Location:</b>
+                            <t t-esc="value.timeslots_reserved_location"/>
+                            <br/>
                         </p>
                         <p>
-                            Meetings cannot be cancelled <t t-esc="locktime"/> before the start.
+                            Meetings cannot be cancelled
+                            <t t-esc="locktime"/>
+                            before the start.
                         </p>
                     </div>
                 </body>
@@ -159,34 +186,38 @@
                 <head>
                     <style>
                         .logo{
-                            position: absolute;
-                            right: 0%;
-                            top: 0%;
+                        position: absolute;
+                        right: 0%;
+                        top: 0%;
                         }
                         body {
-                            background-color: #dbdbdb;
-                            margin: 0;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
+                        background-color: #dbdbdb;
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
                         }
                         .info {
-                            text-align: center;
-                            border: 3px solid red;
+                        text-align: center;
+                        border: 3px solid red;
                         }
                         .title {
-                            text-align: center;
+                        text-align: center;
                         }
                     </style>
                 </head>
                 <body>
                     <div class="title">
                         <br/>
-                            <h1><b>Abilium Meeting Scheduler</b></h1>
+                        <h1>
+                            <b>Abilium Meeting Scheduler</b>
+                        </h1>
                         <br/>
                     </div>
-                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+                    <div class="logo">
+                        <img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/>
+                    </div>
                     <div class="info">
                         <h2>Meeting cancelled</h2>
                         <p>
@@ -202,43 +233,63 @@
         <t t-call="web.html_container">
             <html>
                 <head>
-                        <style>
-                            table {color: black;
-                            }
-                            body {
-                                margin: 0;
-                                position: absolute;
-                                top: 50%;
-                                left: 40%;
-                                transform: translate(-50%, -50%);
-                            }
-                            tr:nth-child(odd){background-color:#c3edfa;}
-                            tr:nth-child(even){background-color:#dbdbdb;}
-                            .logo{
-                                position: absolute;
-                                right: -20%;
-                                top: 0%;
-                            }
-                            th, td{padding: 5px;}
-                            .welcomeText{
-                                text-align: center;
-                            }
-                            .timeslots {
-                                test-align: center;
-                            }
-                            .dropdownfields {
-                                display: flex;
-                            }
-                        </style>
+                    <style>
+                        table {color: black;
+                        }
+                        body {
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 40%;
+                        transform: translate(-50%, -50%);
+                        }
+                        tr:nth-child(odd){background-color:#c3edfa;}
+                        tr:nth-child(even){background-color:#dbdbdb;}
+                        .logo{
+                        position: absolute;
+                        right: -20%;
+                        top: 0%;
+                        }
+                        th, td{padding: 5px;}
+                        .welcomeText{
+                        text-align: center;
+                        }
+                        .timeslots {
+                        test-align: center;
+                        }
+                        .dropdownfields {
+                        display: flex;
+                        }
+                        .contactinfos {
+                        margin: auto;
+                        width: 60%;
+                        }
+                        .timeslots {
+                        margin: auto;
+                        width: 60%;
+                        }
+                        .meetingsubjectclass {
+                        margin: auto;
+                        width: 60%;
+                        }
+                        .submitbutton {
+                        margin: auto;
+                        width: 30%;
+                        }
+                    </style>
                 </head>
                 <body>
                     <div class="welcomeText">
-                        <h1><b>Abilium Meeting Scheduler</b></h1>
+                        <h1>
+                            <b>Abilium Meeting Scheduler</b>
+                        </h1>
                         <p>Please select the timeslot, that is most convenient for you.</p>
                         <br/>
                     </div>
 
-                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+                    <div class="logo">
+                        <img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/>
+                    </div>
 
                     <div class="contactinfos">
                         <h2>Your contact infos:</h2>
@@ -256,9 +307,6 @@
                                 <th>
                                     <label for="email">E-Mail</label>
                                 </th>
-                                <th>
-                                    <label for="meetingtitle">Meeting title</label>
-                                </th>
                             </tr>
                             <tr>
                                 <form id="guestinfos">
@@ -274,9 +322,6 @@
                                     <td>
                                         <input type="text" id="email" name="email"/>
                                     </td>
-                                    <td>
-                                        <input type="text" id="meetingtitle" name="meetingtitle"/>
-                                    </td>
                                 </form>
                             </tr>
                         </table>
@@ -284,134 +329,169 @@
                     </div>
 
                     <div class="timeslots">
-                        <h2>Available Timeslots</h2>
+                        <h2>Available Timeslots:</h2>
 
                         <!--                        <form>-->
-<!--                            <form id="timeslot-infos" t-attf-action="/meeting_scheduler/guest_view/update" method="POST">-->
-                                <table>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Slot Start</th>
-                                        <th>Slot End</th>
-                                        <th>Meeting Start</th>
-                                        <th>Duration</th>
-                                    </tr>
-                                    <t t-foreach="value" t-as="i">
-                                        <tr t-att-id="i.id">
-                                            <form>
-                                                <form id="timeslotinfos" t-attf-action="/meeting_scheduler/guest_view/update/"
-                                                      method="POST">
-                                                    <td>
-                                                    <input type="checkbox" name="chk" t-att-id="i.id"/>
-                                                    </td>
-                                                    <input type="hidden" name="id" t-att-value="i.id"/>
+                        <!--                            <form id="timeslot-infos" t-attf-action="/meeting_scheduler/guest_view/update" method="POST">-->
+                        <table>
+                            <tr>
+                                <th>#</th>
+                                <th>Slot Start</th>
+                                <th>Slot End</th>
+                                <th>Meeting Start</th>
+                                <th>Duration</th>
+                            </tr>
+                            <t t-foreach="value" t-as="i">
+                                <tr t-att-id="i.id">
+                                    <form>
+                                        <form id="timeslotinfos" t-attf-action="/meeting_scheduler/guest_view/update/"
+                                              method="POST">
+                                            <td>
+                                                <input type="checkbox" name="chk" t-att-id="i.id"/>
+                                            </td>
+                                            <input type="hidden" name="id" t-att-value="i.id"/>
 
-                                                    <!--    <<<<<<< Tasks-99
-                                                    <input type="hidden" name="timeslots_start_date_utc"
-                                                           t-att-value="i.timeslots_start_date_utc"/>
-                                                    <input type="hidden" name="timeslots_end_date_utc"
-                                                           t-att-value="i.timeslots_end_date_utc"/>
-                                                        >>>>>>> Tasks-99-->
+                                            <!--    <<<<<<< Tasks-99
+                                            <input type="hidden" name="timeslots_start_date_utc"
+                                                   t-att-value="i.timeslots_start_date_utc"/>
+                                            <input type="hidden" name="timeslots_end_date_utc"
+                                                   t-att-value="i.timeslots_end_date_utc"/>
+                                                >>>>>>> Tasks-99-->
 
-                                                    <td class="startdate" t-esc="i.timeslots_start_date_str"/>
-                                                    <td t-esc="i.timeslots_end_date_str"/>
-                                                    <td>
-                                                        <div class="dropdownfields">
-                                                            <select class="sel_start_h" t-att-data-id="i.id"
-                                                                    name="sel_start_h" t-att-value="i.timeslots_start_date_str">
-                                                                <!--split separates the string on the whitespaces and list treats it as a list-->
-                                                                <t t-foreach="list(i.timeslots_bookable_hours.split())"
-                                                                   t-as="item">
-                                                                    <option t-att-value="item">
-                                                                        <t t-esc="item"/>
-                                                                    </option>
-                                                                </t>
-                                                            </select>:
-                                                            <select class="sel_start_min" t-att-data-id="i.id"
-                                                                    name="sel_start_min" t-att-value="i.timeslots_start_date_str">
-                                                                <t t-foreach="list(i.timeslots_time_min_start.split())"
-                                                                   t-as="t_min">
-                                                                    <option t-att-value="t_min">
-                                                                        <t t-esc="t_min"/>
-                                                                    </option>
-                                                                </t>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="dropdownfields">
-                                                            <select class="sel_duration_h" t-att-data-id="i.id"
-                                                                    name="sel_duration_h" t-att-value="i.timeslots_end_date_str">
-                                                                <t t-foreach="list(i.timeslots_duration_hours.split())"
-                                                                   t-as="item_duration">
-                                                                    <option t-att-value="item_duration">
-                                                                        <t t-esc="item_duration"/>
-                                                                    </option>
-                                                                </t>
-                                                            </select>:
-                                                            <select class="sel_duration_min" t-att-data-id="i.id"
-                                                                    name="sel_duration_min" t-att-value="i.timeslots_end_date_str">
-                                                                <t t-foreach="list(i.timeslots_time_min_end.split())"
-                                                                   t-as="t_min_duration">
-                                                                    <option t-att-value="t_min_duration">
-                                                                        <t t-esc="t_min_duration"/>
-                                                                    </option>
-                                                                </t>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </form>
+                                            <td class="startdate" t-esc="i.timeslots_start_date_str"/>
+                                            <td t-esc="i.timeslots_end_date_str"/>
+                                            <td>
+                                                <div class="dropdownfields">
+                                                    <select class="sel_start_h" t-att-data-id="i.id"
+                                                            name="sel_start_h" t-att-value="i.timeslots_start_date_str">
+                                                        <!--split separates the string on the whitespaces and list treats it as a list-->
+                                                        <t t-foreach="list(i.timeslots_bookable_hours.split())"
+                                                           t-as="item">
+                                                            <option t-att-value="item">
+                                                                <t t-esc="item"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                    :
+                                                    <select class="sel_start_min" t-att-data-id="i.id"
+                                                            name="sel_start_min"
+                                                            t-att-value="i.timeslots_start_date_str">
+                                                        <t t-foreach="list(i.timeslots_time_min_start.split())"
+                                                           t-as="t_min">
+                                                            <option t-att-value="t_min">
+                                                                <t t-esc="t_min"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="dropdownfields">
+                                                    <select class="sel_duration_h" t-att-data-id="i.id"
+                                                            name="sel_duration_h"
+                                                            t-att-value="i.timeslots_end_date_str">
+                                                        <t t-foreach="list(i.timeslots_duration_hours.split())"
+                                                           t-as="item_duration">
+                                                            <option t-att-value="item_duration">
+                                                                <t t-esc="item_duration"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                    :
+                                                    <select class="sel_duration_min" t-att-data-id="i.id"
+                                                            name="sel_duration_min"
+                                                            t-att-value="i.timeslots_end_date_str">
+                                                        <t t-foreach="list(i.timeslots_time_min_end.split())"
+                                                           t-as="t_min_duration">
+                                                            <option t-att-value="t_min_duration">
+                                                                <t t-esc="t_min_duration"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </form>
 
-                                            </form>
-                                        </tr>
-                                    </t>
+                                    </form>
+                                </tr>
+                            </t>
 
-                                </table>
-<!--                            </form>-->
-<!--                        </form>-->
-                            <br/>
-                        <button onclick="combineInputs()">Submit</button>
+                        </table>
+                        <!--                            </form>-->
+                        <!--                        </form>-->
+                        <br/>
                     </div>
-                    <!--    <<<<<<< Tasks-99-->
-
+                    <div class="meetingsubjectclass">
+                        <h2>Your meeting subject:</h2>
+                        <table>
+                            <tr>
+                                <th>
+                                    <label for="meetingtitle">Meeting title</label>
+                                </th>
+                                <th>
+                                    <label for="meetingsubject">Meeting subject</label>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <form id="meetingtitle">
+                                        <input type="text" id="meetingtitle" name="meetingtitle"/>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form id="meetingsubject">
+                                        <input style="height:150px;width:400px;" type="text" id="meetingsubject"
+                                               name="meetingsubject"
+                                               value="Please describe the subject of your requested meeting."/>
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                    </div>
+                    <div class="submitbutton">
+                        <button style="height:50px;width:200px;font-size:20px;background-color:#ccffcc" onclick="combineInputs()">Submit</button>
+                    </div>
                     <script>
-                     
                         function combineInputs() {
-                            var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-                            var ids = [];
-                            for (var i = 0; i &lt; checkboxes.length; i++) {
-                                ids.push(checkboxes[i].id);
-                            }
-                            var row = $('#' + ids[0]);
-                            var values = [];
-                            var idVal = ids[0]
-                            var sel_start_hVal = row.find('.sel_start_h').val();
-                            var sel_start_minVal = row.find('.sel_start_min').val();
-                            var sel_duration_hVal = row.find('.sel_duration_h').val();
-                            var sel_duration_minVal = row.find('.sel_duration_min').val();
-
-                            var firstnameVal = guestinfos.elements.firstname.value;
-                            var lastnameVal = guestinfos.elements.lastname.value;
-                            var companynameVal = guestinfos.elements.companyname.value;
-                            var emailVal = guestinfos.elements.email.value;
-                            var meetingtitleVal = guestinfos.elements.meetingtitle.value;
-
-                            // Combine inputs into a query string
-                            var queryString = "?id=" + encodeURIComponent(idVal) +
-                                            "&amp;sel_start_h=" + encodeURIComponent(sel_start_hVal) +
-                                            "&amp;sel_start_min=" + encodeURIComponent(sel_start_minVal) +
-                                            "&amp;sel_duration_h=" + encodeURIComponent(sel_duration_hVal) +
-                                            "&amp;sel_duration_min=" + encodeURIComponent(sel_duration_minVal) +
-                                            "&amp;firstname=" + encodeURIComponent(firstnameVal) +
-                                            "&amp;lastname=" + encodeURIComponent(lastnameVal) +
-                                            "&amp;companyname=" + encodeURIComponent(companynameVal) +
-                                            "&amp;email=" + encodeURIComponent(emailVal) +
-                                            "&amp;meetingtitle=" + encodeURIComponent(meetingtitleVal);
-
-                            // Redirect to the combined URL
-                            window.location.href = "/meeting_scheduler/guest_view/" + queryString;
+                        var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+                        var ids = [];
+                        for (var i = 0; i &lt; checkboxes.length; i++) {
+                        ids.push(checkboxes[i].id);
                         }
-                
+                        var row = $('#' + ids[0]);
+                        var values = [];
+                        var idVal = ids[0]
+                        var sel_start_hVal = row.find('.sel_start_h').val();
+                        var sel_start_minVal = row.find('.sel_start_min').val();
+                        var sel_duration_hVal = row.find('.sel_duration_h').val();
+                        var sel_duration_minVal = row.find('.sel_duration_min').val();
+
+                        var firstnameVal = guestinfos.elements.firstname.value;
+                        var lastnameVal = guestinfos.elements.lastname.value;
+                        var companynameVal = guestinfos.elements.companyname.value;
+                        var emailVal = guestinfos.elements.email.value;
+
+                        var meetingtitleVal = meetingtitle.elements.meetingtitle.value;
+                        var meetingsubjectVal = meetingsubject.elements.meetingsubject.value;
+
+                        // Combine inputs into a query string
+                        var queryString = "?id=" + encodeURIComponent(idVal) +
+                        "&amp;sel_start_h=" + encodeURIComponent(sel_start_hVal) +
+                        "&amp;sel_start_min=" + encodeURIComponent(sel_start_minVal) +
+                        "&amp;sel_duration_h=" + encodeURIComponent(sel_duration_hVal) +
+                        "&amp;sel_duration_min=" + encodeURIComponent(sel_duration_minVal) +
+                        "&amp;firstname=" + encodeURIComponent(firstnameVal) +
+                        "&amp;lastname=" + encodeURIComponent(lastnameVal) +
+                        "&amp;companyname=" + encodeURIComponent(companynameVal) +
+                        "&amp;email=" + encodeURIComponent(emailVal) +
+                        "&amp;meetingtitle=" + encodeURIComponent(meetingtitleVal) +
+                        "&amp;meetingsubject=" + encodeURIComponent(meetingsubjectVal);
+
+                        // Redirect to the combined URL
+                        window.location.href = "/meeting_scheduler/guest_view/" + queryString;
+                        }
+
                         <!-- Zugriff auf alle Elemente mit der Klasse "sel_start_h", "sel_duration_h", "sel_duration_min" und "sel_start_min". -->
                         const selStartH = document.querySelectorAll('.sel_start_h');
                         const selDurationH = document.querySelectorAll('.sel_duration_h');
@@ -420,121 +500,127 @@
 
                         <!--Adjusts the values of sel_start_min when loading the web page so that you cannot start an appointment too early.-->
                         window.onload = function() {
-                                const minutes = [];
-                                const dataIds = [];
-                                const listStartH = [];
+                        const minutes = [];
+                        const dataIds = [];
+                        const listStartH = [];
 
-                                for (const element of selStartMin) {
-                                    dataIds.push(element.getAttribute('data-id'));
-                                    minutes.push(new Date(element.getAttribute('value')).getMinutes());
-                                }
-
-                                for (let i = 0; dataIds.length > i; i++) {
-                                    const listStartMin = Array.from(selStartMin).find(
-                                        (element) => element.getAttribute('data-id') === dataIds[i]);
-                                    const listStartH = Array.from(selStartH).find(
-                                        (element) => element.getAttribute('data-id') === dataIds[i]);
-                                    const listDurationH = Array.from(selDurationH).find(
-                                        (element) => element.getAttribute('data-id') === dataIds[i]);
-
-                                    if (60 > minutes[i]) {
-                                        if (45 > minutes[i]) {
-                                            if (30 > minutes[i]) {
-                                                if (15 > minutes[i]) {
-                                                    if (minutes[i] === 0){
-                                                        for (let j = 0; j > minutes[j]; j++){
-                                                            listStartMin[j].disabled = false;
-                                                        }
-                                                    }
-                                                    else {
-                                                    listStartMin[0].disabled = true;
-                                                    }
-                                                }
-                                                else {
-                                                    listStartMin[0].disabled = true;
-                                                    listStartMin[1].disabled = true;
-                                                }
-
-                                            } else {
-                                                listStartMin[0].disabled = true;
-                                                listStartMin[1].disabled = true;
-                                            }
-                                        }else {
-                                            listStartH[0].disabled = true;
-                                            listDurationH[listDurationH.length-1].disabled = true;
-                                        }
-                                    }
-                                }
+                        for (const element of selStartMin) {
+                        dataIds.push(element.getAttribute('data-id'));
+                        minutes.push(new Date(element.getAttribute('value')).getMinutes());
                         }
 
-                            <!--Resets all values when you reload the website.-->
-                            window.addEventListener('load', () => {
-                                const selStartH = document.querySelectorAll('.sel_start_h');
-                                const selDurationH = document.querySelectorAll('.sel_duration_h');
-                                const selDurationMin = document.querySelectorAll('.sel_duration_min');
-                                const selStartMin = document.querySelectorAll('.sel_start_min');
-                                const startMinIndex = [];
+                        for (let i = 0; dataIds.length > i; i++) {
+                        const listStartMin = Array.from(selStartMin).find(
+                        (element) => element.getAttribute('data-id') === dataIds[i]);
+                        const listStartH = Array.from(selStartH).find(
+                        (element) => element.getAttribute('data-id') === dataIds[i]);
+                        const listDurationH = Array.from(selDurationH).find(
+                        (element) => element.getAttribute('data-id') === dataIds[i]);
 
-                                selStartH.forEach((element) => {
-                                    const dataId = element.getAttribute('data-id');
-                                    const listStartH = Array.from(selStartH).find(
-                                        (element) => element.getAttribute('data-id') === dataId);
+                        if (60 > minutes[i]) {
+                        if (45 > minutes[i]) {
+                        if (30 > minutes[i]) {
+                        if (15 > minutes[i]) {
+                        if (minutes[i] === 0){
+                        for (let j = 0; j > minutes[j]; j++){
+                        listStartMin[j].disabled = false;
+                        }
+                        }
+                        else {
+                        listStartMin[0].disabled = true;
+                        }
+                        }
+                        else {
+                        listStartMin[0].disabled = true;
+                        listStartMin[1].disabled = true;
+                        }
 
-                                    if (listStartH[0].disabled === true){element.selectedIndex = 1;}
-                                    else {element.selectedIndex = 0;}
-                                });
-                                selDurationMin.forEach((element) => {
-                                    element.selectedIndex = 0;
-                                });
-                                selStartMin.forEach((element) => {
-                                    const minutes = [];
-                                    minutes.push(new Date(element.getAttribute('value')).getMinutes());
-                                    if (60 > minutes[0]) {
-                                        if (45 > minutes[0]) {
-                                            if (30 > minutes[0]) {
-                                                if (15 > minutes[0]) {
-                                                    if (minutes[0] === 0){element.selectedIndex = 0;startMinIndex.push(0);}
-                                                    else {element.selectedIndex = 1;startMinIndex.push(1);}
-                                                }
-                                                else{element.selectedIndex = 2;startMinIndex.push(2);}
-                                            }
-                                            else {element.selectedIndex = 2;startMinIndex.push(2);}
-                                        }
-                                        else if (45 === minutes[0]){element.selectedIndex = 3;startMinIndex.push(3);}
-                                        else {element.selectedIndex = 0;startMinIndex.push(0);}
-                                    }
-                                });
-                                let n = 0;
-                                selDurationH.forEach((element) => {
-                                    const dataId = element.getAttribute('data-id');
-                                    const minutes = [];
-                                    minutes.push(new Date(element.getAttribute('value')).getMinutes());
-                                    const matchingDurationElement = Array.from(selDurationH).find(
-                                        (element) => element.getAttribute('data-id') === dataId);
+                        } else {
+                        listStartMin[0].disabled = true;
+                        listStartMin[1].disabled = true;
+                        }
+                        }else {
+                        listStartH[0].disabled = true;
+                        listDurationH[listDurationH.length-1].disabled = true;
+                        }
+                        }
+                        }
+                        }
 
-                                    if (60 > minutes[0]) {
-                                        if (45 > minutes[0]) {
-                                            if (30 >= minutes[0]) {
-                                                if (15 >= minutes[0]) {
-                                                    if (minutes[0] === 0){if (startMinIndex[n] > 0){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
-                                                    else {if (startMinIndex[n] > 1){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
-                                                }
-                                                else {if (startMinIndex[n] > 2){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
-                                            }
-                                            else {if (startMinIndex[n] > 2){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
-                                        }
-                                        else {if (startMinIndex[n] > 3){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
-                                    }
-                                    n++;
-                                    element.selectedIndex = 0;
-                                });
-                            });
+                        <!--Resets all values when you reload the website.-->
+                        window.addEventListener('load', () => {
+                        const selStartH = document.querySelectorAll('.sel_start_h');
+                        const selDurationH = document.querySelectorAll('.sel_duration_h');
+                        const selDurationMin = document.querySelectorAll('.sel_duration_min');
+                        const selStartMin = document.querySelectorAll('.sel_start_min');
+                        const startMinIndex = [];
+
+                        selStartH.forEach((element) => {
+                        const dataId = element.getAttribute('data-id');
+                        const listStartH = Array.from(selStartH).find(
+                        (element) => element.getAttribute('data-id') === dataId);
+
+                        if (listStartH[0].disabled === true){element.selectedIndex = 1;}
+                        else {element.selectedIndex = 0;}
+                        });
+                        selDurationMin.forEach((element) => {
+                        element.selectedIndex = 0;
+                        });
+                        selStartMin.forEach((element) => {
+                        const minutes = [];
+                        minutes.push(new Date(element.getAttribute('value')).getMinutes());
+                        if (60 > minutes[0]) {
+                        if (45 > minutes[0]) {
+                        if (30 > minutes[0]) {
+                        if (15 > minutes[0]) {
+                        if (minutes[0] === 0){element.selectedIndex = 0;startMinIndex.push(0);}
+                        else {element.selectedIndex = 1;startMinIndex.push(1);}
+                        }
+                        else{element.selectedIndex = 2;startMinIndex.push(2);}
+                        }
+                        else {element.selectedIndex = 2;startMinIndex.push(2);}
+                        }
+                        else if (45 === minutes[0]){element.selectedIndex = 3;startMinIndex.push(3);}
+                        else {element.selectedIndex = 0;startMinIndex.push(0);}
+                        }
+                        });
+                        let n = 0;
+                        selDurationH.forEach((element) => {
+                        const dataId = element.getAttribute('data-id');
+                        const minutes = [];
+                        minutes.push(new Date(element.getAttribute('value')).getMinutes());
+                        const matchingDurationElement = Array.from(selDurationH).find(
+                        (element) => element.getAttribute('data-id') === dataId);
+
+                        if (60 > minutes[0]) {
+                        if (45 > minutes[0]) {
+                        if (30 >= minutes[0]) {
+                        if (15 >= minutes[0]) {
+                        if (minutes[0] === 0){if (startMinIndex[n] >
+                        0){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
+                        else {if (startMinIndex[n] >
+                        1){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
+                        }
+                        else {if (startMinIndex[n] >
+                        2){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
+                        }
+                        else {if (startMinIndex[n] >
+                        2){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
+                        }
+                        else {if (startMinIndex[n] >
+                        3){matchingDurationElement[matchingDurationElement.length-1].disabled = true;}}
+                        }
+                        n++;
+                        element.selectedIndex = 0;
+                        });
+                        });
+
 
                         <!--Adjusts the duration selection when changing the start time in sel_start_h.-->
                             selStartH.forEach((element) => {
                                 element.addEventListener('change', (event) => {
+                        const selectedElement = event.target;
 
-                                    const selectedElement = event.target;
 
                                     const selectedId = selectedElement.getAttribute('data-id');
 
@@ -545,6 +631,7 @@
                                                 (el) => el.getAttribute('data-id') === selectedId)).selectedIndex;
 
                                     const selectedIndex = selectedElement.selectedIndex;
+
 
                                     var setIndex = 0;
                                     const listStartMin = Array.from(selStartMin).find(
@@ -890,11 +977,10 @@
                                     durationH.dispatchEvent(new Event('change'));
                                 });
                             });
-
                     </script>
 
 
- <!--    <<<<<<< Tasks-99-->
+                    <!--    <<<<<<< Tasks-99-->
 
                 </body>
             </html>
@@ -907,52 +993,75 @@
                 <head>
                     <style>
                         .logo{
-                            position: absolute;
-                            right: 0%;
-                            top: 0%;
+                        position: absolute;
+                        right: 0%;
+                        top: 0%;
                         }
                         body {
-                            background-color: #ccffcc;
-                            margin: 0;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
+                        background-color: #ccffcc;
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
                         }
                         .info {
-                            text-align: center;
-                            border: 3px solid green;
+                        text-align: center;
+                        border: 3px solid green;
                         }
                         .title {
-                            text-align: center;
+                        text-align: center;
                         }
                     </style>
                 </head>
                 <body>
                     <div class="title">
                         <br/>
-                            <h1><b>Abilium Meeting Scheduler</b></h1>
+                        <h1>
+                            <b>Abilium Meeting Scheduler</b>
+                        </h1>
                         <br/>
                     </div>
-                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+                    <div class="logo">
+                        <img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/>
+                    </div>
                     <div class="info">
                         <h2>Reservation received</h2>
                         <p>
-                            Reservation: <br/>
-                            <b>Start: </b><t t-esc="converted_start_date"/> <br/>
-                            <b>Duration: </b><t t-esc="value.timeslots_reserved_meeting_duration"/> <br/>
-                            <b>Location: </b>The Location will be provided in the confirmation e-mail. <br/>
+                            Reservation:
+                            <br/>
+                            <b>Start:</b>
+                            <t t-esc="converted_start_date"/>
+                            <br/>
+                            <b>Duration:</b>
+                            <t t-esc="value.timeslots_reserved_meeting_duration"/>
+                            <br/>
+                            <b>Location:</b>The Location will be provided in the confirmation e-mail.
+                            <br/>
                         </p>
                         <p>
-                            Your informations: <br/>
-                            <b>Name: </b><t t-esc="value.firstname"/> <t t-esc="value.lastname"/> <br/>
-                            <b>Company: </b><t t-esc="value.companyname"/> <br/>
-                            <b>E-Mail: </b><t t-esc="value.email"/> <br/>
+                            Your informations:
+                            <br/>
+                            <b>Name:</b>
+                            <t t-esc="value.firstname"/>
+                            <t t-esc="value.lastname"/>
+                            <br/>
+                            <b>Company:</b>
+                            <t t-esc="value.companyname"/>
+                            <br/>
+                            <b>E-Mail:</b>
+                            <t t-esc="value.email"/>
+                            <br/>
                         </p>
                         <p>
-                            Your meeting concerns: <br/>
-                            <b>Title: </b><t t-esc="value.meeting_title"/> <br/>
-                            <b>Subject: </b><t t-esc="value.timeslots_reserved_meeting_subject"/> <br/>
+                            Your meeting concerns:
+                            <br/>
+                            <b>Title:</b>
+                            <t t-esc="value.meeting_title"/>
+                            <br/>
+                            <b>Subject:</b>
+                            <t t-esc="value.timeslots_reserved_meeting_subject"/>
+                            <br/>
                         </p>
                     </div>
                 </body>
@@ -965,40 +1074,47 @@
                 <head>
                     <style>
                         .logo{
-                            position: absolute;
-                            right: 0%;
-                            top: 0%;
+                        position: absolute;
+                        right: 0%;
+                        top: 0%;
                         }
                         body {
-                            background-color: #ff6666;
-                            margin: 0;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%);
+                        background-color: #ff6666;
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
                         }
                         .info {
-                            text-align: center;
-                            border: 3px solid black;
+                        text-align: center;
+                        border: 3px solid black;
                         }
                         .title {
-                            text-align: center;
+                        text-align: center;
                         }
                     </style>
                 </head>
                 <body>
                     <div class="title">
                         <br/>
-                            <h1><b>Abilium Meeting Scheduler</b></h1>
+                        <h1>
+                            <b>Abilium Meeting Scheduler</b>
+                        </h1>
                         <br/>
                     </div>
-                    <div class="logo"><img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/></div>
+                    <div class="logo">
+                        <img src="https://www.abilium.io/abitheme/static/src/img/logo.png" alt="abilium logo"/>
+                    </div>
                     <div class="info">
                         <h2>Something went wrong</h2>
                         <p>
                             Please try again:
-                            <br/><br/>
-                            <button onclick="window.location.href='http://localhost:8069/meeting_scheduler/guest_view/';">Go Back!</button>
+                            <br/>
+                            <br/>
+                            <button onclick="window.location.href='http://localhost:8069/meeting_scheduler/guest_view/';">
+                                Go Back!
+                            </button>
                         </p>
                     </div>
                 </body>
@@ -1031,17 +1147,19 @@
                         <group>
                             <group>
                                 <field name="meeting_title"/>
-<!--                                #TODO add functionality to handle different locations-->
-<!--                                <field name="meeting_location"/>-->
+                                <!--                                #TODO add functionality to handle different locations-->
+                                <!--                                <field name="meeting_location"/>-->
                                 <field name="meeting_show_as"/>
                                 <field name="meeting_privacy"/>
-                              </group>
-                           <group>
-                               <field name="meeting_start_date" widget="daterange" options="{'related_end_date': 'meeting_end_date'}" />
-                               <field name="meeting_end_date" widget="daterange" options="{'related_start_date': 'meeting_start_date'}"/>
-                               <field name="meeting_duration" />
-                               <field name="meeting_repetitions"/>
-                               <field name="meeting_frequency"/>
+                            </group>
+                            <group>
+                                <field name="meeting_start_date" widget="daterange"
+                                       options="{'related_end_date': 'meeting_end_date'}"/>
+                                <field name="meeting_end_date" widget="daterange"
+                                       options="{'related_start_date': 'meeting_start_date'}"/>
+                                <field name="meeting_duration"/>
+                                <field name="meeting_repetitions"/>
+                                <field name="meeting_frequency"/>
                             </group>
                         </group>
                     </sheet>
@@ -1058,8 +1176,8 @@
                     <field name="meeting_title"/>
                     <field name="meeting_start_date"/>
                     <field name="meeting_end_date"/>
-<!--                    #TODO add functionality to handle different locations-->
-<!--                    <field name="meeting_location"/>-->
+                    <!--                    #TODO add functionality to handle different locations-->
+                    <!--                    <field name="meeting_location"/>-->
                     <field name="meeting_duration"/>
                     <field name="meeting_frequency"/>
                     <field name="meeting_privacy"/>
@@ -1072,7 +1190,7 @@
     </data>
 
 
-        <!-- second menu action-->
+    <!-- second menu action-->
     <record id="group_action" model="ir.actions.act_window">
         <field name="name">Group Stage</field>
         <field name="type">ir.actions.act_window</field>
@@ -1096,13 +1214,12 @@
                     <sheet>
                         <group>
                             <field name="meeting_group"/>
-                            <field name="meeting_attendees" />
+                            <field name="meeting_attendees"/>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
-
 
 
         <!-- explicit list view definition second item -->
@@ -1113,17 +1230,17 @@
 
                 <tree>
                     <header>
-<!--                    for tree header buttons no id, states, confirm
-                        class="btn-primary" makes it blue -->
-<!--                        <button name="button_function_test" string="Get free slots from calendar of selected Groups"-->
-<!--                             class="btn-primary" type="object"/>-->
+                        <!--                    for tree header buttons no id, states, confirm
+                                                class="btn-primary" makes it blue -->
+                        <!--                        <button name="button_function_test" string="Get free slots from calendar of selected Groups"-->
+                        <!--                             class="btn-primary" type="object"/>-->
 
-<!--                        <button name="%(view_action)d" type="action"-->
-<!--                                string="Go back to Calendar view" class="btn-primary"/>-->
+                        <!--                        <button name="%(view_action)d" type="action"-->
+                        <!--                                string="Go back to Calendar view" class="btn-primary"/>-->
 
                         <button name="open_time_form" string="Continue with selection"
-                             class="btn-primary" type="object"/>
-<!--                        <button name="action_from_view" string="Open View" type="object"/>-->
+                                class="btn-primary" type="object"/>
+                        <!--                        <button name="action_from_view" string="Open View" type="object"/>-->
 
                     </header>
                     <field name="meeting_group"/>
@@ -1136,18 +1253,17 @@
 
     </data>
 
-            <!-- third menu action-->
+    <!-- third menu action-->
     <record id="action_guest_view_link_wizard" model="ir.actions.act_window">
-    <field name="name">Send Guest Link</field>
-    <field name="res_model">send_guest_view_to_guest_wizard</field>
-    <field name="view_mode">form</field>
-    <field name="view_id" ref="send_guest_view_to_guest_wizardform"/>
-    <field name="target">new</field>
+        <field name="name">Send Guest Link</field>
+        <field name="res_model">send_guest_view_to_guest_wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="send_guest_view_to_guest_wizardform"/>
+        <field name="target">new</field>
     </record>
 
 
-
-        <!-- explicit list view definition third item -->
+    <!-- explicit list view definition third item -->
     <data>
         <record model="ir.ui.view" id="print_table_list">
             <field name="name">print_table list</field>
@@ -1163,14 +1279,14 @@
         </record>
     </data>
 
-            <!-- fourth menu action-->
+    <!-- fourth menu action-->
     <record id="timeslots_action" model="ir.actions.act_window">
         <field name="name">Timeslots</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">timeslots</field>
         <field name="view_mode">tree,kanban,form</field>
     </record>
-        <!-- explicit list view definition second item -->
+    <!-- explicit list view definition second item -->
     <data>
         <record model="ir.ui.view" id="timeslot_list">
             <field name="name">Timeslot list</field>
@@ -1178,10 +1294,10 @@
             <field name="arch" type="xml">
 
                 <tree create="false">
-<!--                    <header>-->
-<!--                    <button name="open_time_form" string="Continue with selection"-->
-<!--                            type="object" class="btn-primary" attrs="{'always_visible': True}"/>-->
-<!--</header>-->
+                    <!--                    <header>-->
+                    <!--                    <button name="open_time_form" string="Continue with selection"-->
+                    <!--                            type="object" class="btn-primary" attrs="{'always_visible': True}"/>-->
+                    <!--</header>-->
                     <field name="timeslots_groupmembers"/>
                     <field name="timeslots_start_date_utc"/>
                     <field name="timeslots_end_date_utc"/>
@@ -1195,14 +1311,14 @@
         </record>
     </data>
 
-            <!-- fifth menu action-->
+    <!-- fifth menu action-->
     <record id="timeslots_reserved_action" model="ir.actions.act_window">
         <field name="name">Reserved Timeslots</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">timeslots_reserved</field>
         <field name="view_mode">tree,form</field>
     </record>
-        <!-- explicit list view definition second item -->
+    <!-- explicit list view definition second item -->
     <data>
         <record model="ir.ui.view" id="timeslot_reserved_list">
             <field name="name">Timeslot list</field>
@@ -1212,7 +1328,7 @@
                 <tree create="false">
                     <header>
                         <button name="open_confirm_form" string="Continue with selection"
-                             class="btn-primary" type="object"/>
+                                class="btn-primary" type="object"/>
                     </header>
                     <field name="meeting_title"/>
                     <field name="firstname"/>
@@ -1246,8 +1362,8 @@
                                 <field name="timeslots_start_date"/>
                                 <field name="timeslots_reserved_meeting_duration"/>
                                 <field name="timeslots_reserved_location"/>
-                              </group>
-                           <group>
+                            </group>
+                            <group>
                                 <field name="firstname"/>
                                 <field name="lastname"/>
                                 <field name="companyname"/>
@@ -1262,7 +1378,6 @@
             </field>
         </record>
     </data>
-
 
 
     <!-- fifth menu action-->
@@ -1299,7 +1414,7 @@
         </record>
     </data>
 
-<!--    the following view is under settings-->
+    <!--    the following view is under settings-->
     <data>
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.employee.dept</field>
@@ -1320,7 +1435,8 @@
                                         <field name="meeting_title_default"/>
                                     </div>
                                     <div class="text-muted content-group mt16">
-                                    Set the default title which is shown when the users create new free slots for meetings.
+                                        Set the default title which is shown when the users create new free slots for
+                                        meetings.
                                     </div>
                                 </div>
                             </div>
@@ -1332,7 +1448,7 @@
                                         <field name="timeslots_minimal_rest_time_default"/>
                                     </div>
                                     <div class="text-muted content-group mt16">
-                                    This defines how long the minimal time remnant can be, when reserving a meeting.
+                                        This defines how long the minimal time remnant can be, when reserving a meeting.
                                         This time remnant can be booked by the guest.
                                     </div>
                                 </div>
@@ -1346,57 +1462,16 @@
                                         <field name="locktime_hours_default"/>
                                     </div>
                                     <div class="text-muted content-group mt16">
-                                    Hours before a meeting can no longer be cancelled by the guest.
+                                        Hours before a meeting can no longer be cancelled by the guest.
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <h2>Meeting scheduler</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box" id="crm_lead">
-                                <div class="o_setting_left_pane"/>
-                                <div class="o_setting_right_pane">
-                                    <label for="meeting_title_default"/>
-                                    <div>
-                                        <field name="meeting_title_default"/>
-                                    </div>
-                                    <div class="text-muted content-group mt16">
-                                    Hours before a meeting can no longer be cancelled by the guest
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="crm_lead">
-                                <div class="o_setting_left_pane"/>
-                                <div class="o_setting_right_pane">
-                                    <label for="meeting_title_default"/>
-                                    <div>
-                                        <field name="meeting_title_default"/>
-                                    </div>
-                                    <div class="text-muted content-group mt16">
-                                    Hours before a meeting can no longer be cancelled by the guest
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
                     </div>
                 </xpath>
             </field>
         </record>
     </data>
-    <!--<data>-->
-<!--    </record>-->
-<!--        <record id="action_Employee_general_config" model="ir.actions.act_window">-->
-<!--        <field name="name">Employee Config</field>-->
-<!--        <field name="type">ir.actions.act_window</field>-->
-<!--        <field name="res_model">res.config.settings</field>-->
-<!--        <field name="view_mode">form</field>-->
-<!--        <field name="target">inline</field>-->
-<!--        <field name="context">{'module' : 'employee_kdepartment'}</field>-->
-<!--    </record>-->
-<!--</data>-->
-
 
     <data>
         <record id="link_to_guest_view" model="ir.actions.act_url">
@@ -1406,8 +1481,6 @@
             <field name="url">http://localhost:8069/meeting_scheduler/guest_view/</field>
         </record>
     </data>
-
-
 
 
     <!-- Top menu item -->
@@ -1437,7 +1510,7 @@
               action="timeslots_action"
               groups="base.group_user"/>
     <menuitem name="4. Send Guest view link"
-              id="meeting-scheduler-stuff-printer"
+              id="meeting-scheduler-linksender"
               parent="meeting-scheduler-root"
               action="action_guest_view_link_wizard"
               groups="base.group_user"/>
@@ -1457,12 +1530,11 @@
               groups="base.group_user"/>
 
 
-        <menuitem name="Guest PreView"
+    <menuitem name="Guest PreView"
               id="meeting-scheduler-guest_view"
               parent="meeting-scheduler-root"
               action="link_to_guest_view"
               groups="base.group_user"/>
-
 
 
 </odoo>
