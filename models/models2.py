@@ -19,10 +19,8 @@ class group_scheduler(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'group_wizard',  # name of respective model,
-            # 'views': [('group_scheduler_timeform', 'form')],  # view id and type
             'view_id': self.env.ref('meeting_scheduler.group_scheduler_timeform').id,  # view id
             'target': 'new',
-            # 'context': context,
         }
 
     def transform_meetings_to_bookable_hours(self, meetings):
@@ -37,21 +35,7 @@ class group_scheduler(models.Model):
         """
         output_timeslots = []
         for meeting in meetings:
-     #     duration = meeting[1] - meeting[0]
-     #       duration = math.floor(duration.total_seconds() / 3600)
-     #       bookable_hours = ""
-     #       for i in range(meeting[0].hour, meeting[0].hour + duration + 2):
-     #           bookable_hours += " " + str(i)  # the list has to be treated as a string,
-     #           # # so that the t-foreach from the qweb template can interpret it as a list
-     #       output_timeslots.append([str(self.convert_timezone(meeting[0])),
-     #                                #           (meeting[0].strftime('%Y-%m-%d, %Z')),
-     #                                str(self.convert_timezone(meeting[1])),
-     #                                bookable_hours,
-     #                                meeting[0],
-     #                                meeting[1],
-     #                                meeting[2]])
-
-            duration = meeting[1].hour - meeting[0].hour  #lvk check if still working for meetings which are longer than 1 day
+            duration = meeting[1].hour - meeting[0].hour  #TODO check if still working for meetings which are longer than 1 day
             bookable_hours = ""
             duration_hours = ""
             time_min_start = " 0 15 30 45"
@@ -135,9 +119,9 @@ class group_scheduler(models.Model):
                                               'timeslots_start_date_utc': i[3],
                                               'timeslots_end_date_utc': i[4],
                                               'timeslots_groupmembers': i[5],
-                                              'timeslots_duration_hours':i[6],  #lvk to del?
-                                              'timeslots_time_min_start':i[7],  #lvk to del?
-                                              'timeslots_time_min_end':i[8]})  #lvk to del?
+                                              'timeslots_duration_hours':i[6],
+                                              'timeslots_time_min_start':i[7],
+                                              'timeslots_time_min_end':i[8]})
         elif (len(group_res_users_all_ids) > 1):
             free_meetings_list = []
             for first_user in found_meetings_per_group_member[0]:
@@ -191,10 +175,9 @@ class group_scheduler(models.Model):
                                               'timeslots_start_date_utc': i[3],
                                               'timeslots_end_date_utc': i[4],
                                               'timeslots_groupmembers': i[5],
-                                              'timeslots_duration_hours':i[6],  #lvk to del?
-                                              'timeslots_time_min_start':i[7],  #lvk to del?
-                                              'timeslots_time_min_end':i[8]})  #lvk to del?
-                # self.env['print_table'].create({'show_stuff': i})
+                                              'timeslots_duration_hours':i[6],
+                                              'timeslots_time_min_start':i[7],
+                                              'timeslots_time_min_end':i[8]})
 
     def button_timeslots_from_union(self,
                                     search_start_date,
@@ -237,4 +220,3 @@ class group_scheduler(models.Model):
                                           'timeslots_duration_hours':i[6],  #lvk to del?
                                           'timeslots_time_min_start':i[7],  #lvk to del?
                                           'timeslots_time_min_end':i[8]})  #lvk to del?
-            # self.env['print_table'].create({'show_stuff': i})

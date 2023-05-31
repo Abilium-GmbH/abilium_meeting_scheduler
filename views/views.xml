@@ -330,9 +330,6 @@
 
                     <div class="timeslots">
                         <h2>Available Timeslots:</h2>
-
-                        <!--                        <form>-->
-                        <!--                            <form id="timeslot-infos" t-attf-action="/meeting_scheduler/guest_view/update" method="POST">-->
                         <table>
                             <tr>
                                 <th>#</th>
@@ -350,14 +347,6 @@
                                                 <input type="checkbox" name="chk" t-att-id="i.id"/>
                                             </td>
                                             <input type="hidden" name="id" t-att-value="i.id"/>
-
-                                            <!--    <<<<<<< Tasks-99
-                                            <input type="hidden" name="timeslots_start_date_utc"
-                                                   t-att-value="i.timeslots_start_date_utc"/>
-                                            <input type="hidden" name="timeslots_end_date_utc"
-                                                   t-att-value="i.timeslots_end_date_utc"/>
-                                                >>>>>>> Tasks-99-->
-
                                             <td class="startdate" t-esc="i.timeslots_start_date_str"/>
                                             <td t-esc="i.timeslots_end_date_str"/>
                                             <td>
@@ -417,8 +406,6 @@
                             </t>
 
                         </table>
-                        <!--                            </form>-->
-                        <!--                        </form>-->
                         <br/>
                     </div>
                     <div class="meetingsubjectclass">
@@ -615,12 +602,10 @@
                         });
                         });
 
-
                         <!--Adjusts the duration selection when changing the start time in sel_start_h.-->
                             selStartH.forEach((element) => {
                                 element.addEventListener('change', (event) => {
                         const selectedElement = event.target;
-
 
                                     const selectedId = selectedElement.getAttribute('data-id');
 
@@ -631,7 +616,6 @@
                                                 (el) => el.getAttribute('data-id') === selectedId)).selectedIndex;
 
                                     const selectedIndex = selectedElement.selectedIndex;
-
 
                                     var setIndex = 0;
                                     const listStartMin = Array.from(selStartMin).find(
@@ -978,10 +962,6 @@
                                 });
                             });
                     </script>
-
-
-                    <!--    <<<<<<< Tasks-99-->
-
                 </body>
             </html>
         </t>
@@ -1122,7 +1102,6 @@
         </t>
     </template>
 
-
     <!-- menu actions -->
     <record id="view_action" model="ir.actions.act_window">
         <field name="name">Abilium Meeting Scheduler</field>
@@ -1189,7 +1168,6 @@
         </record>
     </data>
 
-
     <!-- second menu action-->
     <record id="group_action" model="ir.actions.act_window">
         <field name="name">Group Stage</field>
@@ -1197,7 +1175,6 @@
         <field name="res_model">group_scheduler</field>
         <field name="view_mode">tree,kanban,form</field>
     </record>
-
 
     <!-- explicit form view definition second item -->
     <data>
@@ -1221,7 +1198,6 @@
             </field>
         </record>
 
-
         <!-- explicit list view definition second item -->
         <record model="ir.ui.view" id="group_scheduler_list">
             <field name="name">group_scheduler list</field>
@@ -1230,18 +1206,8 @@
 
                 <tree>
                     <header>
-                        <!--                    for tree header buttons no id, states, confirm
-                                                class="btn-primary" makes it blue -->
-                        <!--                        <button name="button_function_test" string="Get free slots from calendar of selected Groups"-->
-                        <!--                             class="btn-primary" type="object"/>-->
-
-                        <!--                        <button name="%(view_action)d" type="action"-->
-                        <!--                                string="Go back to Calendar view" class="btn-primary"/>-->
-
                         <button name="open_time_form" string="Continue with selection"
                                 class="btn-primary" type="object"/>
-                        <!--                        <button name="action_from_view" string="Open View" type="object"/>-->
-
                     </header>
                     <field name="meeting_group"/>
                     <field name="meeting_attendees"/>
@@ -1294,20 +1260,13 @@
             <field name="arch" type="xml">
 
                 <tree create="false">
-                    <!--                    <header>-->
-                    <!--                    <button name="open_time_form" string="Continue with selection"-->
-                    <!--                            type="object" class="btn-primary" attrs="{'always_visible': True}"/>-->
-                    <!--</header>-->
                     <field name="timeslots_groupmembers"/>
                     <field name="timeslots_start_date_utc"/>
                     <field name="timeslots_end_date_utc"/>
                     <field name="timeslots_start_date_str"/>
                     <field name="timeslots_end_date_str"/>
                 </tree>
-
-
             </field>
-
         </record>
     </data>
 
@@ -1338,10 +1297,7 @@
                     <field name="timeslots_start_date"/>
                     <field name="timeslots_end_date"/>
                 </tree>
-
-
             </field>
-
         </record>
 
         <record model="ir.ui.view" id="timeslot_reserved_form">
@@ -1379,7 +1335,6 @@
         </record>
     </data>
 
-
     <!-- fifth menu action-->
     <record id="timeslots_confirmed_action" model="ir.actions.act_window">
         <field name="name">Confirmed Timeslots</field>
@@ -1406,11 +1361,8 @@
                     <field name="timeslots_end_date"/>
                     <field name="timeslots_reserved_location"/>
                     <field name="timeslots_reserved_meeting_subject"/>
-
                 </tree>
-
             </field>
-
         </record>
     </data>
 
@@ -1482,16 +1434,12 @@
         </record>
     </data>
 
-
     <!-- Top menu item -->
     <menuitem name="Abilium Meeting Scheduler"
               id="meeting-scheduler-root"
               sequence="0"
               web_icon="meeting_scheduler,static/description/icon.png"
               groups="base.group_user"/>
-
-    <!--              web_icon="meeting_scheduler,static/description/icon.png"-->
-
 
     <!-- menu categories -->
     <menuitem name="1. Define Meeting Times"
@@ -1529,12 +1477,9 @@
               action="timeslots_confirmed_action"
               groups="base.group_user"/>
 
-
     <menuitem name="Guest PreView"
               id="meeting-scheduler-guest_view"
               parent="meeting-scheduler-root"
               action="link_to_guest_view"
               groups="base.group_user"/>
-
-
 </odoo>

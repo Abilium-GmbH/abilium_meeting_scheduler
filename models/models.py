@@ -193,18 +193,6 @@ class meeting_scheduler(models.Model):
                                            'start': vals.get('meeting_start_date'),
                                            'stop': vals.get('meeting_end_date')})
 
-        # self.env.cr.commit() #shows no effect when used or not used$
-
-    # self.corresponding_calendar_event = self.env['calendar.event'].search([('name', '=', vals.get('meeting_title')),
-    #                                                                           ('privacy', '=',
-    #                                                                           vals.get('meeting_privacy')),
-    #                                                                         ('show_as', '=',
-    #                                                                           vals.get('meeting_show_as')),
-    #                                                                         ('start', '=',
-    #                                                                         vals.get('meeting_start_date')),
-    #                                                                       ('stop', '=', vals.get(
-    #                                                                          'meeting_end_date'))])
-
     def unlink(self):
         """
         the renewed unlink function deletes the object by the unlink function from the corresponding_calendar_event,

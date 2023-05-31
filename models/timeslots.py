@@ -13,7 +13,6 @@ class timeslots(models.Model):
     _name = 'timeslots'
     _description = 'timeslots'
 
-    # meeting_title = fields.Char(string="Meeting Title", required=True)
     timeslots_start_date_str = fields.Char(string="Start Date (String)", required=True)
     timeslots_end_date_str = fields.Char(string="End Date (String)", required=True)
     timeslots_bookable_hours = fields.Char(string="timeslots_bookable_hours") #field for website dropdown selection
@@ -23,7 +22,3 @@ class timeslots(models.Model):
     timeslots_duration_hours = fields.Char(string="timeslots_duration_hours")
     timeslots_time_min_start = fields.Char(String="timeslots_time_min_start")
     timeslots_time_min_end = fields.Char(String="timeslots_time_min_end")
-    # meeting_location = fields.Char(string="Location")
-    # meeting_subject = fields.Text(string="Subject")
-    # meeting_duration = fields.Char(string="Duration", compute="_calc_duration", store=True)
-    # meeting_repetitions = fields.Integer(string="Number of repetitions", default=1)
