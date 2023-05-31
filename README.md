@@ -41,12 +41,12 @@ Für eine detaillierte Anleitung zur Nutzung des Moduls steht eine Dokumentation
 
 <h2>Dokumentation</h2>
 <ul>
-   <li>Funktionalitäten, Verwendung und Ressourcen/Referenzen finden sie im <a href = "">Manual-DE</a></li>  
+   <li>Funktionalitäten, Verwendung und Ressourcen/Referenzen finden sie im <a href = "./Dokumentation/Manual_DE.pdf">Manual-DE</a></li>  
 </ul>
 
 <h2>Testing</h2>
 <ul>
-   <li>Hier noch eine Anleitung zum Unit Testing: <a href = "">Unit Testing Guide - V7</a></li>  
+   <li>Hier noch eine Anleitung zum Unit Testing: <a href = "./Dokumentation/Unit Testing Guide - V7.pdf">Unit Testing Guide - V7</a></li>  
 </ul>
 
 <h2>Version</h2>
