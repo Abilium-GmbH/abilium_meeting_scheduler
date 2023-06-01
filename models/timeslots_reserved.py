@@ -146,7 +146,7 @@ class timeslots_reserved(models.Model):
 
                 temp_calendar_event.unlink()
 
-        created_calendar_event = self.env['calendar.event'].create({
+        current_event = created_calendar_event = self.env['calendar.event'].create({
             'name': "Booked meeting with " + timeslot_selected_records.firstname + " " + timeslot_selected_records.lastname,
             'privacy': 'public',
             'show_as': 'busy',
@@ -177,6 +177,7 @@ class timeslots_reserved(models.Model):
                 'timeslots_confirmed_link': link,
                 'timeslots_confirmed_calendar_event_id': int(created_calendar_event.id),
                 'timeslots_reserved_participants': timeslots_original.timeslots_groupmembers,
+                'corresponding_calendar_event': current_event,
 
             })
 

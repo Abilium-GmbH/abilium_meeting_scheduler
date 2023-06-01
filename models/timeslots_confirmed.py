@@ -29,6 +29,9 @@ class timeslots_confirmed(models.Model):
     timeslots_confirmed_link = fields.Char(string="Link")
     timeslots_confirmed_calendar_event_id = fields.Integer(string="Foreign Key calendar_event")
     timeslots_reserved_participants = fields.Char(string="Participants")
+    corresponding_calendar_event = fields.Many2one('calendar.event',
+                                                   string="Corresponding Calendar Event",
+                                                   ondelete="cascade", readonly="True")
 
     def button_cancel_meeting(self, timeslots_confirmed_object):
         """
@@ -49,7 +52,9 @@ class timeslots_confirmed(models.Model):
         self.env['timeslots_reserved'].send_mail_to_address(
             "CANCELLED " + str(timeslots_confirmed_object.meeting_title), body_html,
             str(timeslots_confirmed_object.email))
+        self.recreate_meetings(timeslots_confirmed_object)
 
+    def recreate_meetings(self, timeslots_confirmed_object):
         timeslots_confirmed_user_ids = []
         for i in re.split('\[|,| |\]', timeslots_confirmed_object.timeslots_reserved_participants):
             if i.isnumeric():
@@ -94,11 +99,10 @@ class timeslots_confirmed(models.Model):
                         }])
                         meeting_before_found_id.unlink()
 
-
                 if (meeting_after_found_id.id != False) & (not meeting_before_found_id.id):
                     self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
                         'meeting_title': self.env['ir.config_parameter'].sudo().get_param(
-                            'meeting_scheduler.meeting_title_default'), #use the values from the settings
+                            'meeting_scheduler.meeting_title_default'),  # use the values from the settings
                         'meeting_location': False,
                         'meeting_start_date': timeslots_confirmed_object.timeslots_start_date,
                         'meeting_end_date': meeting_after_found_id.meeting_end_date,
@@ -110,11 +114,11 @@ class timeslots_confirmed(models.Model):
                     }])
                     meeting_after_found_id.unlink()
 
-                if(not meeting_before_found_id.id) and (not meeting_after_found_id.id):
-                    #for the case that the meeting has no meetings directly before or after
+                if (not meeting_before_found_id.id) and (not meeting_after_found_id.id):
+                    # for the case that the meeting has no meetings directly before or after
                     self.env['meeting_scheduler'].with_env(self.env(user=int(i))).create([{
                         'meeting_title': self.env['ir.config_parameter'].sudo().get_param(
-                            'meeting_scheduler.meeting_title_default'), #use the values from the settings
+                            'meeting_scheduler.meeting_title_default'),  # use the values from the settings
                         'meeting_location': False,
                         'meeting_start_date': timeslots_confirmed_object.timeslots_start_date,
                         'meeting_end_date': timeslots_confirmed_object.timeslots_end_date,
@@ -125,11 +129,37 @@ class timeslots_confirmed(models.Model):
                         'meeting_subject': False
                     }])
 
-
-        self.env['timeslots_reserved'].generate_new_bookable_timeslots(timeslots_confirmed_object.timeslots_start_date, timeslots_confirmed_user_ids)
+        self.env['timeslots_reserved'].generate_new_bookable_timeslots(timeslots_confirmed_object.timeslots_start_date,
+                                                                       timeslots_confirmed_user_ids)
         # upon confirming a meeting, this section generates new bookable timeslots for that day
 
         self.env['calendar.event'].browse(timeslots_confirmed_object.timeslots_confirmed_calendar_event_id).unlink()
         timeslots_confirmed_object.unlink()
+
+        return True
+
+    def unlink(self):
+        self.recreate_meetings(self)
+
+        body_html = "We sadly have to inform you, that the following Meeting was cancelled: </br>" \
+                    + "<h1>" + str(timeslots_confirmed_object.meeting_title) + "</h1>" \
+                    + "<p>Starting on the <b>" + str(timeslots_confirmed_object.timeslots_start_date) + "</b></br>" \
+                    + "participants: " + str(timeslots_confirmed_object.firstname) + " " \
+                    + str(timeslots_confirmed_object.lastname) + ", " \
+                    + str(timeslots_confirmed_object.companyname) + "</br>"
+
+        if str(timeslots_confirmed_object.timeslots_reserved_meeting_subject) != "False":
+            body_html = body_html + "description: " + str(timeslots_confirmed_object.timeslots_reserved_meeting_subject)
+
+        body_html = body_html + " </p>"
+        domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        link = domain + '/meeting_scheduler/guest_view/'
+        link = "\"" + link + "\""
+        body_html = body_html + "<p>Follow this link to schedule a meeting: </br> <a href=" + link + ">Meeting scheduler</a>   </p>"
+        self.env['timeslots_reserved'].send_mail_to_address(
+            "CANCELLATION " + str(timeslots_confirmed_object.meeting_title), body_html,
+            str(timeslots_confirmed_object.email))
+
+        self.corresponding_calendar_event.unlink()
 
         return True
