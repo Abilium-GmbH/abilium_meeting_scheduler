@@ -9,7 +9,6 @@
 
                     <script>
                         $(document).ready(function(){
-<!--                        $(".modal-header").hide();-->
                         $(".modal-footer").hide();
                         });
                     </script>
@@ -52,6 +51,5 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-
     </data>
 </odoo>

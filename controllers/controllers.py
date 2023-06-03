@@ -25,33 +25,27 @@ class MeetingScheduler(http.Controller):
             inputs_contact.append(kw.get('email'))
         if((kw.get('meetingtitle') is not None) and (kw.get('meetingtitle') != '')):
             inputs_contact.append(kw.get('meetingtitle'))
-        if((kw.get('id') is not None) and (kw.get('id') != '')
+        if((kw.get('meetingsubject') is not None) and (kw.get('meetingsubject') != '')):
+            inputs_contact.append(kw.get('meetingsubject'))
+        if((kw.get('id') is not None) and (kw.get('id') != '') and (kw.get('id') != 'undefined')
             and(kw.get('sel_start_h') is not None) and (kw.get('sel_start_h') != '')
             and (kw.get('sel_start_min') is not None) and (kw.get('sel_start_min') != '')
-           
-           #and (kw.get('sel_end_h') is not None) and (kw.get('sel_end_h') != '')
-           #and (kw.get('sel_end_min') is not None) and (kw.get('sel_end_min') != '')):         
             and (kw.get('sel_duration_h') is not None) and (kw.get('sel_duration_h') != '')
             and (kw.get('sel_duration_min') is not None) and (kw.get('sel_duration_min') != '')):
           
             temp_id = kw.get('id')
             
-            #temp_start = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date_str'])
-            #temp_start = datetime.strptime(temp_start[0:10], '%Y-%m-%d')
-            #temp_start = temp_start.replace(hour = int(kw.get('sel_start_h')), minute= int(kw.get('sel_start_min')))
             temp_start_zurich = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date_str'])
             temp_start_zurich = datetime.strptime(temp_start_zurich[0:16], '%Y-%m-%d %H:%M')
             temp_start_zurich = temp_start_zurich.replace(hour = int(kw.get('sel_start_h')) - temp_start_zurich.hour , minute= int(kw.get('sel_start_min')))
             temp_start_zurich_utc = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date_utc'])
             temp_start_zurich_utc = temp_start_zurich_utc.replace(hour = temp_start_zurich_utc.hour + temp_start_zurich.hour, minute = temp_start_zurich.minute)
 
-            #inputs_meeting.append(temp_start)
             inputs_meeting.append(temp_start_zurich_utc)
 
             temp_end = (request.env['timeslots'].search([('id', '=', temp_id)])['timeslots_start_date_str'])
             temp_end = datetime.strptime(temp_end[0:10], '%Y-%m-%d')
-            #temp_end = temp_end.replace(hour = int(kw.get('sel_end_h')), minute= int(kw.get('sel_end_min')))
-            
+
             if ((inputs_meeting[0].minute + int(kw.get('sel_duration_min')))<60):
                 temp_end = temp_end.replace(hour = inputs_meeting[0].hour + int(kw.get('sel_duration_h')),
                                             minute= inputs_meeting[0].minute + int(kw.get('sel_duration_min')))
@@ -60,10 +54,8 @@ class MeetingScheduler(http.Controller):
                 temp_end = temp_end.replace(hour=inputs_meeting[0].hour + int(kw.get('sel_duration_h')) + 1,
                                             minute=(inputs_meeting[0].minute + int(kw.get('sel_duration_min')))-60)
                 inputs_meeting.append(temp_end)
-                
             inputs_meeting.append(temp_id)
-
-        if(len(inputs_contact) == 5) and (len(inputs_meeting) == 3):
+        if(len(inputs_contact) == 6) and (len(inputs_meeting) == 3):
             duration = inputs_meeting[1] -inputs_meeting[0]
             # create a new timeslots reserved element
             reservation = request.env['timeslots_reserved'].create({'firstname': inputs_contact[0],
@@ -71,9 +63,10 @@ class MeetingScheduler(http.Controller):
                                                       'companyname': inputs_contact[2],
                                                       'email': inputs_contact[3],
                                                       'meeting_title': inputs_contact[4],
+                                                      'timeslots_reserved_meeting_subject': inputs_contact[5],
                                                       'timeslots_start_date': inputs_meeting[0],
                                                       'timeslots_end_date': inputs_meeting[1],
-                                                      'timeslots_id': inputs_meeting[2],
+                                                      'timeslots_id': int(inputs_meeting[2]),
                                                       'timeslots_reserved_meeting_duration': duration})
             # create an activity
             list_guest_ids = request.env['timeslots_reserved'].get_user_ids_from_timeslot_id(inputs_meeting[2])
@@ -96,7 +89,7 @@ class MeetingScheduler(http.Controller):
             # show a confirmation for the received reservation
             response = request.render("meeting_scheduler.guest_view_confirm", {'value': reservation,
                                                                                'converted_start_date': str(request.env['group_scheduler'].convert_timezone(reservation.timeslots_start_date))})
-        if((len(inputs_contact) != 5) or (len(inputs_meeting) != 3)) and (kw.get('id') is not None) and (kw.get('id') != ''):
+        if((len(inputs_contact) != 6) or (len(inputs_meeting) != 3)) and (kw.get('id') is not None) and (kw.get('id') != ''):
             response = request.render("meeting_scheduler.guest_view_error", {})
         return response
 

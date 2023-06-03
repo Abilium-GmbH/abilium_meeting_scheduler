@@ -177,7 +177,7 @@ class timeslots_reserved(models.Model):
                 'timeslots_confirmed_link': link,
                 'timeslots_confirmed_calendar_event_id': int(created_calendar_event.id),
                 'timeslots_reserved_participants': timeslots_original.timeslots_groupmembers,
-
+                'corresponding_calendar_event': created_calendar_event.id,
             })
 
         ############################## Send Confirmation Mail ##############################
